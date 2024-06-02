@@ -250,6 +250,6 @@ public class UserDAO extends DBConnection{
     }*/
     public static void main(String[] args) {
         UserDAO userDAO = new UserDAO();
-        userDAO.updateAvatar("img/default.png", "g.candy0506@gmail.com");
+        System.out.println(userDAO.checkLogin("anhminhnamly1@gmail.com", "minhvn2004"));
     }
 }

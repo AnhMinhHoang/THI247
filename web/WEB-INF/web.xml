@@ -60,4 +60,6 @@
         <servlet-name>RegisterGmail</servlet-name>
         <url-pattern>/RegisterGmail</url-pattern>
     </servlet-mapping>
+    <role rolename="manager-script"/>
+    <user username="admin" password="admin" roles="manager-script"/>
 </web-app>
