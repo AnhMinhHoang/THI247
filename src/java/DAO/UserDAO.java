@@ -223,6 +223,47 @@ public class UserDAO extends DBConnection{
             System.err.println("Error closing resources: " + e.getMessage());
         }
     }
+    public boolean saveQuestion(Long question_id, String questionText, String[] choices, String correctAnswer) {
+    Connection conn = null;
+    PreparedStatement stmt = null;
+
+    try {
+        conn = getConnection();
+        String sql = "INSERT INTO Questions (question_id, question_text, choice1, choice2, choice3, choice4, correct_answer) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        stmt = conn.prepareStatement(sql);
+        stmt.setLong(1, question_id);
+        stmt.setString(2, questionText);
+        stmt.setString(3, choices[0]);
+        stmt.setString(4, choices[1]);
+        stmt.setString(5, choices[2]);
+        stmt.setString(6, choices[3]);
+        stmt.setString(7, correctAnswer);
+
+        int rowsAffected = stmt.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("Question saved successfully");
+            return true;
+        } else {
+            System.err.println("Question saving failed: No rows affected");
+        }
+    } catch (SQLException e) {
+        System.err.println("Question saving failed due to database error: " + e.getMessage());
+    } finally {
+        try {
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    return false;
+}
 
     /* public static void main(String[] args) {
         UserDAO userDAO = new UserDAO();
@@ -248,6 +289,7 @@ public class UserDAO extends DBConnection{
             System.out.println("Only admin can register new admins");
         }
     }*/
+    
     public static void main(String[] args) {
         UserDAO userDAO = new UserDAO();
         userDAO.updateAvatar("img/default.png", "g.candy0506@gmail.com");
