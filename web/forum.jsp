@@ -155,8 +155,6 @@
       crossorigin="anonymous"
     />
        
-
-    
     <div class="container">
       <div class="main-body p-0">
         <div class="inner-wrapper">
@@ -266,7 +264,7 @@
                 <div class="card-body p-2 p-sm-3">
                   <div class="media forum-item">
                     <a
-                      href="#"
+                      href="user-profile.jsp"
                       data-target=".forum-content"
                       ><img
                         src="https://bootdey.com/img/Content/avatar/avatar1.png"
@@ -277,7 +275,7 @@
                     <div class="media-body">
                       <h6>
                         <a
-                          href="#"
+                          href="forum-detail.jsp"
                           data-target=".forum-content"
                           class="text-body"
                           >Giúp mình kiểm tra hướng của đồ thị</a

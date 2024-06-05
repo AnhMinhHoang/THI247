@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
 
 <html lang="en">
 <head>
@@ -60,19 +60,9 @@
                     </div>
                     <a href="contact.jsp" class="nav-item nav-link">Contact</a>
                 </div>
-                <%
-                    if(session.getAttribute("currentUser") == null){
-                %>
+               
                  <a href="login.jsp" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a> 
-                <%
-                    }
-                    else{
-                    Users user = (Users)session.getAttribute("currentUser");
-                    String role;
-                    if(user.getRole() == 1) role = "Admin";
-                    else if(user.getRole() == 2) role = "Lecture";
-                    else role = "Student";
-                %>
+                
             <li class="nav-item dropdown pe-3 no">
                 <style>
                     .no{
@@ -80,14 +70,14 @@
                     }
                 </style>
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="<%=user.getAvatarURL()%>" alt="Profile" width="50" height="50" class="rounded-circle">
-            <span class="d-none d-md-block dropdown-toggle ps-2"><%=user.getUsername()%></span>
+            <img src="" alt="Profile" width="50" height="50" class="rounded-circle">
+            <span class="d-none d-md-block dropdown-toggle ps-2">minh</span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6><%=user.getUsername()%></h6>
-              <span><%=role%></span>
+              <h6>minh</h6>
+              <span>happy birthday</span>
             </li>
             <li>
               <hr class="dropdown-divider">
@@ -108,9 +98,7 @@
 
           </ul><!-- End Profile Dropdown Items -->
         </li>
-                <%
-                    }
-                %>
+               
             </div>
         </nav>
         <!-- Navbar End -->
