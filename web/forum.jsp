@@ -253,7 +253,7 @@
 
             <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
               <!-- bai post -->
-              <div class="card mb-2">
+<div class="card mb-2">
                 <div class="card-body p-2 p-sm-3">
                   <div class="media forum-item">
                     <a
@@ -288,8 +288,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
-              <!-- ket thuc bai post -->
+              </div>              <!-- ket thuc bai post -->
             </div>
             
           </div>
@@ -328,7 +327,21 @@
                       placeholder="Tiêu đề"
                       autofocus
                     />
+                    <br>
+                    <div class="form-group">
+                    <label for="thread-detail">Chi tiết</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="threadTitle"
+                      placeholder="Tiêu đề"
+                      autofocus
+                    />
                   </div>
+<!--                    <label for="thread-image">Ảnh</label>
+                    <input type="file" name="file" id="imgupload" accept="image/png, image/jpeg" style="display:none" onchange="submitForm()"/>-->
+                    <label for="myfile">Select a file:</label>
+                    <input type="file" id="myfile" name="myfile"><br><br>
                   <textarea
                     class="form-control summernote"
                     style="display: none"
@@ -347,12 +360,16 @@
                   >
                     Hủy
                   </button>
-                  <button type="button" class="btn btn-primary">Đăng</button>
+                    <button type="submit" class="btn btn-primary">Đăng</button>
                 </div>
-              </form>
-            </div>
+              
+            </div> 
+            </form>
           </div>
         </div>
       </div>
     </div>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript"></script>
     <jsp:include page="footer.jsp"></jsp:include>
