@@ -276,7 +276,13 @@
                       </h6>
                       <p class="text-secondary">
                         lorem ipsum dolor sit amet lorem ipsum dolor sit amet
+                        lorem ipsum dolor sit ametlorem ipsum dolor sit amet lorem ipsum dolor sit amet
+                        lorem ipsum dolor sit ametlorem ipsum dolor sit amet lorem ipsum dolor sit amet
+                        lorem ipsum dolor sit ametlorem ipsum dolor sit amet lorem ipsum dolor sit amet
+                        lorem ipsum dolor sit ametlorem ipsum dolor sit amet lorem ipsum dolor sit amet
+                        lorem ipsum dolor sit ametlorem ipsum dolor sit amet lorem ipsum dolor sit amet
                         lorem ipsum dolor sit amet
+                        if abc.length > 16 abc = substring(0-16) + "..."
                       </p>
                       
                     </div>

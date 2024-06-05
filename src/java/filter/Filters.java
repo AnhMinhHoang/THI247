@@ -189,9 +189,6 @@ public class Filters implements Filter {
         else if(url.contains("RegisterGmail") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
         }
-        else if(url.contains("user-profile.jsp") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("user-profile.jsp");
-        }
         
         
         //prevent admin page when user is not admin
