@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8"/>
-
-    <title>THI247 - Forum</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+<jsp:include page="header.jsp"></jsp:include>
     <style type="text/css">
       body {
         margin-top: 20px;
@@ -144,6 +134,9 @@
         flex: 1 1 auto;
         min-height: 1px;
         padding: 1rem;
+      }
+      .container{
+          margin-top: 15px;
       }
     </style>
   </head>
@@ -362,8 +355,4 @@
         </div>
       </div>
     </div>
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript"></script>
-  </body>
-</html>
+    <jsp:include page="footer.jsp"></jsp:include>
