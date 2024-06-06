@@ -103,6 +103,33 @@ public class UserDAO extends DBConnection{
         return null;
     }
     
+    public Users findByUserID(int userID) {
+        String query = "SELECT * FROM Users WHERE userID=?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int iD = rs.getInt("userID");
+                    String usernames = rs.getString("username");
+                    String fullname = rs.getString("fullname");
+                    String emails = rs.getString("email");
+                    int role = rs.getInt("roles");
+                    String avatarURL = rs.getString("avatar");
+                    int balance = rs.getInt("balance");
+                    String passwords = rs.getString("password");
+            
+                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance);
+                    return us;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("SDASD");
+        }
+        return null;
+    }
+    
     public void updateInfo(String email, String username, String fullname, String password){
         String query = "UPDATE Users SET username = ? , fullname = ? , password = ? WHERE email=?";
         try (Connection conn = getConnection();

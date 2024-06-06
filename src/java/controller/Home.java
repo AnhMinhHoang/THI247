@@ -33,9 +33,6 @@ public class Home extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
         Users user = (Users)session.getAttribute("currentUser");
-        if(user != null && user.getPassword().isEmpty()){
-            response.sendRedirect("registerGmail.jsp");
-        }
         request.getRequestDispatcher("home.jsp").forward(request, response);
     }
 
