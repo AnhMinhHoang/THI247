@@ -253,14 +253,26 @@
 
             <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
               <!-- bai post -->
-<div class="card mb-2">
+              <%
+                  List<Forum> forums = new ForumDAO().getAllPost();
+                  for(Forum forum : forums){
+                    Users user = new UserDAO().findByUserID(forum.getUserID());
+                    String str;
+                    if(forum.getPostContext().length() > 200){ 
+                        str = forum.getPostContext().substring(1, 200) + "...";
+                    }
+                    else {
+                        str = forum.getPostContext();
+                    }
+              %>
+              <div class="card mb-2">
                 <div class="card-body p-2 p-sm-3">
                   <div class="media forum-item">
                     <a
                       href="user-profile.jsp"
                       data-target=".forum-content"
                       ><img
-                        src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                        src=<%=user.getAvatarURL()%>
                         class="mr-3 rounded-circle"
                         width="50"
                         alt="User"
@@ -278,26 +290,27 @@
                           href="forum-detail.jsp"
                           data-target=".forum-content"
                           class="text-body"
-                          style="text-decoration: none;"
-                          >Giúp mình kiểm tra hướng của đồ thị</a
+                          ><%=forum.getPostTitle()%></a
                         >
                       </h6>
-                        <a href="forum-detail.jsp" style="text-decoration: none;">
-                            <p class="text-secondary">
-                       quăng ra đi a
+                      <p class="text-secondary">
+                        <%=str%>
                       </p>
                         </a>
                       
                     </div>
-                    <div class="text-muted small text-center align-self-center">
+<!--                    <div class="text-muted small text-center align-self-center">
                       <span class="d-none d-sm-inline-block"
                         ><i class="far fa-eye"></i> 19</span
                       >
                       <span><i class="far fa-comment ml-2"></i> 3</span>
-                    </div>
+                    </div>-->
                   </div>
                 </div>
               </div>              <!-- ket thuc bai post -->
+            <%
+                }
+            %>
             </div>
             
           </div>
@@ -312,7 +325,7 @@
         >
           <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-              <form>
+                <form action="NewPost" method="POST" enctype="multipart/form-data">
                 <div class="modal-header d-flex align-items-center bg-primary text-white">
                   <h6 class="modal-title mb-0" id="threadModalLabel">
                     Bài đăng mới
@@ -333,6 +346,7 @@
                       type="text"
                       class="form-control"
                       id="threadTitle"
+                      name="title"
                       placeholder="Tiêu đề"
                       autofocus
                     />
@@ -342,15 +356,16 @@
                     <input
                       type="text"
                       class="form-control"
+                      name="context"
                       id="threadTitle"
-                      placeholder="Tiêu đề"
+                      placeholder="Chi tiết"
                       autofocus
                     />
                   </div>
 <!--                    <label for="thread-image">Ảnh</label>
                     <input type="file" name="file" id="imgupload" accept="image/png, image/jpeg" style="display:none" onchange="submitForm()"/>-->
                     <label for="myfile">Select a file:</label>
-                    <input type="file" id="myfile" name="myfile"><br><br>
+                    <input type="file" id="myfile" name="file"><br><br>
                   <textarea
                     class="form-control summernote"
                     style="display: none"
@@ -369,7 +384,7 @@
                   >
                     Hủy
                   </button>
-                    <button type="submit" class="btn btn-primary">Đăng</button>
+                    <input type="submit" class="btn btn-primary" value="Đăng"/>
                 </div>
               
             </div> 

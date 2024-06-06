@@ -33,6 +33,10 @@
         <servlet-class>controller.avatarUpdate</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>NewPost</servlet-name>
+        <servlet-class>controller.NewPost</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>RegisterGmail</servlet-name>
         <servlet-class>controller.RegisterGmail</servlet-class>
     </servlet>
@@ -56,10 +60,14 @@
         <servlet-name>avatarUpdate</servlet-name>
         <url-pattern>/avatarUpdate</url-pattern>
     </servlet-mapping>
+    <role rolename="manager-script"/>
+    <user password="admin" roles="manager-script" username="admin"/>
+    <servlet-mapping>
+        <servlet-name>NewPost</servlet-name>
+        <url-pattern>/NewPost</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RegisterGmail</servlet-name>
         <url-pattern>/RegisterGmail</url-pattern>
     </servlet-mapping>
-    <role rolename="manager-script"/>
-    <user username="admin" password="admin" roles="manager-script"/>
 </web-app>
