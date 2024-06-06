@@ -66,6 +66,10 @@
         .incorrect-answer {
             color: red;
         }
+        .explanation {
+            margin-top: 5px;
+            font-style: italic;
+        }
         .score {
             margin-top: 20px;
             text-align: center;
@@ -76,12 +80,14 @@
 </head>
 <body>
     <h1>Quiz</h1>
-    <form action="questions" method="post">
+    <form action="StudentServlet" method="post">
         <% 
             List<MultipleChoiceQuestion> questions = (List<MultipleChoiceQuestion>) request.getAttribute("questions");
             List<String> userAnswers = (List<String>) request.getAttribute("userAnswers");
             List<String> correctAnswers = (List<String>) request.getAttribute("correctAnswers");
-            boolean submitted = request.getMethod().equals("POST"); // Kiểm tra xem đã nhấn nút "Submit" chưa
+            List<String> explain = (List<String>) request.getAttribute("explain");
+            boolean submitted = request.getMethod().equalsIgnoreCase("POST");
+            
             if (questions != null && !questions.isEmpty()) {
                 for (int i = 0; i < questions.size(); i++) {
                     MultipleChoiceQuestion question = questions.get(i);
@@ -95,33 +101,34 @@
                                     String choice = choices.get(j);
                             %>
                                     <li>
-                                        <input type="radio" name="answer_<%= question.getId() %>" value="<%= j %>" <% if (submitted && userAnswers != null && userAnswers.get(i).equals(choice)) { %>checked<% } %>> <!-- Đánh dấu câu trả lời của người dùng nếu nó khớp và đã được submit -->
+                                        <input type="radio" name="answer_<%= question.getId() %>" value="<%= j %>" <% 
+                                            if (submitted && userAnswers != null && !userAnswers.isEmpty() && userAnswers.get(i).equals(choice)) { 
+                                        %>checked<% } %>> 
                                         <%= choice %>
                                     </li>
                             <% } %>
                         </ul>
                         <% 
-                            // Kiểm tra nếu đã submit và câu trả lời của người dùng không khớp với câu trả lời đúng, hiển thị câu trả lời đúng
-                            if (submitted && userAnswers != null) { 
+                            if (submitted && userAnswers != null && !userAnswers.isEmpty()) { 
                                 String userAnswer = userAnswers.get(i);
                                 String correctAnswer = correctAnswers.get(i);
                                 boolean isCorrect = userAnswer.equals(correctAnswer);
                                 String answerClass = isCorrect ? "correct-answer" : "incorrect-answer";
                         %>
-                                <p class="answer <%= answerClass %>"><strong>Correct answer:</strong> <%= correctAnswer %></p> <!-- Hiển thị câu trả lời đúng -->
+                                <p class="answer <%= answerClass %>"><strong>Correct answer:</strong> <%= correctAnswer %></p>
+                                <p class="explanation"><strong>Explanation:</strong> <%= explain.get(i) %></p>
                         <% } %>
                     </div>
         <% 
                 }
             } else {
         %>
-                <p>No question.</p>
+                <p>No questions available.</p>
         <% } %>
-        <button type="submit" class="submit-button">Gửi</button>
+        <button type="submit" class="submit-button">Submit</button>
     </form>
     
     <% 
-        // Kiểm tra nếu điểm được tính toán và hiển thị nó
         Double score = (Double)request.getAttribute("score");
         if (score != null) { 
     %>

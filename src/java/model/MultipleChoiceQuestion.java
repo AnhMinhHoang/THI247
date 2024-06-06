@@ -15,14 +15,15 @@ public class MultipleChoiceQuestion {
     private String questionText;
     private List<String> choices;
     private String correctAnswer;
-
+    private String explain;
     // Constructor
 
-    public MultipleChoiceQuestion(long id, String questionText, List<String> choices, String correctAnswer) {
+    public MultipleChoiceQuestion(long id, String questionText, List<String> choices, String correctAnswer, String explain) {
         this.id = id;
         this.questionText = questionText;
         this.choices = choices;
         this.correctAnswer = correctAnswer;
+        this.explain = explain;
     }
   
 
@@ -59,9 +60,18 @@ public class MultipleChoiceQuestion {
         this.correctAnswer = correctAnswer;
     }
 
+    public String getExplain() {
+        return explain;
+    }
+
+    public void setExplain(String explain) {
+        this.explain = explain;
+    }
+
     @Override
     public String toString() {
-        return "MultipleChoiceQuestion{" + "id=" + id + ", questionText=" + questionText + ", choices=" + choices + ", correctAnswer=" + correctAnswer + '}';
+        return "MultipleChoiceQuestion{" + "id=" + id + ", questionText=" + questionText + ", choices=" + choices + ", correctAnswer=" + correctAnswer + ", explain=" + explain + '}';
     }
+
     
 }

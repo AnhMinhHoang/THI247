@@ -10,16 +10,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
-public class QuestionDAO extends DBConnection{
-
-
-    
+public class QuestionDAO extends DBConnection {
 
     // CREATE
     public boolean createMultipleChoiceQuestion(MultipleChoiceQuestion question) {
-        String sql = "INSERT INTO MultipleChoiceQuestions (question_text, choice1, choice2, choice3, choice4, correct_answer) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO MultipleChoiceQuestions (question_text, choice1, choice2, choice3, choice4, correct_answer, explain) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, question.getQuestionText());
             List<String> choices = question.getChoices();
@@ -27,6 +23,7 @@ public class QuestionDAO extends DBConnection{
                 stmt.setString(i + 2, choices.get(i));
             }
             stmt.setString(6, question.getCorrectAnswer());
+            stmt.setString(7, question.getExplain());
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -37,7 +34,7 @@ public class QuestionDAO extends DBConnection{
     }
 
     // READ
-     public List<MultipleChoiceQuestion> getAllMultipleChoiceQuestions() {
+    public List<MultipleChoiceQuestion> getAllMultipleChoiceQuestions() {
         List<MultipleChoiceQuestion> questions = new ArrayList<>();
         String query = "SELECT * FROM MultipleChoiceQuestions";
 
@@ -52,8 +49,8 @@ public class QuestionDAO extends DBConnection{
                         resultSet.getString("choice4")
                 );
                 String correctAnswer = resultSet.getString("correct_answer");
-
-                MultipleChoiceQuestion question = new MultipleChoiceQuestion(id, questionText, choices, correctAnswer);
+                String explain = resultSet.getString("explain");
+                MultipleChoiceQuestion question = new MultipleChoiceQuestion(id, questionText, choices, correctAnswer, explain);
                 questions.add(question);
             }
         } catch (SQLException e) {
@@ -65,7 +62,7 @@ public class QuestionDAO extends DBConnection{
 
     // UPDATE
     public boolean updateMultipleChoiceQuestion(MultipleChoiceQuestion question) {
-        String sql = "UPDATE MultipleChoiceQuestions SET question_text = ?, choice1 = ?, choice2 = ?, choice3 = ?, choice4 = ?, correct_answer = ? WHERE id = ?";
+        String sql = "UPDATE MultipleChoiceQuestions SET question_text = ?, choice1 = ?, choice2 = ?, choice3 = ?, choice4 = ?, correct_answer = ?, explain = ? WHERE id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, question.getQuestionText());
             List<String> choices = question.getChoices();
@@ -73,7 +70,8 @@ public class QuestionDAO extends DBConnection{
                 stmt.setString(i + 2, choices.get(i));
             }
             stmt.setString(6, question.getCorrectAnswer());
-            stmt.setLong(7, question.getId());
+            stmt.setString(7, question.getExplain());
+            stmt.setLong(8, question.getId());
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -95,7 +93,9 @@ public class QuestionDAO extends DBConnection{
             return false;
         }
     }
-   public double calculateScore(List<String> userAnswers, List<MultipleChoiceQuestion> questions) {
+
+    // Calculate Score
+    public double calculateScore(List<String> userAnswers, List<MultipleChoiceQuestion> questions) {
         int totalQuestions = questions.size();
         int correctAnswers = 0;
 
@@ -110,58 +110,62 @@ public class QuestionDAO extends DBConnection{
         return (double) correctAnswers / totalQuestions * 100;
     }
 
-
-    // READ - Get correct answers
-public List<String> getCorrectAnswers(List<MultipleChoiceQuestion> questions) {
-    List<String> correctAnswers = new ArrayList<>();
-    for (MultipleChoiceQuestion question : questions) {
-        correctAnswers.add(question.getCorrectAnswer());
+    // Get correct answers
+    public List<String> getCorrectAnswers(List<MultipleChoiceQuestion> questions) {
+        List<String> correctAnswers = new ArrayList<>();
+        for (MultipleChoiceQuestion question : questions) {
+            correctAnswers.add(question.getCorrectAnswer());
+        }
+        return correctAnswers;
     }
-    return correctAnswers;
+    // GET BY ID
+    public MultipleChoiceQuestion getQuestionById(long id) {
+        String query = "SELECT * FROM MultipleChoiceQuestions WHERE id = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setLong(1, id);
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                if (resultSet.next()) {
+                    String questionText = resultSet.getString("question_text");
+                    List<String> choices = Arrays.asList(
+                            resultSet.getString("choice1"),
+                            resultSet.getString("choice2"),
+                            resultSet.getString("choice3"),
+                            resultSet.getString("choice4")
+                    );
+                    String correctAnswer = resultSet.getString("correct_answer");
+                    String explain = resultSet.getString("explain");
+                    return new MultipleChoiceQuestion(id, questionText, choices, correctAnswer, explain);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static void main(String[] args) {
+        // Create a new QuestionDAO instance
+        QuestionDAO questionDAO = new QuestionDAO();
+
+//        // Create a MultipleChoiceQuestion object
+//        List<String> choices = new ArrayList<>(Arrays.asList("a", "b", "c", "d"));
+//        MultipleChoiceQuestion question = new MultipleChoiceQuestion(3, "What is the capital of France?", choices, "Paris", "Paris is the capital of France.");
+//
+//        // Add the question to the database
+//        boolean success = questionDAO.createMultipleChoiceQuestion(question);
+//        if (success) {
+//            System.out.println("Question created successfully!");
+//        } else {
+//            System.out.println("Failed to create question.");
+//        }
+
+        // Fetch and print all questions from the database
+        List<MultipleChoiceQuestion> questions = questionDAO.getAllMultipleChoiceQuestions();
+        for (MultipleChoiceQuestion q : questions) {
+            System.out.println("ID: " + q.getId());
+            System.out.println("Question: " + q.getQuestionText());
+            System.out.println("Choices: " + q.getChoices());
+            System.out.println("Correct Answer: " + q.getCorrectAnswer());
+            System.out.println("Explanation: " + q.getExplain());
+        }
+    }
 }
-
-
-    
-
-   public static void main(String[] args) {
-    // Create a new QuestionDAO instance
-    QuestionDAO questionDAO = new QuestionDAO();
-   
-
-    // Create a MultipleChoiceQuestion object
-//    List<String> choices = new ArrayList<>(Arrays.asList("a", "b", "c", "d"));
-//    MultipleChoiceQuestion question = new MultipleChoiceQuestion(3, "aaa", choices, "d");
-//
-//    // Add the question to the database
-//    boolean success = questionDAO.createMultipleChoiceQuestion(question);
-//    if (success) {
-//        System.out.println("Question created successfully!");
-//    } else {
-//        System.out.println("Failed to create question.");
-//    }
-//
-//    // Fetch and print all questions from the database
-//    List<MultipleChoiceQuestion> questions = questionDAO.getAllMultipleChoiceQuestions();
-//    for (MultipleChoiceQuestion q : questions) {
-//        System.out.println("ID: " + q.getId());
-//        System.out.println("Question: " + q.getQuestionText());
-//        System.out.println("Choices: " + q.getChoices());
-//        System.out.println("Correct Answer: " + q.getCorrectAnswer());
-//    }
-
-
-//        // Fetch all multiple-choice questions from the database
-//        List<MultipleChoiceQuestion> questions = questionDAO.getAllMultipleChoiceQuestions();
-//
-//        // Display questions and allow the user to select answers
-//        List<String> userAnswers = QuestionDAO.getUserAnswers(questions);
-//
-//        // Calculate and display the user's score
-//        double score = questionDAO.calculateScore(userAnswers, questions);
-//        System.out.println("Your score: " + score + "%");
-   }
-}
-
-
-
-

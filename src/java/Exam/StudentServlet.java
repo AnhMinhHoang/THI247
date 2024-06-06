@@ -22,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import model.MultipleChoiceQuestion;
 
-@WebServlet("/questions")
-public class QuestionServlet extends HttpServlet {
+@WebServlet("/StudentServlet")
+public class StudentServlet extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -58,13 +58,13 @@ public class QuestionServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
 
-
+@Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         QuestionDAO questionDAO = new QuestionDAO();
         List<MultipleChoiceQuestion> questions = questionDAO.getAllMultipleChoiceQuestions();
         request.setAttribute("questions", questions);
-        request.getRequestDispatcher("quiz.jsp").forward(request, response);
+        request.getRequestDispatcher("Studentquiz.jsp").forward(request, response);
     }
 
 
@@ -76,35 +76,42 @@ public class QuestionServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    QuestionDAO questionDAO = new QuestionDAO();
-    List<MultipleChoiceQuestion> questions = questionDAO.getAllMultipleChoiceQuestions();
-    
-    List<String> userAnswers = new ArrayList<>();
-    List<String> correctAnswers = new ArrayList<>(); // Lưu trữ đáp án đúng
-    
-    for (MultipleChoiceQuestion question : questions) {
-        String userAnswerIndex = request.getParameter("answer_" + question.getId());
-        int index = Integer.parseInt(userAnswerIndex);
-        List<String> choices = question.getChoices();
-        String userAnswer = choices.get(index);
-        userAnswers.add(userAnswer);
-        // Lấy đáp án đúng và lưu trữ
-        String correctAnswer = question.getCorrectAnswer();
-        correctAnswers.add(correctAnswer);
+     @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        QuestionDAO questionDAO = new QuestionDAO();
+        List<MultipleChoiceQuestion> questions = questionDAO.getAllMultipleChoiceQuestions();
+
+        List<String> userAnswers = new ArrayList<>();
+        List<String> correctAnswers = new ArrayList<>();
+        List<String> explain = new ArrayList<>();
+
+        for (MultipleChoiceQuestion question : questions) {
+            String userAnswerIndex = request.getParameter("answer_" + question.getId());
+            if (userAnswerIndex != null) {
+                int index = Integer.parseInt(userAnswerIndex);
+                List<String> choices = question.getChoices();
+                String userAnswer = choices.get(index);
+                userAnswers.add(userAnswer);
+            } else {
+                userAnswers.add("");  // Add an empty answer if no selection is made
+            }
+
+            String correctAnswer = question.getCorrectAnswer();
+            correctAnswers.add(correctAnswer);
+            explain.add(question.getExplain());
+        }
+
+        double score = questionDAO.calculateScore(userAnswers, questions);
+
+        request.setAttribute("userAnswers", userAnswers);
+        request.setAttribute("correctAnswers", correctAnswers);
+        request.setAttribute("explain", explain);
+        request.setAttribute("score", score);
+        request.setAttribute("questions", questions);
+        request.getRequestDispatcher("Studentquiz.jsp").forward(request, response);
     }
-    
-    double score = questionDAO.calculateScore(userAnswers, questions);
-    
-    // Lưu trữ thông tin câu trả lời của người dùng và đáp án đúng để hiển thị lại trong JSP
-   request.setAttribute("userAnswers", userAnswers);
-request.setAttribute("correctAnswers", correctAnswers);
-    request.setAttribute("score", score);
-    request.setAttribute("questions", questions); // Truyền danh sách câu hỏi để hiển thị lại
-    request.getRequestDispatcher("quiz.jsp").forward(request, response);
-}
+
 
 
 
