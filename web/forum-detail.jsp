@@ -165,7 +165,7 @@
                 <div class="card-body p-2 p-sm-3">
                   <div class="media forum-item">
                     <a
-                      href="#"
+                      href="user-profiles.jsp"
                       data-target=".forum-content"
                       ><img
                         src="https://bootdey.com/img/Content/avatar/avatar1.png"
@@ -176,24 +176,26 @@
                     <div class="media-body">
                       <h6>
                         <a
+                          href="user-profiles.jsp"
+                          data-target=".forum-content"
+                          class="text-body"
+                          style="text-decoration: none;"
+                          >username</a
+                        >
+                        <p style="font-style: italic; color: gray">06/06/2024</p></h6>
+                        
+                        <h4
                           href="#"
                           data-target=".forum-content"
                           class="text-body"
-                          >Giúp mình kiểm tra hướng của đồ thị</a
-                        >
-                      </h6>
+                          style="text-decoration: none; cursor: "
+                          >Giúp mình kiểm tra hướng của đồ thị</h4>
+                      
                       <p class="text-secondary">
-                        lorem ipsum dolor sit amet lorem ipsum dolor sit amet
-                        lorem ipsum dolor sit amet
+                        quăng ra đi a
                       </p>
                       
-                    </div>
-                    <div class="text-muted small text-center align-self-center">
-                      <span class="d-none d-sm-inline-block"
-                        ><i class="far fa-eye"></i> 19</span
-                      >
-                      <span><i class="far fa-comment ml-2"></i> 3</span>
-                    </div>
+                    </div>            
                   </div>
                 </div>
               </div>
@@ -206,7 +208,7 @@
                 <div class="card-body p-2 p-sm-3">
                   <div class="media forum-item">
                     <a
-                      href="#"
+                      href="user-profiles.jsp"
                       data-target=".forum-content"
                       ><img
                         src="https://bootdey.com/img/Content/avatar/avatar1.png"
@@ -220,20 +222,15 @@
                           href="#"
                           data-target=".forum-content"
                           class="text-body"
+                          style="text-decoration: none;"
                           >username</a
                         >
+                                                <p style="font-style: italic; color: gray">06/06/2024</p></h6>
                       </h6>
                       <p class="text-body">
                         lorem ipsum dolor sit amet lorem ipsum dolor sit amet
                         lorem ipsum dolor sit amet
                       </p>
-                      
-                    </div>
-                    <div class="text-muted small text-center align-self-center">
-                      <span class="d-none d-sm-inline-block"
-                        ><i class="far fa-eye"></i> 19</span
-                      >
-                      <span><i class="far fa-comment ml-2"></i> 3</span>
                     </div>
                   </div>
                 </div>

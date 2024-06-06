@@ -268,22 +268,25 @@
                     <div class="media-body">
                       <h6>
                         <a
+                          href="user-profiles.jsp"
+                          data-target=".forum-content"
+                          class="text-body"
+                          >username</a
+                        >
+                        <p style="font-style: italic; color: gray">06/06/2024</p>
+                        <a
                           href="forum-detail.jsp"
                           data-target=".forum-content"
                           class="text-body"
+                          style="text-decoration: none;"
                           >Giúp mình kiểm tra hướng của đồ thị</a
                         >
                       </h6>
-                      <p class="text-secondary">
-                        lorem ipsum dolor sit amet lorem ipsum dolor sit amet
-                        lorem ipsum dolor sit ametlorem ipsum dolor sit amet lorem ipsum dolor sit amet
-                        lorem ipsum dolor sit ametlorem ipsum dolor sit amet lorem ipsum dolor sit amet
-                        lorem ipsum dolor sit ametlorem ipsum dolor sit amet lorem ipsum dolor sit amet
-                        lorem ipsum dolor sit ametlorem ipsum dolor sit amet lorem ipsum dolor sit amet
-                        lorem ipsum dolor sit ametlorem ipsum dolor sit amet lorem ipsum dolor sit amet
-                        lorem ipsum dolor sit amet
-                        if abc.length > 16 abc = substring(0-16) + "..."
+                        <a href="forum-detail.jsp" style="text-decoration: none;">
+                            <p class="text-secondary">
+                       quăng ra đi a
                       </p>
+                        </a>
                       
                     </div>
                     <div class="text-muted small text-center align-self-center">
