@@ -245,7 +245,7 @@
                           style="text-decoration: none;"
                           ><%=otherUser.getUsername()%></a
                         >
-                        <p style="font-style: italic; color: gray"><%=cmt.getCommentDate()%></p></h6>
+                        <p style="font-style: italic; color: gray; font-size: 12px"><%=cmt.getCommentDate()%></p></h6>
                       </h6>
                       <p class="text-body">
                         <%=cmt.getCommentContext()%>
