@@ -173,7 +173,7 @@
                       href="user-profiles.jsp"
                       data-target=".forum-content"
                       ><img
-                        src=<%=user.getAvatarURL()%>
+                        src="<%=user.getAvatarURL()%>"
                         class="mr-3 rounded-circle"
                         width="50"
                         height="50"
@@ -230,7 +230,7 @@
                       href="user-profiles.jsp"
                       data-target=".forum-content"
                       ><img
-                        src=<%=otherUser.getAvatarURL()%>
+                        src="<%=otherUser.getAvatarURL()%>"
                         class="mr-3 rounded-circle"
                         width="40"
                         height="40"
