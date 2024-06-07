@@ -173,7 +173,7 @@
                       href="user-profiles.jsp"
                       data-target=".forum-content"
                       ><img
-                        src=<%=user.getAvatarURL()%>
+                        src="<%=user.getAvatarURL()%>"
                         class="mr-3 rounded-circle"
                         width="50"
                         height="50"
@@ -230,7 +230,7 @@
                       href="user-profiles.jsp"
                       data-target=".forum-content"
                       ><img
-                        src=<%=otherUser.getAvatarURL()%>
+                        src="<%=otherUser.getAvatarURL()%>"
                         class="mr-3 rounded-circle"
                         width="40"
                         height="40"
@@ -266,50 +266,13 @@
               if(currentUser != null){
                 
               %>
-<!--              <div class="card mb-2">
-                <div class="card-body p-2 p-sm-3">
-                  <div class="media forum-item">
-                    <a
-                      href="#"
-                      data-target=".forum-content"
-                      ><img
-                        src=<%=currentUser.getAvatarURL()%>
-                        class="mr-3 rounded-circle"
-                        width="50"
-                        height="50"
-                        alt="User"
-                    /></a>
-                    <div class="media-body">
-                        <form method="POST" action="PostComments">
-                            <input id="submit-comment" type="text" name="comment" placeholder="Nhập bình luận"/>
-                            <button type="submit" class="btn btn-primary"style="height:50px; position: absolute; padding-left: 20px;">Đăng</button>
-                        </form>
-                    </div>
-                  </div>
-                </div>
-              </div>-->
+
               <%
                   }
               %>
               <!-- ket thuc phan comment cua user hien tai -->
 
             </div>
-              
-<!--                          <div class="comment-forum-detail">
-              <a
-                class="nav-link nav-icon rounded-circle nav-link-faded mr-3 d-md-none"
-                href="#"
-                data-toggle="inner-sidebar"
-                ><i class="material-icons">arrow_forward_ios</i></a
-              >
-              <form>
-                 <span class="input-icon input-icon-sm ml-auto w-auto">
-                <input id="submit-comment" type="text" placeholder="Nhập bình luận"/>
-                <button type="button" class="btn btn-primary">Đăng</button>
-              </form>
-              
-            </div>-->
-
           </div>
               
         </div>
@@ -321,7 +284,7 @@
                       href="#"
                       data-target=".forum-content"
                       ><img
-                        src=<%=currentUser.getAvatarURL()%>
+                        src="<%=currentUser.getAvatarURL()%>"
                         class="mr-3 rounded-circle"
                         width="50"
                         height="50"

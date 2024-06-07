@@ -274,7 +274,7 @@
                       href="user-profile.jsp"
                       data-target=".forum-content"
                       ><img
-                        src=<%=user.getAvatarURL()%>
+                        src="<%=user.getAvatarURL()%>"
                         class="mr-3 rounded-circle"
                         width="50"
                         height="50"
