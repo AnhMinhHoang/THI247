@@ -355,6 +355,7 @@
                       id="threadTitle"
                       name="title"
                       placeholder="Tiêu đề"
+                      required
                       autofocus
                     />
                     <br>
@@ -366,6 +367,7 @@
                       name="context"
                       id="threadTitle"
                       placeholder="Chi tiết"
+                      required
                       autofocus
                     />
                   </div>

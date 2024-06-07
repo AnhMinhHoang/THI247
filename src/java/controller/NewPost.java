@@ -49,7 +49,7 @@ public class NewPost extends HttpServlet {
         boolean check = true;
         
         if(!uploadDir.exists()){
-            uploadDir.mkdir();
+            uploadDir.mkdirs();
         }
         
         for(Part part: request.getParts()){
