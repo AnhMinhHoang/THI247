@@ -4,8 +4,9 @@
  */
 package controller;
 
-import DAO.UserDAO;
+import DAO.ForumDAO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +18,7 @@ import model.Users;
  *
  * @author GoldCandy
  */
-public class RegisterGmail extends HttpServlet {
+public class PostComments extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,20 +32,13 @@ public class RegisterGmail extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirmPassword");
-        if(!password.equals(confirmPassword)){
-            request.setAttribute("errorMessage", "Password not match");
-            request.getRequestDispatcher("registerGmail.jsp").forward(request, response);
-        }
-        else{
-            HttpSession session = request.getSession();
-            Users user = (Users)session.getAttribute("currentUser");
-            new UserDAO().updateInfo(user.getEmail(), user.getUsername(), user.getFullname(), password);
-            user = new UserDAO().findByEmail(user.getEmail());
-            session.setAttribute("currentUser", user);
-            response.sendRedirect("Home");
-        }
+        HttpSession session = request.getSession();
+        String context = request.getParameter("comment");
+        int postID = (Integer)session.getAttribute("postID");
+        Users user = (Users)session.getAttribute("currentUser");
+        new ForumDAO().createNewComment(user.getUserID(), postID, context);
+        request.setAttribute("num", postID);
+        request.getRequestDispatcher("forum-detail.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

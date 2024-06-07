@@ -42,7 +42,7 @@ if (userFound == null) {
     if (inserted) {
         userFound = userDAO.findByEmail(user.getEmail());
         session.setAttribute("currentUser", userFound);
-        response.sendRedirect("registerGmail.jsp");
+        response.sendRedirect("Home");
     } else {
         response.sendRedirect("404.jsp");
     }
@@ -51,7 +51,7 @@ if (userFound == null) {
     System.out.println("User already exists in the database");
     session.setAttribute("currentUser", userFound);
     if(userFound.getPassword().isEmpty()){
-        response.sendRedirect("registerGmail.jsp");
+        response.sendRedirect("Home");
     }
     response.sendRedirect("Home");
 }

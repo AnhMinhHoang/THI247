@@ -37,8 +37,12 @@
         <servlet-class>controller.NewPost</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>RegisterGmail</servlet-name>
-        <servlet-class>controller.RegisterGmail</servlet-class>
+        <servlet-name>ForumDetail</servlet-name>
+        <servlet-class>controller.ForumDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PostComments</servlet-name>
+        <servlet-class>controller.PostComments</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
@@ -67,7 +71,11 @@
         <url-pattern>/NewPost</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>RegisterGmail</servlet-name>
-        <url-pattern>/RegisterGmail</url-pattern>
+        <servlet-name>ForumDetail</servlet-name>
+        <url-pattern>/ForumDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PostComments</servlet-name>
+        <url-pattern>/PostComments</url-pattern>
     </servlet-mapping>
 </web-app>

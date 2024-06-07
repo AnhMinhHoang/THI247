@@ -14,7 +14,7 @@
         <div class="main-body">
             <%
                     Users user = (Users)session.getAttribute("currentUser");
-                    if(user != null && !user.getPassword().isEmpty()){
+                    if(user != null){
                     String role;
                     if(user.getRole() == 1) role = "Admin";
                     else if(user.getRole() == 2) role = "Lecture";

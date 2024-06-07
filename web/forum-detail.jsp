@@ -153,6 +153,11 @@
       }
      
     </style>
+    <%
+    int postID = (Integer)request.getAttribute("num");
+    Forum forum = new ForumDAO().findPostByID(postID);
+    Users user = new UserDAO().findByUserID(forum.getUserID());
+    %>
     <div class="container">
       <div class="main-body p-0">
         <div class="inner-wrapper">
@@ -168,9 +173,10 @@
                       href="user-profiles.jsp"
                       data-target=".forum-content"
                       ><img
-                        src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                        src=<%=user.getAvatarURL()%>
                         class="mr-3 rounded-circle"
                         width="50"
+                        height="50"
                         alt="User"
                     /></a>
                     <div class="media-body">
@@ -179,22 +185,28 @@
                           href="user-profiles.jsp"
                           data-target=".forum-content"
                           class="text-body"
-                          style="text-decoration: none;"
-                          >username</a
+                          style="text-decoration: none"
+                          ><%=user.getUsername()%></a
                         >
-                        <p style="font-style: italic; color: gray">06/06/2024</p></h6>
+                        <p style="font-style: italic; color: gray; font-size: 12px"><%=forum.getPostDate()%></p></h6>
                         
-                        <h4
+                        <h3
                           href="#"
                           data-target=".forum-content"
                           class="text-body"
                           style="text-decoration: none; cursor: "
-                          >Giúp mình kiểm tra hướng của đồ thị</h4>
+                          ><%=forum.getPostTitle()%></h3>
                       
                       <p class="text-secondary">
-                        quăng ra đi a
+                        <%=forum.getPostContext()%>
                       </p>
-                      
+                      <%
+                      if(forum.getPostImg() != null){
+                      %>
+                      <img src=<%=forum.getPostImg()%> />
+                      <%
+                          }
+                      %>
                     </div>            
                   </div>
                 </div>
@@ -204,6 +216,13 @@
               <h3  id="comment-forum" >Bình luận</h3>
               <br><!-- comment -->
               <!-- phan comment  -->
+              <%
+                  List<Comments> cmts = new ForumDAO().findAllCommentsByPostID(postID);
+                  for(int i = cmts.size() - 1; i >= 0; i--){
+                    Comments cmt = cmts.get(i);
+                    Users otherUser = new UserDAO().findByUserID(cmt.getUserID());
+              %>
+              
               <div class="card mb-2" >
                 <div class="card-body p-2 p-sm-3">
                   <div class="media forum-item">
@@ -211,35 +230,42 @@
                       href="user-profiles.jsp"
                       data-target=".forum-content"
                       ><img
-                        src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                        src=<%=otherUser.getAvatarURL()%>
                         class="mr-3 rounded-circle"
-                        width="30"
+                        width="40"
+                        height="40"
                         alt="User"
                     /></a>
                     <div class="media-body">
                       <h6>
                         <a
-                          href="#"
+                          href="user-profiles.jsp"
                           data-target=".forum-content"
                           class="text-body"
                           style="text-decoration: none;"
-                          >username</a
+                          ><%=otherUser.getUsername()%></a
                         >
-                                                <p style="font-style: italic; color: gray">06/06/2024</p></h6>
+                        <p style="font-style: italic; color: gray"><%=cmt.getCommentDate()%></p></h6>
                       </h6>
                       <p class="text-body">
-                        lorem ipsum dolor sit amet lorem ipsum dolor sit amet
-                        lorem ipsum dolor sit amet
+                        <%=cmt.getCommentContext()%>
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
+              <%
+                  }
+              %>
               <!-- ket thuc phan comment -->
               
               
               <!-- comment cua user hien tai -->
-
+              <%
+              Users currentUser = (Users)session.getAttribute("currentUser");
+              if(currentUser != null){
+                
+              %>
               <div class="card mb-2">
                 <div class="card-body p-2 p-sm-3">
                   <div class="media forum-item">
@@ -247,20 +273,24 @@
                       href="#"
                       data-target=".forum-content"
                       ><img
-                        src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                        src=<%=currentUser.getAvatarURL()%>
                         class="mr-3 rounded-circle"
                         width="50"
+                        height="50"
                         alt="User"
                     /></a>
                     <div class="media-body">
-                        <form>
-                            <input id="submit-comment" type="text" placeholder="Nhập bình luận"/>
+                        <form method="POST" action="PostComments">
+                            <input id="submit-comment" type="text" name="comment" placeholder="Nhập bình luận"/>
                             <button type="submit" class="btn btn-primary"style="height:50px; position: absolute; padding-left: 20px;">Đăng</button>
                         </form>
                     </div>
                   </div>
                 </div>
               </div>
+              <%
+                  }
+              %>
               <!-- ket thuc phan comment cua user hien tai -->
 
             </div>

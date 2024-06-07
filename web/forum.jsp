@@ -8,6 +8,7 @@
         text-align: left;
         background-color: #e2e8f0;
       }
+      
       .inner-wrapper {
         position: relative;
         height: calc(100vh - 3.5rem);
@@ -255,7 +256,8 @@
               <!-- bai post -->
               <%
                   List<Forum> forums = new ForumDAO().getAllPost();
-                  for(Forum forum : forums){
+                  for (int i = forums.size() - 1; i >= 0; i--) {
+                    Forum forum = forums.get(i);
                     Users user = new UserDAO().findByUserID(forum.getUserID());
                     String str;
                     if(forum.getPostContext().length() > 200){ 
@@ -275,6 +277,7 @@
                         src=<%=user.getAvatarURL()%>
                         class="mr-3 rounded-circle"
                         width="50"
+                        height="50"
                         alt="User"
                     /></a>
                     <div class="media-body">
@@ -283,16 +286,20 @@
                           href="user-profiles.jsp"
                           data-target=".forum-content"
                           class="text-body"
-                          >username</a
+                          style="text-decoration: none"
+                          ><%=user.getUsername()%></a
                         >
-                        <p style="font-style: italic; color: gray">06/06/2024</p>
+                        <p style="font-style: italic; color: gray; font-size: 12px"><%=forum.getPostDate()%></p>
+                        </h6>
+                        <h4>
                         <a
-                          href="forum-detail.jsp"
+                          href="ForumDetail?postID=<%=forum.getPostID()%>"
                           data-target=".forum-content"
                           class="text-body"
                           ><%=forum.getPostTitle()%></a
                         >
-                      </h6>
+                        </h4>
+                        <a href="ForumDetail?postID=<%=forum.getPostID()%>" style="text-decoration: none">
                       <p class="text-secondary">
                         <%=str%>
                       </p>

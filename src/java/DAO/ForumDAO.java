@@ -10,6 +10,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import model.Comments;
 import model.Forum;
 import model.Users;
 
@@ -30,6 +31,28 @@ public class ForumDAO extends DBConnection{
             String timeStamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new java.util.Date());
             ps.setString(4, timeStamp);
             ps.setString(5, postIMG);
+            try{
+                ps.executeUpdate();
+            }
+            catch(Exception e){
+                System.out.println(e);
+            }
+        }catch(Exception err){
+            System.out.println(err);
+        }
+    }
+    
+    public void createNewComment(int userID,int postID ,String commentContent){
+        String query = "insert into forum_comment(userID,post_id,comment_context,comment_date,comment_react)"
+                + "values(?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userID);
+            ps.setInt(2, postID);
+            ps.setString(3, commentContent);
+            String timeStamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new java.util.Date());
+            ps.setString(4, timeStamp);
+            ps.setInt(5, 0);
             try{
                 ps.executeUpdate();
             }
@@ -66,16 +89,61 @@ public class ForumDAO extends DBConnection{
         return list;
     }
     
-    public static void main(String args[]) {
-        List<Forum> forums = new ForumDAO().getAllPost();
-        for (Forum forum : forums) {
-            Users user = new UserDAO().findByUserID(forum.getUserID());
-            if(forum.getPostContext().length() > 200){ 
-                        String str = forum.getPostContext().substring(1, 200) + "...";
-                    }
-            else {
-                String str = forum.getPostContext();
+    public List<Comments> findAllCommentsByPostID(int id){
+        String query = "select * from forum_comment WHERE post_id=?";
+        List<Comments> cmts = new ArrayList<>();
+        try(Connection con = getConnection()){
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                Comments cmt = new Comments();
+                cmt.setCommentID(rs.getInt(1));
+                cmt.setUserID(rs.getInt(2));
+                cmt.setPostID(rs.getInt(3));
+                cmt.setCommentContext(rs.getString(4));
+                cmt.setCommentDate(rs.getString(5));
+                cmt.setCommentReact(rs.getInt(6));
+                cmts.add(cmt);
             }
         }
+        catch(Exception e){
+            System.out.println(e);
+        }
+        return cmts;
+    }
+    
+    public Forum findPostByID(int id){
+        String query = "select * from forum_post WHERE post_id=?";
+        Forum forum = new Forum();
+        try(Connection con = getConnection()){
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                forum.setPostID(rs.getInt(1));
+                forum.setUserID(rs.getInt(2));
+                forum.setPostTitle(rs.getString(3));
+                forum.setPostContext(rs.getString(4));
+                forum.setPostDate(rs.getString(5));
+                forum.setPostApproved(rs.getBoolean(6));
+                forum.setPostReact(rs.getInt(7));
+                forum.setPostImg(rs.getString(8));
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+        return forum;
+    }
+    
+    public static void main(String args[]) {
+        List<Comments> cmts = new ForumDAO().findAllCommentsByPostID(1);
+                  for(int i = cmts.size() - 1; i >= 0; i--){
+                    Comments cmt = cmts.get(i);
+                      System.out.println(cmt.toString());
+//                    Users otherUser = new UserDAO().findByUserID(cmt.getUserID());
+                  }
+        
     }
 }
