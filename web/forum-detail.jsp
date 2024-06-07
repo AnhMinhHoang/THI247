@@ -266,7 +266,7 @@
               if(currentUser != null){
                 
               %>
-              <div class="card mb-2">
+<!--              <div class="card mb-2">
                 <div class="card-body p-2 p-sm-3">
                   <div class="media forum-item">
                     <a
@@ -287,7 +287,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div>-->
               <%
                   }
               %>
@@ -311,8 +311,32 @@
             </div>-->
 
           </div>
+              
         </div>
+              <br><!-- comment -->
+              <div class="card mb-2" style="width: 1250px; margin-left: 18px">
+                <div class="card-body p-2 p-sm-3">
+                  <div class="media forum-item">
+                    <a
+                      href="#"
+                      data-target=".forum-content"
+                      ><img
+                        src=<%=currentUser.getAvatarURL()%>
+                        class="mr-3 rounded-circle"
+                        width="50"
+                        height="50"
+                        alt="User"
+                    /></a>
+                    <div class="media-body">
+                        <form method="POST" action="PostComments">
+                            <input id="submit-comment" type="text" name="comment" placeholder="Nhập bình luận"/>
+                            <button type="submit" class="btn btn-primary"style="height:50px; position: absolute; padding-left: 20px;">Đăng</button>
+                        </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
         </div>
-      </div>
-    </div>
+      </div>    
     <jsp:include page="footer.jsp"></jsp:include>
