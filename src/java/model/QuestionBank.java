@@ -1,39 +1,50 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author sonhu
- */
 import java.util.List;
 
-public class MultipleChoiceQuestion {
-    private long id;
+public class QuestionBank {
+    private int id;
+    private String subject;
+    private int userId;
     private String questionText;
     private List<String> choices;
     private String correctAnswer;
     private String explain;
-    // Constructor
 
-    public MultipleChoiceQuestion(long id, String questionText, List<String> choices, String correctAnswer, String explain) {
+    // Constructor
+    public QuestionBank(int id, String subject, int userId, String questionText, List<String> choices, String correctAnswer, String explain) {
         this.id = id;
+        this.subject = subject;
+        this.userId = userId;
         this.questionText = questionText;
         this.choices = choices;
         this.correctAnswer = correctAnswer;
         this.explain = explain;
     }
-  
 
-    // Getters and setters
-    public long getId() {
+    // Getters and Setters
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getQuestionText() {
@@ -70,8 +81,7 @@ public class MultipleChoiceQuestion {
 
     @Override
     public String toString() {
-        return "MultipleChoiceQuestion{" + "id=" + id + ", questionText=" + questionText + ", choices=" + choices + ", correctAnswer=" + correctAnswer + ", explain=" + explain + '}';
+        return "QuestionBank{" + "id=" + id + ", subject=" + subject + ", userId=" + userId + ", questionText=" + questionText + ", choices=" + choices + ", correctAnswer=" + correctAnswer + ", explain=" + explain + '}';
     }
-
     
 }

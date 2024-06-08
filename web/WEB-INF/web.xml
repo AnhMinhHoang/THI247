@@ -60,4 +60,5 @@
         <servlet-name>RegisterGmail</servlet-name>
         <url-pattern>/RegisterGmail</url-pattern>
     </servlet-mapping>
+
 </web-app>

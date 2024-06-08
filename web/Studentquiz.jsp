@@ -1,9 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="model.QuestionBank" %>
 <%@ page import="java.util.List" %>
-<%@ page import="model.MultipleChoiceQuestion" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="DAO.QuestionDAO" %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,127 +10,132 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
         h1 {
             text-align: center;
         }
-        form {
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .question {
+
+        fieldset {
             margin-bottom: 20px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
         }
-        .question h2 {
-            margin-top: 0;
+
+        legend {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #333;
         }
-        .choices {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        .choices li {
+
+        p {
             margin-bottom: 10px;
         }
-        .submit-button {
-            display: block;
-            margin-top: 20px;
-            width: 100%;
-            padding: 10px;
+
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
             background-color: #4CAF50;
-            color: #fff;
             border: none;
+            color: white;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s;
         }
-        .submit-button:hover {
+
+        input[type="submit"]:hover {
             background-color: #45a049;
         }
-        .answer {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        .correct-answer {
-            color: green;
-        }
-        .incorrect-answer {
-            color: red;
-        }
-        .explanation {
-            margin-top: 5px;
-            font-style: italic;
-        }
-        .score {
+
+        .result {
             margin-top: 20px;
             text-align: center;
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 1.2em;
         }
     </style>
 </head>
 <body>
-    <h1>Quiz</h1>
-    <form action="StudentServlet" method="post">
-        <% 
-            List<MultipleChoiceQuestion> questions = (List<MultipleChoiceQuestion>) request.getAttribute("questions");
-            List<String> userAnswers = (List<String>) request.getAttribute("userAnswers");
-            List<String> correctAnswers = (List<String>) request.getAttribute("correctAnswers");
-            List<String> explain = (List<String>) request.getAttribute("explain");
-            boolean submitted = request.getMethod().equalsIgnoreCase("POST");
-            
-            if (questions != null && !questions.isEmpty()) {
-                for (int i = 0; i < questions.size(); i++) {
-                    MultipleChoiceQuestion question = questions.get(i);
-        %>
-                    <div class="question">
-                        <h2><%= question.getQuestionText() %></h2>
-                        <ul class="choices">
-                            <% 
-                                List<String> choices = question.getChoices();
-                                for (int j = 0; j < choices.size(); j++) {
-                                    String choice = choices.get(j);
-                            %>
-                                    <li>
-                                        <input type="radio" name="answer_<%= question.getId() %>" value="<%= j %>" <% 
-                                            if (submitted && userAnswers != null && !userAnswers.isEmpty() && userAnswers.get(i).equals(choice)) { 
-                                        %>checked<% } %>> 
-                                        <%= choice %>
-                                    </li>
+    <div class="container">
+        <h1>Quiz</h1>
+        <form action="StudentServlet" method="post">
+            <fieldset>
+                <legend>Quiz Questions</legend>
+                <%
+                    List<QuestionBank> questions = (List<QuestionBank>) request.getAttribute("questions");
+                    double totalScore = 0;
+                    for (QuestionBank question : questions) {
+                        double questionScore = 0;
+                %>
+                    <p><%= question.getQuestionText() %></p>
+                    <input type="hidden" name="questionIds" value="<%= question.getId() %>">
+                    <%
+                        List<String> choices = question.getChoices();
+                        String userChoice = request.getParameter("answers_" + question.getId());
+                        if (userChoice != null) { // Chỉ hiển thị nếu người dùng đã chọn
+                            String correctAnswer = question.getCorrectAnswer();
+                            String explain = question.getExplain();
+                            boolean isCorrect = userChoice.equals(correctAnswer);
+                            if (isCorrect) {
+                                questionScore = 1;
+                            }
+                            totalScore += questionScore;
+                            for (String choice : choices) {
+                                if (choice.equals(userChoice)) {
+                    %>
+                                    <input type="radio" name="answers_<%= question.getId() %>" value="<%= choice %>" checked><%= choice %><br>
+                    <%
+                                } else {
+                    %>
+                                    <input type="radio" name="answers_<%= question.getId() %>" value="<%= choice %>"><%= choice %><br>
+                    <%
+                                }
+                            }
+                    %>
+                            <%-- Hiển thị choice correct và kết quả --%>
+                            <p>Correct choice: <%= correctAnswer %></p>
+                            <p>Result: <%= isCorrect ? "Correct" : "Incorrect" %></p>
+                            <%-- Hiển thị giải thích nếu là sai --%>
+                            <% if (!isCorrect) { %>
+                                <p>Explain: <%= explain %></p>
                             <% } %>
-                        </ul>
-                        <% 
-                            if (submitted && userAnswers != null && !userAnswers.isEmpty()) { 
-                                String userAnswer = userAnswers.get(i);
-                                String correctAnswer = correctAnswers.get(i);
-                                boolean isCorrect = userAnswer.equals(correctAnswer);
-                                String answerClass = isCorrect ? "correct-answer" : "incorrect-answer";
-                        %>
-                                <p class="answer <%= answerClass %>"><strong>Correct answer:</strong> <%= correctAnswer %></p>
-                                <p class="explanation"><strong>Explanation:</strong> <%= explain.get(i) %></p>
-                        <% } %>
-                    </div>
-        <% 
-                }
-            } else {
-        %>
-                <p>No questions available.</p>
-        <% } %>
-        <button type="submit" class="submit-button">Submit</button>
-    </form>
-    
-    <% 
-        Double score = (Double)request.getAttribute("score");
-        if (score != null) { 
-    %>
-        <div class="score">Score: <%= score %>%</div>
-    <% } %>
+                            <%-- Hiển thị điểm của câu hỏi --%>
+                            <p>Question Score: <%= questionScore * 100 %> %</p>
+                    <%
+                        } else {
+                            for (String choice : choices) {
+                    %>
+                                <input type="radio" name="answers_<%= question.getId() %>" value="<%= choice %>"><%= choice %><br>
+                    <%
+                            }
+                        }
+                    %>
+                <%
+                    }
+                    // Tính tổng điểm
+                    double totalMaxScore = 100.0; // Số điểm tối đa của bài kiểm tra
+                    totalScore = (totalScore / questions.size()) * totalMaxScore;
+                %>
+            </fieldset>
+            <%-- Hiển thị tổng điểm --%>
+            <p class="result">Total Score: <%= totalScore %> %</p>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
 </body>
 </html>

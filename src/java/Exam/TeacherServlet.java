@@ -1,141 +1,132 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package Exam;
 
 import DAO.QuestionDAO;
-import java.io.IOException;
-import java.io.PrintWriter;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Arrays;
-import java.util.List;
-import model.MultipleChoiceQuestion;
+import model.QuestionBank;
 
-/**
- *
- * @author sonhu
- */
+
+import java.io.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 @WebServlet("/TeacherServlet")
 public class TeacherServlet extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet CrquizServlet</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet CrquizServlet at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    } 
+    private QuestionDAO questionDAO = new QuestionDAO();
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-  
-   @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        QuestionDAO questionDAO = new QuestionDAO();
 
-        try {
-            if ("create".equals(action)) {
-                String questionText = request.getParameter("questionText");
-                List<String> choices = Arrays.asList(
-                        request.getParameter("choice1"),
-                        request.getParameter("choice2"),
-                        request.getParameter("choice3"),
-                        request.getParameter("choice4")
-                );
-                String correctAnswer = request.getParameter("correctAnswer");
-                String explain = request.getParameter("explain");
-
-                MultipleChoiceQuestion question = new MultipleChoiceQuestion(0, questionText, choices, correctAnswer, explain);
-                questionDAO.createMultipleChoiceQuestion(question);
-
-            } else if ("update".equals(action)) {
-                long id = Long.parseLong(request.getParameter("id"));
-                String questionText = request.getParameter("questionText");
-                List<String> choices = Arrays.asList(
-                        request.getParameter("choice1"),
-                        request.getParameter("choice2"),
-                        request.getParameter("choice3"),
-                        request.getParameter("choice4")
-                );
-                String correctAnswer = request.getParameter("correctAnswer");
-                String explain = request.getParameter("explain");
-
-                MultipleChoiceQuestion question = new MultipleChoiceQuestion(id, questionText, choices, correctAnswer, explain);
-                questionDAO.updateMultipleChoiceQuestion(question);
-
+        if (action != null) {
+            switch (action) {
+                case "add":
+                    addQuestion(request, response);
+                    break;
+                case "update":
+                    updateQuestion(request, response);
+                    break;
+                default:
+                    // Handle other actions
             }
-        } catch (NumberFormatException e) {
-            response.getWriter().write("Invalid number format for ID.");
-            e.printStackTrace();
-        } catch (Exception e) {
-            response.getWriter().write("An error occurred: " + e.getMessage());
-            e.printStackTrace();
         }
-
-        response.sendRedirect("Teacherquiz.jsp");
     }
 
-    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        QuestionDAO questionDAO = new QuestionDAO();
 
-        try {
-            if ("delete".equals(action)) {
-                String idStr = request.getParameter("id");
-                if (idStr != null) {
-                    int id = Integer.parseInt(idStr);
-                    questionDAO.deleteMultipleChoiceQuestion(id);
-                }
+        if (action != null) {
+            switch (action) {
+                case "delete":
+                    deleteQuestion(request, response);
+                    break;
+                default:
+                    // Handle other actions
             }
-        } catch (NumberFormatException e) {
-            response.getWriter().write("Invalid number format for ID.");
-            e.printStackTrace();
-        } catch (Exception e) {
-            response.getWriter().write("An error occurred: " + e.getMessage());
-            e.printStackTrace();
+        } else {
+            // Retrieve questions and forward to JSP
+            List<QuestionBank> questions = questionDAO.getAllMultipleChoiceQuestions();
+            request.setAttribute("questions", questions);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("Teacherquiz.jsp");
+            dispatcher.forward(request, response);
         }
-
-        response.sendRedirect("Teacherquiz.jsp");
     }
 
+private void addQuestion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String subject = request.getParameter("subject");
+    int userId = Integer.parseInt(request.getParameter("userId"));
+    String questionText = request.getParameter("questionText");
+    String choice1 = request.getParameter("choice1");
+    String choice2 = request.getParameter("choice2");
+    String choice3 = request.getParameter("choice3");
+    String correctAnswer = request.getParameter("correctAnswer");
+    String explain = request.getParameter("explain");
 
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+    List<String> choices = new ArrayList<>();
+    choices.add(choice1);
+    choices.add(choice2);
+    choices.add(choice3);
 
+    // Sử dụng constructor đã được định nghĩa trong lớp QuestionBank
+    QuestionBank question = new QuestionBank(0, subject, userId, questionText, choices, correctAnswer, explain);
+
+    try {
+        boolean added = questionDAO.createMultipleChoiceQuestion(question);
+        if (added) {
+            response.sendRedirect("TeacherServlet");
+        } else {
+            // Xử lý khi thêm câu hỏi thất bại
+        }
+    } catch (SQLException e) {
+        // Xử lý ngoại lệ SQL
+        e.printStackTrace();
+    }
+}
+
+
+
+    private void updateQuestion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        String subject = request.getParameter("subject");
+        int userId = Integer.parseInt(request.getParameter("userId"));
+        String questionText = request.getParameter("questionText");
+        String choice1 = request.getParameter("choice1");
+        String choice2 = request.getParameter("choice2");
+        String choice3 = request.getParameter("choice3");
+        String correctAnswer = request.getParameter("correctAnswer");
+        String explain = request.getParameter("explain");
+
+        List<String> choices = List.of(choice1, choice2, choice3);
+
+        QuestionBank question = new QuestionBank(id, subject, userId, questionText, choices, correctAnswer, explain);
+
+        try {
+            boolean updated = questionDAO.updateMultipleChoiceQuestion(question);
+            if (updated) {
+                response.sendRedirect("TeacherServlet");
+            } else {
+                // Handle update failure
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteQuestion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        try {
+            boolean deleted = questionDAO.deleteMultipleChoiceQuestion(id);
+            if (deleted) {
+                response.sendRedirect("TeacherServlet");
+            } else {
+                // Handle delete failure
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

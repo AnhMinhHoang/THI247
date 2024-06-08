@@ -1,11 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package DAO;
 
-import model.MultipleChoiceQuestion;
+import model.QuestionBank;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,44 +8,46 @@ import java.util.List;
 
 public class QuestionDAO extends DBConnection {
 
-    // CREATE
-    public boolean createMultipleChoiceQuestion(MultipleChoiceQuestion question) {
-        String sql = "INSERT INTO MultipleChoiceQuestions (question_text, choice1, choice2, choice3, choice4, correct_answer, explain) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, question.getQuestionText());
-            List<String> choices = question.getChoices();
-            for (int i = 0; i < 4; i++) {
-                stmt.setString(i + 2, choices.get(i));
-            }
-            stmt.setString(6, question.getCorrectAnswer());
-            stmt.setString(7, question.getExplain());
+  
+    public boolean createMultipleChoiceQuestion(QuestionBank question) throws SQLException {
+    String sql = "INSERT INTO question_bank (subject, userID, question_context, choice_1, choice_2, choice_3, choice_correct, choice_correct_explain) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setString(1, question.getSubject());
+        stmt.setInt(2, question.getUserId());
+        stmt.setString(3, question.getQuestionText());
+        List<String> choices = question.getChoices();
+        stmt.setString(4, choices.get(0));
+        stmt.setString(5, choices.get(1));
+        stmt.setString(6, choices.get(2));
+        stmt.setString(7, question.getCorrectAnswer());
+        stmt.setString(8, question.getExplain());
 
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        int rowsAffected = stmt.executeUpdate();
+        return rowsAffected > 0;
     }
+}
+
 
     // READ
-    public List<MultipleChoiceQuestion> getAllMultipleChoiceQuestions() {
-        List<MultipleChoiceQuestion> questions = new ArrayList<>();
-        String query = "SELECT * FROM MultipleChoiceQuestions";
+    public List<QuestionBank> getAllMultipleChoiceQuestions() {
+        List<QuestionBank> questions = new ArrayList<>();
+        String query = "SELECT * FROM question_bank";
 
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet resultSet = stmt.executeQuery(query)) {
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                String questionText = resultSet.getString("question_text");
+                int id = resultSet.getInt("question_id");
+                String subject = resultSet.getString("subject");
+                int userId = resultSet.getInt("userID");
+                String questionText = resultSet.getString("question_context");
                 List<String> choices = Arrays.asList(
-                        resultSet.getString("choice1"),
-                        resultSet.getString("choice2"),
-                        resultSet.getString("choice3"),
-                        resultSet.getString("choice4")
+                        resultSet.getString("choice_1"),
+                        resultSet.getString("choice_2"),
+                        resultSet.getString("choice_3"),
+                        resultSet.getString("choice_correct")
                 );
-                String correctAnswer = resultSet.getString("correct_answer");
-                String explain = resultSet.getString("explain");
-                MultipleChoiceQuestion question = new MultipleChoiceQuestion(id, questionText, choices, correctAnswer, explain);
+                String correctAnswer = resultSet.getString("choice_correct");
+                String explain = resultSet.getString("choice_correct_explain");
+                QuestionBank question = new QuestionBank(id, subject, userId, questionText, choices, correctAnswer, explain);
                 questions.add(question);
             }
         } catch (SQLException e) {
@@ -61,46 +58,42 @@ public class QuestionDAO extends DBConnection {
     }
 
     // UPDATE
-    public boolean updateMultipleChoiceQuestion(MultipleChoiceQuestion question) {
-        String sql = "UPDATE MultipleChoiceQuestions SET question_text = ?, choice1 = ?, choice2 = ?, choice3 = ?, choice4 = ?, correct_answer = ?, explain = ? WHERE id = ?";
+    public boolean updateMultipleChoiceQuestion(QuestionBank question) throws SQLException {
+        String sql = "UPDATE question_bank SET subject = ?, userID = ?, question_context = ?, choice_1 = ?, choice_2 = ?, choice_3 = ?, choice_correct = ?, choice_correct_explain = ? WHERE question_id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, question.getQuestionText());
+            stmt.setString(1, question.getSubject());
+            stmt.setInt(2, question.getUserId());
+            stmt.setString(3, question.getQuestionText());
             List<String> choices = question.getChoices();
-            for (int i = 0; i < 4; i++) {
-                stmt.setString(i + 2, choices.get(i));
-            }
-            stmt.setString(6, question.getCorrectAnswer());
-            stmt.setString(7, question.getExplain());
-            stmt.setLong(8, question.getId());
+            stmt.setString(4, choices.get(0));
+            stmt.setString(5, choices.get(1));
+            stmt.setString(6, choices.get(2));
+            stmt.setString(7, question.getCorrectAnswer());
+            stmt.setString(8, question.getExplain());
+            stmt.setInt(9, question.getId());
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 
     // DELETE
-    public boolean deleteMultipleChoiceQuestion(int id) {
-        String sql = "DELETE FROM MultipleChoiceQuestions WHERE id = ?";
+    public boolean deleteMultipleChoiceQuestion(int id) throws SQLException {
+        String sql = "DELETE FROM question_bank WHERE question_id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
         }
     }
 
     // Calculate Score
-    public double calculateScore(List<String> userAnswers, List<MultipleChoiceQuestion> questions) {
+    public double calculateScore(List<String> userAnswers, List<QuestionBank> questions) {
         int totalQuestions = questions.size();
         int correctAnswers = 0;
 
         for (int i = 0; i < totalQuestions; i++) {
-            MultipleChoiceQuestion question = questions.get(i);
+            QuestionBank question = questions.get(i);
             String userAnswer = userAnswers.get(i);
             if (userAnswer.equals(question.getCorrectAnswer())) {
                 correctAnswers++;
@@ -111,30 +104,33 @@ public class QuestionDAO extends DBConnection {
     }
 
     // Get correct answers
-    public List<String> getCorrectAnswers(List<MultipleChoiceQuestion> questions) {
+    public List<String> getCorrectAnswers(List<QuestionBank> questions) {
         List<String> correctAnswers = new ArrayList<>();
-        for (MultipleChoiceQuestion question : questions) {
+        for (QuestionBank question : questions) {
             correctAnswers.add(question.getCorrectAnswer());
         }
         return correctAnswers;
     }
+
     // GET BY ID
-    public MultipleChoiceQuestion getQuestionById(long id) {
-        String query = "SELECT * FROM MultipleChoiceQuestions WHERE id = ?";
+    public QuestionBank getQuestionById(int id) {
+        String query = "SELECT * FROM question_bank WHERE question_id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setLong(1, id);
+            stmt.setInt(1, id);
             try (ResultSet resultSet = stmt.executeQuery()) {
                 if (resultSet.next()) {
-                    String questionText = resultSet.getString("question_text");
+                    String subject = resultSet.getString("subject");
+                    int userId = resultSet.getInt("userID");
+                    String questionText = resultSet.getString("question_context");
                     List<String> choices = Arrays.asList(
-                            resultSet.getString("choice1"),
-                            resultSet.getString("choice2"),
-                            resultSet.getString("choice3"),
-                            resultSet.getString("choice4")
+                            resultSet.getString("choice_1"),
+                            resultSet.getString("choice_2"),
+                            resultSet.getString("choice_3"),
+                            resultSet.getString("choice_correct")
                     );
-                    String correctAnswer = resultSet.getString("correct_answer");
-                    String explain = resultSet.getString("explain");
-                    return new MultipleChoiceQuestion(id, questionText, choices, correctAnswer, explain);
+                    String correctAnswer = resultSet.getString("choice_correct");
+                    String explain = resultSet.getString("choice_correct_explain");
+                    return new QuestionBank(id, subject, userId, questionText, choices, correctAnswer, explain);
                 }
             }
         } catch (SQLException e) {
@@ -142,30 +138,6 @@ public class QuestionDAO extends DBConnection {
         }
         return null;
     }
-    public static void main(String[] args) {
-        // Create a new QuestionDAO instance
-        QuestionDAO questionDAO = new QuestionDAO();
 
-//        // Create a MultipleChoiceQuestion object
-//        List<String> choices = new ArrayList<>(Arrays.asList("a", "b", "c", "d"));
-//        MultipleChoiceQuestion question = new MultipleChoiceQuestion(3, "What is the capital of France?", choices, "Paris", "Paris is the capital of France.");
-//
-//        // Add the question to the database
-//        boolean success = questionDAO.createMultipleChoiceQuestion(question);
-//        if (success) {
-//            System.out.println("Question created successfully!");
-//        } else {
-//            System.out.println("Failed to create question.");
-//        }
 
-        // Fetch and print all questions from the database
-        List<MultipleChoiceQuestion> questions = questionDAO.getAllMultipleChoiceQuestions();
-        for (MultipleChoiceQuestion q : questions) {
-            System.out.println("ID: " + q.getId());
-            System.out.println("Question: " + q.getQuestionText());
-            System.out.println("Choices: " + q.getChoices());
-            System.out.println("Correct Answer: " + q.getCorrectAnswer());
-            System.out.println("Explanation: " + q.getExplain());
-        }
-    }
 }
