@@ -63,17 +63,11 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto p-4 p-lg-0">
-                    <a href="Home" class="nav-item nav-link active">Home</a>
-                    <a href="forum.jsp" class="nav-item nav-link">Forum</a>
-                    <a href="404.jsp" class="nav-item nav-link">Courses</a>
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                        <div class="dropdown-menu fade-down m-0">
-                            <a href="team.jsp" class="dropdown-item">Our Team</a>
-                            <a href="testimonial.jsp" class="dropdown-item">Testimonial</a>
-                        </div>
-                    </div>
-                    <a href="contact.jsp" class="nav-item nav-link">Contact</a>
+                    <a href="Home" class="nav-item nav-link active">Trang Chủ</a>
+                    <a href="forum.jsp" class="nav-item nav-link">Diễn Đàn</a>
+                    <a href="courses.jsp" class="nav-item nav-link">Kiểm Tra</a>
+                    <a href="shop.jsp" class="nav-item nav-link">Cửa Hàng</a>
+
                 </div>
                 <%
                     if(session.getAttribute("currentUser") == null){
