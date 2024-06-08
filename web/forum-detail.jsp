@@ -162,8 +162,6 @@
       <div class="main-body p-0">
         <div class="inner-wrapper">
           <div class="inner-main">
-
-
             <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
               <!-- bai post -->
               <div class="card mb-2">
@@ -266,17 +264,7 @@
               if(currentUser != null){
                 
               %>
-
-              <%
-                  }
-              %>
-              <!-- ket thuc phan comment cua user hien tai -->
-
-            </div>
-          </div>
-              
-        </div>
-              <br><!-- comment -->
+                <br><!-- comment -->
               <div class="card mb-2" style="width: 1250px; margin-left: 18px">
                 <div class="card-body p-2 p-sm-3">
                   <div class="media forum-item">
@@ -299,6 +287,15 @@
                   </div>
                 </div>
               </div>
+              <%
+                  }
+              %>
+              <!-- ket thuc phan comment cua user hien tai -->
+
+            </div>
+          </div>
+              
+        </div>
 
         </div>
       </div>    
