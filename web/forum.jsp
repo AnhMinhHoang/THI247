@@ -275,7 +275,7 @@
                       data-target=".forum-content"
                       ><img
                         src="<%=user.getAvatarURL()%>"
-                        class= "mr-3 rounded-circle"
+                        class="mr-3 rounded-circle"
                         width="50"
                         height="50"
                         alt="User"

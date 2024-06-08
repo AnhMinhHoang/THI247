@@ -160,11 +160,11 @@
     %>
     <div class="container">
       <div class="main-body p-0">
-        <div class="inner-wrapper">
-          <div class="inner-main">
+        <div class="">
+          <div class="">
 
 
-            <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
+            <div class=" p-2 p-sm-3 forum-content">
               <!-- bai post -->
               <div class="card mb-2">
                 <div class="card-body p-2 p-sm-3">
@@ -186,8 +186,7 @@
                           data-target=".forum-content"
                           class="text-body"
                           style="text-decoration: none"
-                          ><%=user.getUsername()%></a
-                        >
+                          ><%=user.getUsername()%></a>
                         <p style="font-style: italic; color: gray; font-size: 12px"><%=forum.getPostDate()%></p></h6>
                         
                         <h3
@@ -266,23 +265,23 @@
               if(currentUser != null){
                 
               %>
-              <div class="card mb-2">
+                <div class="card mb-2" style="position: sticky; bottom: 0px">
                 <div class="card-body p-2 p-sm-3">
                   <div class="media forum-item">
                     <a
                       href="#"
                       data-target=".forum-content"
                       ><img
-                        src=<%=currentUser.getAvatarURL()%>
+                        src="<%=currentUser.getAvatarURL()%>"
                         class="mr-3 rounded-circle"
                         width="50"
                         height="50"
                         alt="User"
                     /></a>
-                    <div class="media-body">
+                        <div class="card mb-2">
                         <form method="POST" action="PostComments">
                             <input id="submit-comment" type="text" name="comment" placeholder="Nhập bình luận"/>
-                            <button type="submit" class="btn btn-primary"style="height:50px; position: absolute; padding-left: 20px;">Đăng</button>
+                            <button type="submit" class="btn btn-primary"style="height:50px">Đăng</button>
                         </form>
                     </div>
                   </div>
@@ -294,25 +293,11 @@
               <!-- ket thuc phan comment cua user hien tai -->
 
             </div>
-              
-<!--                          <div class="comment-forum-detail">
-              <a
-                class="nav-link nav-icon rounded-circle nav-link-faded mr-3 d-md-none"
-                href="#"
-                data-toggle="inner-sidebar"
-                ><i class="material-icons">arrow_forward_ios</i></a
-              >
-              <form>
-                 <span class="input-icon input-icon-sm ml-auto w-auto">
-                <input id="submit-comment" type="text" placeholder="Nhập bình luận"/>
-                <button type="button" class="btn btn-primary">Đăng</button>
-              </form>
-              
-            </div>-->
-
           </div>
+              
         </div>
+              <br><!-- comment -->
+
         </div>
-      </div>
-    </div>
+      </div>    
     <jsp:include page="footer.jsp"></jsp:include>
