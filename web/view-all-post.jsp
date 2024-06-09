@@ -42,31 +42,64 @@
               <table class="table datatable">
                 <thead>
                   <tr>
-                    <th>
-                      Tiêu ??
-                    </th>
-                    <th>N?i dung</th>
-                    <th data-type="date" data-format="YYYY/DD/MM">Ngày ??ng</th>
-                    <th>L??t t??ng tác</th>
-                    <th>Tác v?</th>
+                    <th style="text-align: center">Tiêu ??</th>
+                    <th style="text-align: center">N?i dung</th>
+                    <th style="text-align: center" data-type="date" data-format="YYYY/DD/MM">Ngày ??ng</th>
+                    <th style="text-align: center">L??t t??ng tác</th>
+                    <th style="padding-left: 33px">Tác v?</th>
                   </tr>
                 </thead>
                 <tbody>
                     <!--bai dang-->
                   <tr>
-                    <td>getPostTitle</td>
-                    <td>getPostContext cut...</td>
-                    <td>getPostDate</td>
-                    <td>getPostReact</td>
-                    <td>
-                        <span>
-                            <a href="url" target="target">S?a</a>
-                        </span>
-                        <span>/</span>
-                        <span>
-                            <a href="url" target="target">Xóa</a>
-                        </span>
+                    <td style="text-align: center">getPostTitle</td>
+                    <td style="text-align: center">getPostContext cut...</td>
+                    <td style="text-align: center">getPostDate</td>
+                    <td style="text-align: center">getPostReact</td>
+                    <td style="display: flex; flex-direction: row; text-align: center">
 
+                            <div class="inner-sidebar-header justify-content-center">
+                                <a href="post-update.jsp">
+                                    <input type="submit" class="btn btn-primary" value="S?a"/>
+                                </a>
+                            </div>
+                            
+                        
+                        <div class="inner-sidebar-header justify-content-center" style="background-color: red; border-radius: 5px">
+                                <button
+                                  class="btn btn-xoa"
+                                  type="button"
+                                  data-toggle="modal"
+                                  data-target="#threadModal"  
+                                >
+                                  Xóa
+                                </button>
+                            </div>
+          
+            <div class="modal fade" id="threadModal" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content" style="width: 500px; margin: auto">
+<!--                        doi ten servlet-->
+                        <form action="NewPost" method="POST" enctype="multipart/form-data">
+                        <div class="modal-header d-flex align-items-center bg-primary text-white">
+                            <h6 class="modal-title mb-0" id="threadModalLabel">Xác nh?n xóa bài ??ng ?</h6>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">                       
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-light" data-dismiss="modal" >H?y</button>
+                                        <input type="submit" class="btn btn-primary" style="background-color: red" value="Xóa"/>
+                                    </div>
+                                </div> 
+                            </div>
+                        </form>
+                    </div> 
+                </div>                        
+            </div>      
+                        
+                        
+                        
+                        
                     </td>
                   </tr>
                  <!--ket thuc bai dang-->
@@ -96,7 +129,9 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
-
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript"></script>
 </body>
 
 </html>
