@@ -51,7 +51,7 @@
                   <div class="card mt-3">
                       <div class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
                           <h4>Recent post</h4>
-                          <h4><a href="view-all-post.jsp">View all post</a></h4>
+                          <h4><a href="ViewAllPostUser?userID=<%=user.getUserID()%>">View all post</a></h4>
                       </div>
                     <%
                     List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
@@ -63,7 +63,7 @@
                         for(int i = forums.size() - 1; i >= size; i--){
                         Forum forum = forums.get(i);
                         if(forum.getPostTitle().length() > 60) 
-                            str = forum.getPostTitle().substring(1, 200) + "...";
+                            str = forum.getPostTitle().substring(1, 60) + "...";
                             else str = forum.getPostTitle();
                     %>
                     <ul class="list-group list-group-flush">

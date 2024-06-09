@@ -48,6 +48,14 @@
         <servlet-name>UserProfile</servlet-name>
         <servlet-class>controller.UserProfile</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ViewAllPost</servlet-name>
+        <servlet-class>controller.ViewAllPost</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewAllPostUser</servlet-name>
+        <servlet-class>controller.ViewAllPostUser</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -85,5 +93,13 @@
     <servlet-mapping>
         <servlet-name>UserProfile</servlet-name>
         <url-pattern>/UserProfile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewAllPost</servlet-name>
+        <url-pattern>/ViewAllPost</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewAllPostUser</servlet-name>
+        <url-pattern>/ViewAllPostUser</url-pattern>
     </servlet-mapping>
 </web-app>

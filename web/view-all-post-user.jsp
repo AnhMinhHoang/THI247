@@ -11,7 +11,7 @@ List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
             <div class="row justify-content-center">
                 <div class="col-lg-10 text-center">
                     <h1 class="display-3 text-white animated slideInDown">Bài đăng</h1>
-                    <h3 class="text-white animated slideInDown">Dưới đây là danh sách những bài viết của <%=user.getUsername()%> ở trên diễn đàn</h3>
+                    <h3 class="text-white animated slideInDown">Dưới đây là danh sách những bài viết của bạn ở trên diễn đàn</h3>
                 </div>
             </div>
         </div>
@@ -24,7 +24,7 @@ List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
           <div class="card">
             <div class="card-body">
               <!-- Table with stripped rows -->
-              <%
+               <%
               if(forums.size() > 0){
               %>
               <table class="table datatable">
@@ -36,11 +36,12 @@ List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
                     <th>Nội dung</th>
                     <th data-type="date" data-format="YYYY/DD/MM">Ngày đăng</th>
                     <th>Lượt tương tác</th>
+                    <th>Tác vụ</th>
                   </tr>
                 </thead>
                 <tbody>
                     <!--bai dang-->
-                <%
+                    <%
                 String title;
                 String content;
                 for(int i = forums.size() - 1; i >= 0; i--){
@@ -53,7 +54,7 @@ List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
                     else content = forum.getPostContext();
                 %>
                   <tr>
-                      <td><a
+                    <td><a
                           href="ForumDetail?postID=<%=forum.getPostID()%>"
                           data-target=".forum-content"
                           class="text-body"
@@ -62,6 +63,16 @@ List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
                     <td><%=content%></td>
                     <td><%=forum.getPostDate()%></td>
                     <td><%=forum.getPostReact()%></td>
+                    <td>
+                        <span>
+                            <a href="url" target="target">Sửa</a>
+                        </span>
+                        <span>/</span>
+                        <span>
+                            <a href="url" target="target">Xóa</a>
+                        </span>
+
+                    </td>
                   </tr>
                   <%
                       }
@@ -84,7 +95,7 @@ List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
     </section>
 
   </main><!-- End #main -->
-
+   <jsp:include page="footer.jsp"></jsp:include>
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
@@ -100,4 +111,7 @@ List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
 
-  <jsp:include page="footer.jsp"></jsp:include>
+<!--
+</body>
+
+</html>-->
