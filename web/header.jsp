@@ -72,7 +72,7 @@
                 <%
                     if(session.getAttribute("currentUser") == null){
                 %>
-                 <a href="login.jsp" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a> 
+                 <a href="login.jsp" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Tham gia ngay<i class="fa fa-arrow-right ms-3"></i></a> 
                 <%
                     }
                     else{

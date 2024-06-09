@@ -1,337 +1,102 @@
 <!DOCTYPE html>
-<%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
-<jsp:include page="header.jsp"></jsp:include>
-    <style type="text/css">
-        body {
-        margin-top: 20px;
-        color: #1a202c;
-        text-align: left;
-        background-color: #e2e8f0;
-      }
-      .inner-wrapper {
-        position: relative;
-        height: calc(100vh - 3.5rem);
-        transition: transform 0.3s;
-        margin-left: -235px;
-      }
-      @media (min-width: 992px) {
-        .sticky-navbar .inner-wrapper {
-          height: calc(100vh - 3.5rem - 48px);
-        }
-      }
+<html lang="en">
 
-      .inner-main,
-      .inner-sidebar {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        display: flex;
-        flex-direction: column;
-      }
-      .inner-sidebar {
-        left: 0;
-        width: 235px;
-        border-right: 1px solid #cbd5e0;
-        background-color: #fff;
-        z-index: 1;
-      }
-      .inner-main {
-        right: 0;
-        left: 235px;
-      }
-      .inner-main-footer,
-      .inner-main-header,
-      .inner-sidebar-footer,
-      .inner-sidebar-header {
-        height: 3.5rem;
-        border-bottom: 1px solid #cbd5e0;
-        display: flex;
-        align-items: center;
-        padding: 0 1rem;
-        flex-shrink: 0;
-      }
-      .inner-main-body,
-      .inner-sidebar-body {
-        padding: 1rem;
-        overflow-y: auto;
-        position: relative;
-        flex: 1 1 auto;
-      }
-      .inner-main-body .sticky-top,
-      .inner-sidebar-body .sticky-top {
-        z-index: 999;
-      }
-      .inner-main-footer,
-      
-      .inner-main-footer,
-      .inner-sidebar-footer {
-        border-top: 1px solid #cbd5e0;
-        border-bottom: 0;
-        height: auto;
-        min-height: 3.5rem;
-      }
-      @media (max-width: 767.98px) {
-        .inner-sidebar-body {
-                        margin-left: -235px;
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-        }
-        .inner-main-body {
-          margin-left: -235px;
-        }
-        .inner-expand .main-body {
-          overflow: hidden;
-        }
-        .inner-expand .inner-wrapper {
-          transform: translate3d(235px, 0, 0);
-        }
-      }
+  <title>THI247 - My Post</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
 
-      .nav .show > .nav-link.nav-link-faded,
-      .nav-link.nav-link-faded.active,
-      .nav-link.nav-link-faded:active,
-      .nav-pills .nav-link.nav-link-faded.active,
-      .navbar-nav .show > .nav-link.nav-link-faded {
-        color: #3367b5;
-        background-color: #c9d8f0;
-      }
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <!-- Google Fonts -->
+  <link href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
 
-      .nav-pills .nav-link.active,
-      .nav-pills .show > .nav-link {
-        color: #fff;
-        background-color: #467bcb;
-      }
-      .nav-link.has-icon {
-        display: flex;
-        align-items: center;
-      }
-      .nav-link.active {
-        color: #467bcb;
-      }
-      .nav-pills .nav-link {
-        border-radius: 0.25rem;
-      }
-      .nav-link {
-        color: #4a5568;
-      }
-      .card {
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1),
-          0 1px 2px 0 rgba(0, 0, 0, 0.06);
-      }
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
+  <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
+  <link href="assets/css/style.css" rel="stylesheet">
 
-      .card {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        min-width: 0;
-        word-wrap: break-word;
-        background-color: #fff;
-        background-clip: border-box;
-        border: 0 solid rgba(0, 0, 0, 0.125);
-        border-radius: 0.25rem;
-      }
+</head>
 
-      .card-body {
-        flex: 1 1 auto;
-        min-height: 1px;
-        padding: 1rem;
-      }
-      #comment-forum{
-          justify-content: center;
-          align-items: center;
-          text-align: center;
-          color: #808080;
-      }
-      #submit-comment{
-          width: 950px;
-          height: 50px;
-      }
-      .container{
-          margin-top: 15px;
-          margin: auto;
-      }
-     
-    </style>
-  </head>
-  <body>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css"
-      integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o="
-      crossorigin="anonymous"
-    />
-       
-    <div class="container">
-      <div class="main-body p-0">
-        <div class="inner-wrapper">
-          <div class="inner-main">
-            <div class="inner-main-header">
-              <a
-                class="nav-link nav-icon rounded-circle nav-link-faded mr-3 d-md-none"
-                href="#"
-                data-toggle="inner-sidebar"
-                ><i class="material-icons">arrow_forward_ios</i></a
-              >
-              
-              <span class="input-icon input-icon-sm ml-auto w-auto">
-                <input
-                  type="text"
-                  class="form-control form-control-sm bg-gray-200 border-gray-200 shadow-none mb-4 mt-4"
-                  placeholder="Search forum"
-                />
-              </span>
+<body>
+
+    <main id="main" class="main" style="margin-left: 0">
+      <section class="section" style="margin: auto;justify-content: center">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">B‡i ??ng g?n ?‚y</h5>
+              <p>D??i ?‚y l‡ danh s·ch nh?ng b‡i vi?t c?a b?n ? trÍn di?n ?‡n</p>
+              <!-- Table with stripped rows -->
+              <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th>
+                      TiÍu ??
+                    </th>
+                    <th>N?i dung</th>
+                    <th data-type="date" data-format="YYYY/DD/MM">Ng‡y ??ng</th>
+                    <th>L??t t??ng t·c</th>
+                    <th>T·c v?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <!--bai dang-->
+                  <tr>
+                    <td>getPostTitle</td>
+                    <td>getPostContext cut...</td>
+                    <td>getPostDate</td>
+                    <td>getPostReact</td>
+                    <td>
+                        <span>
+                            <a href="url" target="target">S?a</a>
+                        </span>
+                        <span>/</span>
+                        <span>
+                            <a href="url" target="target">XÛa</a>
+                        </span>
+
+                    </td>
+                  </tr>
+                 <!--ket thuc bai dang-->
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
             </div>
+          </div>
 
-            <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
-              <!-- bai post -->
-              <%
-                  List<Forum> forums = new ForumDAO().getAllPost();
-                  for (int i = forums.size() - 1; i >= 0; i--) {
-                    Forum forum = forums.get(i);
-                    Users user = new UserDAO().findByUserID(forum.getUserID());
-                    String str;
-                    if(forum.getPostContext().length() > 200){ 
-                        str = forum.getPostContext().substring(1, 200) + "...";
-                    }
-                    else {
-                        str = forum.getPostContext();
-                    }
-              %>
-              <div class="card mb-2">
-                <div class="card-body p-2 p-sm-3">
-                  <div class="media forum-item">
-                    <a
-                      href="user-profile.jsp"
-                      data-target=".forum-content"
-                      ><img
-                        src="<%=user.getAvatarURL()%>"
-                        class="mr-3 rounded-circle"
-                        width="50"
-                        height="50"
-                        alt="User"
-                    /></a>
-                    <div class="media-body">
-                      <h6>
-                        <a
-                          href="user-profiles.jsp"
-                          data-target=".forum-content"
-                          class="text-body"
-                          style="text-decoration: none"
-                          ><%=user.getUsername()%></a
-                        >
-                        <p style="font-style: italic; color: gray; font-size: 12px"><%=forum.getPostDate()%></p>
-                        </h6>
-                        <h4>
-                        <a
-                          href="ForumDetail?postID=<%=forum.getPostID()%>"
-                          data-target=".forum-content"
-                          class="text-body"
-                          ><%=forum.getPostTitle()%></a
-                        >
-                        </h4>
-                        <a href="ForumDetail?postID=<%=forum.getPostID()%>" style="text-decoration: none">
-                      <p class="text-secondary">
-                        <%=str%>
-                      </p>
-                        </a>
-                      
-                    </div>
-<!--                    <div class="text-muted small text-center align-self-center">
-                      <span class="d-none d-sm-inline-block"
-                        ><i class="far fa-eye"></i> 19</span
-                      >
-                      <span><i class="far fa-comment ml-2"></i> 3</span>
-                    </div>-->
-                  </div>
-                </div>
-              </div>              <!-- ket thuc bai post -->
-            <%
-                }
-            %>
-            </div>
-            
-          </div>
-        </div>
-        <div
-          class="modal fade"
-          id="threadModal"
-          tabindex="-1"
-          role="dialog"
-          aria-labelledby="threadModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <form action="NewPost" method="POST" enctype="multipart/form-data">
-                <div class="modal-header d-flex align-items-center bg-primary text-white">
-                  <h6 class="modal-title mb-0" id="threadModalLabel">
-                    B√†i ƒëƒÉng m·ªõi
-                  </h6>
-                  <button
-                    type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-label="Close"
-                  >
-                    <span aria-hidden="true">√ó</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <div class="form-group">
-                    <label for="threadTitle">Ti√™u ƒë·ªÅ</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="threadTitle"
-                      name="title"
-                      placeholder="Ti√™u ƒë·ªÅ"
-                      required
-                      autofocus
-                    />
-                    <br>
-                    <div class="form-group">
-                    <label for="thread-detail">Chi ti·∫øt</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      name="context"
-                      id="threadTitle"
-                      placeholder="Chi ti·∫øt"
-                      required
-                      autofocus
-                    />
-                  </div>
-<!--                    <label for="thread-image">·∫¢nh</label>
-                    <input type="file" name="file" id="imgupload" accept="image/png, image/jpeg" style="display:none" onchange="submitForm()"/>-->
-                    <label for="myfile">Select a file:</label>
-                    <input type="file" id="myfile" name="file"><br><br>
-                  <textarea
-                    class="form-control summernote"
-                    style="display: none"
-                  ></textarea>
-                  <div
-                    class="custom-file form-control-sm mt-3"
-                    style="max-width: 300px"
-                  >
-                </div>
-                </div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-light"
-                    data-dismiss="modal"
-                  >
-                    H·ªßy
-                  </button>
-                    <input type="submit" class="btn btn-primary" value="ƒêƒÉng"/>
-                </div>
-              
-            </div> 
-            </form>
-          </div>
         </div>
       </div>
-    </div>
-    <jsp:include page="footer.jsp"></jsp:include>
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript"></script>
+    </section>
+
+  </main><!-- End #main -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/chart.js/chart.umd.js"></script>
+  <script src="assets/vendor/echarts/echarts.min.js"></script>
+  <script src="assets/vendor/quill/quill.js"></script>
+  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
+  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
