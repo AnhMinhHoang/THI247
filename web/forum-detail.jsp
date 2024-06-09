@@ -296,7 +296,6 @@
           </div>
               
         </div>
-              <br><!-- comment -->
 
         </div>
       </div>    
