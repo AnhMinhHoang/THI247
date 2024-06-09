@@ -89,6 +89,32 @@ public class ForumDAO extends DBConnection{
         return list;
     }
     
+    public List<Forum> getAllPostFromUserID(int userID){
+        String query = "select * from forum_post WHERE userID = ?";
+        List<Forum> list = new ArrayList<>();
+        try(Connection con = getConnection()){
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                Forum forum = new Forum();
+                forum.setPostID(rs.getInt(1));
+                forum.setUserID(rs.getInt(2));
+                forum.setPostTitle(rs.getString(3));
+                forum.setPostContext(rs.getString(4));
+                forum.setPostDate(rs.getString(5));
+                forum.setPostApproved(rs.getBoolean(6));
+                forum.setPostReact(rs.getInt(7));
+                forum.setPostImg(rs.getString(8));
+                list.add(forum);
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+        return list;
+    }
+    
     public List<Comments> findAllCommentsByPostID(int id){
         String query = "select * from forum_comment WHERE post_id=?";
         List<Comments> cmts = new ArrayList<>();

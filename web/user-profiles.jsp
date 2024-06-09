@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<%@page contentType="text/html" pageEncoding="UTF-8" %>
+<%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
 <jsp:include page="header.jsp"></jsp:include>
 
 <style>
@@ -13,7 +13,15 @@
     align-items: center;
     justify-content: center;
   }
-</style>       
+</style>   
+<%
+int id = (Integer)request.getAttribute("userID");
+Users user = new UserDAO().findByUserID(id);
+String role;
+if(user.getRole() == 1) role = "Admin";
+else if(user.getRole() == 2) role = "Lecture";
+else role = "Student";
+%>
             </div>
         </nav>
         <!-- Navbar End -->
@@ -23,39 +31,80 @@
         <div class="col-xl-4">
           <div class="card" id="card-height">
             <div class="card-body profile-card pt-4 d-flex flex-column align-items-center" id="card-center">
-              <img src="assets/img/profile-img.jpg"class="rounded-circle">
-              <h2>Kevin Anderson</h2>
-              <h3>Web Designer</h3>    
+                <img src="<%=user.getAvatarURL()%>"class="rounded-circle" width="130px" height="130px">
+              <h2><%=user.getUsername()%></h2>
+              <h3><%=role%></h3>    
             </div>
           </div>
+            <div class="card mt-3">
+                      <div class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                          <h4>Recent post</h4>
+                          <h4><a href="view-all-post.jsp">View all post</a></h4>
+                      </div>
+                    <%
+                    List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
+                    if(forums.size() > 0){
+                        String str;
+                        int size;
+                        if(forums.size() > 5) size = forums.size() - 5;
+                        else size = 0;
+                        for(int i = forums.size() - 1; i >= size; i--){
+                        Forum forum = forums.get(i);
+                        if(forum.getPostTitle().length() > 60) 
+                            str = forum.getPostTitle().substring(1, 200) + "...";
+                            else str = forum.getPostTitle();
+                    %>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                        <a
+                          href="ForumDetail?postID=<%=forum.getPostID()%>"
+                          data-target=".forum-content"
+                          class="text-body"
+                          ><%=str%></a
+                        >
+                      </li>
+                    </ul>
+                    <%
+                        }
+                    }
+                    else{
+                    %>
+                    <div class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+                        Bạn chưa đăng bài viết nào!
+                    </div>
+                    <%
+                        }
+                    %>
+                  </div>
 
         </div>
+            
+            
 
         <div class="col-xl-8">
 
           <div class="card">
             <div class="card-body pt-3">
               <!-- Bordered Tabs -->
-              <ul class="nav nav-tabs nav-tabs-bordered">
-
-                <li class="nav-item">
-                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Thông tin cá nhân</button>
-                </li>
-              </ul>
               <div class="tab-content pt-2">
 
                 <div class="tab-pane fade show active profile-overview" id="profile-overview">
 
-                  <h5 class="card-title">Profile Details</h5>
+                  <h5 class="card-title">Thông tin cá nhân</h5>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Họ và Tên</div>
-                    <div class="col-lg-9 col-md-8">Kevin Anderson</div>
+                    <div class="col-lg-9 col-md-8"><%=user.getFullname()%></div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Vai trò</div>
-                    <div class="col-lg-9 col-md-8">Giáo viên/ Học Sinh</div>
+                    <div class="col-lg-9 col-md-8"><%=role%></div>
+                  </div>
+                  
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Ngày Sinh</div>
+                    <div class="col-lg-9 col-md-8">05/06/2004</div>
                   </div>
 
                   <div class="row">
@@ -70,7 +119,7 @@
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Email</div>
-                    <div class="col-lg-9 col-md-8">k.anderson@example.com</div>
+                    <div class="col-lg-9 col-md-8"><%=user.getEmail()%></div>
                   </div>
                 </div>
               </div><!-- End Bordered Tabs -->

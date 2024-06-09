@@ -44,6 +44,10 @@
         <servlet-name>PostComments</servlet-name>
         <servlet-class>controller.PostComments</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UserProfile</servlet-name>
+        <servlet-class>controller.UserProfile</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -77,5 +81,9 @@
     <servlet-mapping>
         <servlet-name>PostComments</servlet-name>
         <url-pattern>/PostComments</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserProfile</servlet-name>
+        <url-pattern>/UserProfile</url-pattern>
     </servlet-mapping>
 </web-app>
