@@ -15,17 +15,19 @@ public class Comments {
     private String commentContext;
     private String commentDate;
     private int commentReact;
+    private String commentURL;
 
     public Comments() {
     }
 
-    public Comments(int commentID, int userID, int postID, String commentContext, String commentDate, int commentReact) {
+    public Comments(int commentID, int userID, int postID, String commentContext, String commentDate, int commentReact, String commentURL) {
         this.commentID = commentID;
         this.userID = userID;
         this.postID = postID;
         this.commentContext = commentContext;
         this.commentDate = commentDate;
         this.commentReact = commentReact;
+        this.commentURL = commentURL;
     }
 
     public int getCommentReact() {
@@ -76,8 +78,16 @@ public class Comments {
         this.commentDate = commentDate;
     }
 
+    public String getCommentURL() {
+        return commentURL;
+    }
+
+    public void setCommentURL(String commentURL) {
+        this.commentURL = commentURL;
+    }
+
     @Override
     public String toString() {
-        return "Comments{" + "commentID=" + commentID + ", userID=" + userID + ", postID=" + postID + ", commentContext=" + commentContext + ", commentDate=" + commentDate + ", commentReact=" + commentReact + '}';
+        return "Comments{" + "commentID=" + commentID + ", userID=" + userID + ", postID=" + postID + ", commentContext=" + commentContext + ", commentDate=" + commentDate + ", commentReact=" + commentReact + ", commentURL=" + commentURL + '}';
     }
 }

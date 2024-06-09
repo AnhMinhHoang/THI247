@@ -33,7 +33,7 @@
                                 <form id="updateForm" action="avatarUpdate" method="POST" enctype="multipart/form-data">
                                 <div class="d-flex flex-column align-items-center text-center">
                                     <div class="containers">
-                                        <input type="file" name="file" id="imgupload" accept="image/png, image/jpeg" style="display:none" onchange="submitForm()"/>
+                                        <input type="file" name="file" id="imgupload" accept="image/*" style="display:none" onchange="submitForm()"/>
                                         <img src="<%=user.getAvatarURL()%>" alt="Admin" class="rounded-circle p-1 bg-primary image" width="150" height="150" onclick="UpdateImage()">
                                         <div class="middle" onclick="UpdateImage()">
                                             <i class="fas fa-pen"></i>

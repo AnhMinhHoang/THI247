@@ -15,7 +15,7 @@
   }
 </style>   
 <%
-int id = (Integer)request.getAttribute("userID");
+int id = (Integer)session.getAttribute("userID");
 Users user = new UserDAO().findByUserID(id);
 String role;
 if(user.getRole() == 1) role = "Admin";

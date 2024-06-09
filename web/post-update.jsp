@@ -1,82 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
+<jsp:include page="header.jsp"></jsp:include>
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+<%
+int postID = (Integer)session.getAttribute("postID");
+Forum forum = new ForumDAO().findPostByID(postID);
+String postIMG = (String)session.getAttribute("postIMG");
+%>
 
-  <title>Forms / Elements - NiceAdmin Bootstrap Template</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
-  <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
-</head>
-
+<div class="container-fluid bg-primary py-5 mb-5 page-header">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="text-white animated slideInDown">Chỉnh sửa bài đăng</h1>
+                </div>
+            </div>
+        </div>
+    </div>
 <body>
     <section class="section">
       <div class="row">
           <div class="col-lg-6" style="margin: auto">
 
+                <form action="UpdatePost" method="POST" enctype="multipart/form-data">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Ch?nh s?a b�i ??ng</h5>
-              <form>
+                    <input type="hidden" name="userID" value="<%=forum.getUserID()%>"/>
+                    <input type="hidden" name="postID" value="<%=postID%>"/>
+                    <input type="hidden" name="postIMG" value="<%=postIMG%>"/>
                 <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label" >Ti�u ??</label>
+                  <label class="col-sm-2 col-form-label" >Tiêu đề</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" value="getPostTitle">
-                  </div>
+                    <input type="text" name="title" class="form-control" value="<%=forum.getPostTitle()%>">
+                    </div>
                 </div>
                   <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">N?i dung</label>
+                  <label class="col-sm-2 col-form-label">Nội dung</label>
                   <div class="col-sm-10">
-                      <textarea class="form-control" style="height: 100px">getPostContext</textarea>
+                      <textarea class="form-control" name="context" rows="5" style="resize: none; overflow: hidden;"><%=forum.getPostContext()%></textarea>
                   </div>
                 </div>
                 <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">?nh</label>
+                  <label class="col-sm-2 col-form-label">Ảnh</label>
                   <div class="col-sm-10">
-                      <input class="form-control" type="file" id="formFile" value="fef">
+                      <input class="form-control" name="file" type="file" accept="image/*" id="formFile" onchange="readURL(this);" value="aa">
+                      <img id="img" src="<%=forum.getPostImg()%>" alt="Không có ảnh nào trong bài post" width="500px" height="200px"/>
                   </div>
                 </div>
-                <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">Ng�y ??ng</label>
+<!--                <div class="row mb-3">
+                  <label class="col-sm-2 col-form-label">Ngày đăng</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" value="getPostDate" disabled>
                   </div>
                 </div>
                 <div class="row mb-3">
-                  <label class="col-sm-2 col-form-label">L??t t??ng t�c</label>
+                  <label class="col-sm-2 col-form-label">L??t t??ng tác</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" value="getPostReact" disabled>
                   </div>
-                </div>
+                -->
                 <div class="row" style="margin: auto">
                   <div class="col-sm-10">
-                    <button type="submit" class="btn btn-primary">Submit Form</button>
+                    <input type="submit" class="btn btn-primary" value="Cập nhật">
                   </div>
                 </div>
-              </form><!-- End General Form Elements -->
             </div>
           </div>
+              </form><!-- End General Form Elements -->
         </div>  
       </div>
     </section>
@@ -99,7 +89,25 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+  <script>
+      function readURL(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
 
-</body>
+    reader.onload = function (e) {
+      $('#img').attr('src', e.target.result).width(500).height(200);
+    };
 
-</html>
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+  </script>
+  
+<script>
+  var textarea = document.getElementById("submit-comment");
+  textarea.addEventListener("input", function () {
+      this.style.height = "auto";
+      this.style.height = (this.scrollHeight) + "px";
+  });
+</script>
+<jsp:include page="footer.jsp"></jsp:include>

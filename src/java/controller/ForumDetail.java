@@ -33,8 +33,7 @@ public class ForumDetail extends HttpServlet {
         HttpSession session = request.getSession();
         int postID = Integer.parseInt(request.getParameter("postID"));
         session.setAttribute("postID", postID);
-        request.setAttribute("num", postID);
-        request.getRequestDispatcher("forum-detail.jsp").forward(request, response);
+        response.sendRedirect("forum-detail.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

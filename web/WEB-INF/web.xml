@@ -56,6 +56,18 @@
         <servlet-name>ViewAllPostUser</servlet-name>
         <servlet-class>controller.ViewAllPostUser</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeletePost</servlet-name>
+        <servlet-class>controller.DeletePost</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PassDataPostUpdate</servlet-name>
+        <servlet-class>controller.PassDataPostUpdate</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdatePost</servlet-name>
+        <servlet-class>controller.UpdatePost</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -101,5 +113,17 @@
     <servlet-mapping>
         <servlet-name>ViewAllPostUser</servlet-name>
         <url-pattern>/ViewAllPostUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeletePost</servlet-name>
+        <url-pattern>/DeletePost</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PassDataPostUpdate</servlet-name>
+        <url-pattern>/PassDataPostUpdate</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdatePost</servlet-name>
+        <url-pattern>/UpdatePost</url-pattern>
     </servlet-mapping>
 </web-app>

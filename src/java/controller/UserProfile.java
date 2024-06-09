@@ -31,8 +31,9 @@ public class UserProfile extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         int userID = Integer.parseInt(request.getParameter("userID"));
-        request.setAttribute("userID", userID);
-        request.getRequestDispatcher("user-profiles.jsp").forward(request, response);
+        HttpSession session = request.getSession();
+        session.setAttribute("userID", userID);
+        response.sendRedirect("user-profiles.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

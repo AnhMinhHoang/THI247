@@ -139,6 +139,27 @@
         .container{
             margin-top: 15px;
         }
+        #image-preview {
+            max-width: 400px; /* Adjust max width as needed */
+            max-height: 400px; /* Adjust max height as needed */
+        }
+        
+        #image-preview-wrapper {
+            position: relative;
+            display: inline-block; /* Ensure it wraps around the image */
+        }
+        
+        #delete-image {
+            position: absolute;
+            top: 5px; /* Adjust as needed */
+            right: 5px; /* Adjust as needed */
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: none; /* Initially hidden */
+        }
     </style>
 </head>
 <body>
@@ -195,7 +216,7 @@
                                             style="height: 100%; overflow-y: hidden;"
                                             >
 
-                                            <div class="simplebar-content" style="padding: 16px">
+<!--                                            <div class="simplebar-content" style="padding: 16px">
                                                 <nav class="nav nav-pills nav-gap-y-1 flex-column">
                                                     <a
                                                         href="view-all-post.jsp"
@@ -204,7 +225,7 @@
                                                         >Bài đăng của tôi</a
                                                     >
                                                 </nav>
-                                            </div>
+                                            </div>-->
                                         </div>
                                     </div>
                                 </div>
@@ -398,7 +419,7 @@
                                     <br>
                                     <div class="form-group">
                                         <label for="thread-detail">Chi tiết</label>
-                                        <input
+                                        <textarea
                                             type="text"
                                             class="form-control"
                                             name="context"
@@ -406,12 +427,23 @@
                                             placeholder="Chi tiết"
                                             required
                                             autofocus
-                                            />
+                                            rows="5" 
+                                            style="resize: none; overflow: hidden;"
+                                            ></textarea>
                                     </div>
                                     <!--                    <label for="thread-image">Ảnh</label>
                                                         <input type="file" name="file" id="imgupload" accept="image/png, image/jpeg" style="display:none" onchange="submitForm()"/>-->
-                                    <label for="myfile">Select a file:</label>
-                                    <input type="file" id="myfile" name="file"><br><br>
+                                    <div id="image-preview-container">
+                                        <label for="myfile">Chọn ảnh:</label>
+                                        <input id="image-upload" type="file" name="image" accept="image/*">
+                                        <br>
+                                        <div id="image-preview-wrapper" style="position: relative;">
+                                            <img id="image-preview" src="#" alt="Preview Image" style="display:none;">
+                                            <button id="delete-image" style="display:none;"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <br><br>
                                     <textarea
                                         class="form-control summernote"
                                         style="display: none"
@@ -423,7 +455,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button
+                                    <button onclick="removeURL(this)"
                                         type="button"
                                         class="btn btn-light"
                                         data-dismiss="modal"
@@ -443,3 +475,45 @@
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
         <script type="text/javascript"></script>
+        <script>
+    // Function to handle file input change event
+    document.getElementById('image-upload').addEventListener('change', function (event) {
+        var file = event.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            var imgElement = document.getElementById('image-preview');
+            imgElement.src = e.target.result;
+            imgElement.style.display = 'block';
+
+            // Show delete button
+            document.getElementById('delete-image').style.display = 'inline-block';
+        }
+
+        reader.readAsDataURL(file);
+    });
+
+    // Function to handle delete image button click
+    document.getElementById('delete-image').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default behavior (page reload)
+
+        var imgElement = document.getElementById('image-preview');
+        imgElement.src = '#'; // Clear the preview
+        imgElement.style.display = 'none';
+
+        // Hide delete button
+        document.getElementById('delete-image').style.display = 'none';
+
+        // Reset file input
+        document.getElementById('image-upload').value = '';
+    });
+
+</script>
+  
+          <script>
+            var textarea = document.getElementById("submit-comment");
+            textarea.addEventListener("input", function () {
+                this.style.height = "auto";
+                this.style.height = (this.scrollHeight) + "px";
+            });
+        </script>

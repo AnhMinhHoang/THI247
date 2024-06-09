@@ -153,8 +153,52 @@
         }
 
     </style>
+
+    <style>
+        .chat-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .image-upload {
+            margin-right: 10px;
+        }
+
+        #submit-comment {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            height: 50px;
+        }
+        #image-preview {
+            max-width: 400px; /* Adjust max width as needed */
+            max-height: 400px; /* Adjust max height as needed */
+        }
+
+        #image-preview-wrapper {
+            position: relative;
+            display: inline-block; /* Ensure it wraps around the image */
+        }
+
+        #delete-image {
+            position: absolute;
+            top: 5px; /* Adjust as needed */
+            right: 5px; /* Adjust as needed */
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: none; /* Initially hidden */
+        }
+    </style>
 <%
-int postID = (Integer)request.getAttribute("num");
+int postID = (Integer)session.getAttribute("postID");
 Forum forum = new ForumDAO().findPostByID(postID);
 Users user = new UserDAO().findByUserID(forum.getUserID());
 %>
@@ -237,7 +281,7 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                         <%
                                         if(forum.getPostImg() != null){
                                         %>
-                                        <img src="<%=forum.getPostImg()%>" />
+                                        <img src="<%=forum.getPostImg()%>" height="300px" width="700px"/>
                                         <%
                                             }
                                         %>
@@ -287,80 +331,157 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                 }
                                             else{
                                             %>
-                                            <a
-                                        href="UserProfile?userID=<%=cmt.getUserID()%>"
-                                        data-target=".forum-content"
-                                        ><img
-                                            src="<%=otherUser.getAvatarURL()%>"
-                                            class="mr-3 rounded-circle"
-                                            width="40"
-                                            height="40"
-                                            alt="User"
-                                            /></a>
-                                    <div class="media-body">
-                                        <h6>
-                                            <a
-                                                href="UserProfile?userID=<%=cmt.getUserID()%>"
-                                                data-target=".forum-content"
-                                                class="text-body"
-                                                style="text-decoration: none;"
-                                                ><%=otherUser.getUsername()%></a
-                                            >
-                                            <p style="font-style: italic; color: gray; font-size: 12px"><%=cmt.getCommentDate()%></p></h6>
+                                        <a
+                                            href="UserProfile?userID=<%=cmt.getUserID()%>"
+                                            data-target=".forum-content"
+                                            ><img
+                                                src="<%=otherUser.getAvatarURL()%>"
+                                                class="mr-3 rounded-circle"
+                                                width="40"
+                                                height="40"
+                                                alt="User"
+                                                /></a>
+                                        <div class="media-body">
+                                            <h6>
+                                                <a
+                                                    href="UserProfile?userID=<%=cmt.getUserID()%>"
+                                                    data-target=".forum-content"
+                                                    class="text-body"
+                                                    style="text-decoration: none;"
+                                                    ><%=otherUser.getUsername()%></a
+                                                >
+                                                <p style="font-style: italic; color: gray; font-size: 12px"><%=cmt.getCommentDate()%></p></h6>
+                                                <%
+                                                    }
+                                                %>
+                                            <p class="text-body">
+                                                <%=cmt.getCommentContext()%>
+                                            </p>
+                                            <%
+                                            if(cmt.getCommentURL() != null){
+                                            %>
+                                            <img src="<%=cmt.getCommentURL()%>" width="700" height="400"/>
                                             <%
                                                 }
                                             %>
-                                        <p class="text-body">
-                                            <%=cmt.getCommentContext()%>
-                                        </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <%
-                            }
-                        %>
-                        <!-- ket thuc phan comment -->
+                            <%
+                                }
+                            %>
+                            <%
+                            if(cmts.size() == 0){
+                            %>
+                            <h5  id="comment-forum" >Chưa có bình luận nào</h5>
+                            <%
+                                }
+                            %>
+                            <!-- ket thuc phan comment -->
 
 
-                        <!-- comment cua user hien tai -->
-                        <%
-                        Users currentUser = (Users)session.getAttribute("currentUser");
-                        if(currentUser != null){
+                            <!-- comment cua user hien tai -->
+                            <%
+                            Users currentUser = (Users)session.getAttribute("currentUser");
+                            if(currentUser != null){
                 
-                        %>
-                        <div class="card mb-2" style="position: sticky; bottom: 0px">
-                            <div class="card-body p-2 p-sm-3">
-                                <div class="media forum-item">
-                                    <a
-                                        href="#"
-                                        data-target=".forum-content"
-                                        ><img
-                                            src="<%=currentUser.getAvatarURL()%>"
-                                            class="mr-3 rounded-circle"
-                                            width="50"
-                                            height="50"
-                                            alt="User"
-                                            /></a>
-                                    <div class="card mb-2">
-                                        <form method="POST" action="PostComments">
-                                            <input id="submit-comment" type="text" name="comment" placeholder="Nhập bình luận"/>
-                                            <button type="submit" class="btn btn-primary"style="height:50px">Đăng</button>
-                                        </form>
+                            %>
+                            <div class="card mb-2" style="position: sticky; bottom: 0px">
+                                <div class="card-body p-2 p-sm-3">
+                                    <div class="media forum-item">
+                                        <a
+                                            href="#"
+                                            data-target=".forum-content"
+                                            ><img
+                                                src="<%=currentUser.getAvatarURL()%>"
+                                                class="mr-3 rounded-circle"
+                                                width="50"
+                                                height="50"
+                                                alt="User"
+                                                /></a>
+                                        <div class="card mb-2">
+                                            <form method="POST" action="PostComments" enctype="multipart/form-data">
+                                                <div class="chat-container">
+                                                    <div class="image-upload">
+                                                        <label for="image-upload" class="custom-file-upload">
+                                                            <i class="fa fa-image" style="cursor: pointer;"></i>
+                                                        </label>
+                                                        <input id="image-upload" type="file" name="image" accept="image/*" style="display:none;">
+                                                    </div>
+                                                    <textarea id="submit-comment" required name="comment" placeholder="Nhập bình luận" rows="1" style="resize: none; overflow: hidden;"></textarea>
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fa fa-paper-plane"></i>
+                                                    </button>
+                                                </div>
+                                                <div id="image-preview-container">
+                                                    <input id="image-upload" type="file" name="image" accept="image/*" style="display:none;">
+                                                    <br>
+                                                    <div id="image-preview-wrapper" style="position: relative;">
+                                                        <img id="image-preview" src="#" alt="Preview Image" style="display:none;">
+                                                        <button id="delete-image" style="display:none;"><i class="fa fa-times"></i></button>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <%
-                            }
-                        %>
-                        <!-- ket thuc phan comment cua user hien tai -->
+                            <%
+                                }
+                            %>
+                            <!-- ket thuc phan comment cua user hien tai -->
 
+                        </div>
                     </div>
+
                 </div>
 
             </div>
+        </div>    
+    </div>
+</div>
+<jsp:include page="footer.jsp"></jsp:include>
+<script>
+    var textarea = document.getElementById("submit-comment");
+    textarea.addEventListener("input", function () {
+        this.style.height = "auto";
+        this.style.height = (this.scrollHeight) + "px";
+    });
+</script>
 
-        </div>
-    </div>    
-    <jsp:include page="footer.jsp"></jsp:include>
+<script>
+    // Function to handle file input change event
+    document.getElementById('image-upload').addEventListener('change', function (event) {
+        var file = event.target.files[0];
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            var imgElement = document.getElementById('image-preview');
+            imgElement.src = e.target.result;
+            imgElement.style.display = 'block';
+
+            // Show delete button
+            document.getElementById('delete-image').style.display = 'inline-block';
+        }
+
+        reader.readAsDataURL(file);
+    });
+
+    // Function to handle delete image button click
+    document.getElementById('delete-image').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default behavior (page reload)
+
+        var imgElement = document.getElementById('image-preview');
+        imgElement.src = '#'; // Clear the preview
+        imgElement.style.display = 'none';
+
+        // Hide delete button
+        document.getElementById('delete-image').style.display = 'none';
+
+        // Reset file input
+        document.getElementById('image-upload').value = '';
+    });
+
+</script>

@@ -42,9 +42,9 @@ public class ForumDAO extends DBConnection{
         }
     }
     
-    public void createNewComment(int userID,int postID ,String commentContent){
-        String query = "insert into forum_comment(userID,post_id,comment_context,comment_date,comment_react)"
-                + "values(?, ?, ?, ?, ?)";
+    public void createNewComment(int userID,int postID ,String commentContent, String url){
+        String query = "insert into forum_comment(userID,post_id,comment_context,comment_date,comment_react, commentImg)"
+                + "values(?, ?, ?, ?, ?, ?)";
         try (Connection conn = getConnection();
             PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, userID);
@@ -53,6 +53,7 @@ public class ForumDAO extends DBConnection{
             String timeStamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new java.util.Date());
             ps.setString(4, timeStamp);
             ps.setInt(5, 0);
+            ps.setString(6, url);
             try{
                 ps.executeUpdate();
             }
@@ -61,6 +62,43 @@ public class ForumDAO extends DBConnection{
             }
         }catch(Exception err){
             System.out.println(err);
+        }
+    }
+    
+    public void updatePostByID(int postID, String title, String context, String URL){
+        String query = "update forum_post set post_title = ?, post_context = ?, post_img = ? where post_id = ?";
+        try (Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, title);
+            ps.setString(2, context);
+            ps.setString(3, URL);
+            ps.setInt(4, postID);
+        try{
+                ps.executeUpdate();
+            }   
+            catch(Exception e){
+                System.out.println(e);
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+    }
+    
+    public void deletePostByID(int postID){
+        String query = "delete from forum_post where post_id = ?";
+        try (Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, postID);
+        try{
+                ps.executeUpdate();
+            }   
+            catch(Exception e){
+                System.out.println(e);
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
         }
     }
     
@@ -130,6 +168,7 @@ public class ForumDAO extends DBConnection{
                 cmt.setCommentContext(rs.getString(4));
                 cmt.setCommentDate(rs.getString(5));
                 cmt.setCommentReact(rs.getInt(6));
+                cmt.setCommentURL(rs.getString(7));
                 cmts.add(cmt);
             }
         }
@@ -164,12 +203,14 @@ public class ForumDAO extends DBConnection{
     }
     
     public static void main(String args[]) {
-        List<Comments> cmts = new ForumDAO().findAllCommentsByPostID(1);
-                  for(int i = cmts.size() - 1; i >= 0; i--){
-                    Comments cmt = cmts.get(i);
-                      System.out.println(cmt.toString());
-//                    Users otherUser = new UserDAO().findByUserID(cmt.getUserID());
-                  }
+        List<Forum> forums = new ForumDAO().getAllPostFromUserID(2);
+        String str;
+        for (Forum forum : forums) {
+            if(forum.getPostTitle().length() > 60) 
+                            str = forum.getPostTitle().substring(1, 60) + "...";
+                            else str = forum.getPostTitle();
+            System.out.println(str);
+        }
         
     }
 }

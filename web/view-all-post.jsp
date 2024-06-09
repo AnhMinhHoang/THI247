@@ -2,7 +2,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
 <jsp:include page="header.jsp"></jsp:include>
 <%
-int id = (Integer)request.getAttribute("userID");
+int id = (Integer)session.getAttribute("userID");
 Users user = new UserDAO().findByUserID(id);
 List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
 %>
@@ -30,12 +30,10 @@ List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
               <table class="table datatable">
                 <thead>
                   <tr>
-                    <th>
-                      Tiêu đề
-                    </th>
-                    <th>Nội dung</th>
-                    <th data-type="date" data-format="YYYY/DD/MM">Ngày đăng</th>
-                    <th>Lượt tương tác</th>
+                    <th style="text-align: center">Tiêu đề</th>
+                    <th style="text-align: center">Nội dung</th>
+                    <th style="text-align: center" data-type="date" data-format="YYYY/DD/MM">Ngày đăng</th>
+                    <th style="text-align: center">Lượt tương tác</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -53,15 +51,10 @@ List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
                     else content = forum.getPostContext();
                 %>
                   <tr>
-                      <td><a
-                          href="ForumDetail?postID=<%=forum.getPostID()%>"
-                          data-target=".forum-content"
-                          class="text-body"
-                          ><%=title%></a
-                        ></td>
-                    <td><%=content%></td>
-                    <td><%=forum.getPostDate()%></td>
-                    <td><%=forum.getPostReact()%></td>
+                      <td style="text-align: center"><a href="ForumDetail?postID=<%=forum.getPostID()%>"><%=title%></a></td>
+                    <td style="text-align: center"><%=content%></td>
+                    <td style="text-align: center"><%=forum.getPostDate()%></td>
+                    <td style="text-align: center"><%=forum.getPostReact()%></td>
                   </tr>
                   <%
                       }
@@ -99,5 +92,8 @@ List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript"></script>
 
   <jsp:include page="footer.jsp"></jsp:include>

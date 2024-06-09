@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  *
@@ -30,8 +31,9 @@ public class ViewAllPostUser extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         int userID = Integer.parseInt(request.getParameter("userID"));
-        request.setAttribute("userID", userID);
-        request.getRequestDispatcher("view-all-post-user.jsp").forward(request, response);
+        HttpSession session = request.getSession();
+        session.setAttribute("userID", userID);
+        response.sendRedirect("view-all-post-user.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
