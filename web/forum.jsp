@@ -198,9 +198,10 @@
                         <div class="simplebar-content" style="padding: 16px">
                           <nav class="nav nav-pills nav-gap-y-1 flex-column">
                             <a
-                              href="bs4_forum.html"
+                                href="view-all-post.jsp"
                               class="nav-link nav-link-faded has-icon active"
-                              >Tất cả bài đăng</a
+                              style="text-align: center;"
+                              >Bài đăng của tôi</a
                             >
                           </nav>
                         </div>
