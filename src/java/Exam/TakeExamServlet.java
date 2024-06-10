@@ -36,23 +36,10 @@ public class TakeExamServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Retrieve examId from request parameters
         String examIdStr = request.getParameter("examId");
-
-        if (examIdStr == null || examIdStr.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing examId parameter");
-            return;
-        }
-
         try {
             int examId = Integer.parseInt(examIdStr);
-
             // Retrieve questions for the exam from your data source
             List<QuestionBank> questions = new ExamDAO().getQuestionsByExamId(examId);
-
-            if (questions == null || questions.isEmpty()) {
-                request.setAttribute("errorMessage", "No questions found for this exam.");
-                questions = new ArrayList<>(); // Initialize an empty list to avoid NullPointerException
-            }
-
             // Set attributes in request
             request.setAttribute("examId", examIdStr);
             request.setAttribute("questions", questions);
@@ -71,27 +58,10 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
     String examIdStr = request.getParameter("examId");
     String[] questionIds = request.getParameterValues("questionIds");
 
-    // Kiểm tra nếu các tham số không tồn tại
-    if (examIdStr == null || examIdStr.isEmpty() || questionIds == null || questionIds.length == 0) {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing examId or questionIds parameters");
-        return;
-    }
-
     try {
-        int examId = Integer.parseInt(examIdStr);
-
-        // In ra để debug
-        System.out.println("Exam ID: " + examId);
-        System.out.println("Question IDs: " + Arrays.toString(questionIds));
-
+        int examId = Integer.parseInt(examIdStr); 
         // Retrieve questions for the exam
         List<QuestionBank> questions = new ExamDAO().getQuestionsForExam(examId);
-
-        if (questions == null || questions.isEmpty()) {
-            request.setAttribute("errorMessage", "No questions found for this exam.");
-            questions = new ArrayList<>();
-        }
-
         // Process the submitted answers
         double score = 0.0;
         int numCorrect = 0;
@@ -152,19 +122,6 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
     } catch (SQLException e) {
         throw new ServletException("Database error while retrieving questions for the exam", e);
     }
-}
-
-
-
-
-
-private QuestionBank getQuestionById(List<QuestionBank> questions, int questionId) {
-    for (QuestionBank question : questions) {
-        if (question.getId() == questionId) {
-            return question;
-        }
-    }
-    return null;
 }
 
 
