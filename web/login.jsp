@@ -23,12 +23,12 @@
                             <!-- Email input -->
                             <h5 class="card-title text-center mb-5 fw-light fs-5">Login</h5>
                             <div class="form-outline mb-4" data-mdb-input-init>
-                                <input type="email" id="form1Example1" class="form-control" placeholder="Email" name="email" />
+                                <input type="email" id="form1Example1" class="form-control" placeholder="Email" name="email" required/>
                             </div>
 
                             <!-- Password input -->
                             <div class="form-outline mb-4" data-mdb-input-init>
-                                <input type="password" id="form1Example2" class="form-control" placeholder="Password" name="password"/>
+                                <input type="password" id="form1Example2" minlength="10" class="form-control" placeholder="Password" name="password" required/>
                             </div>
                             <c:if test="${not empty errorMessage}">
                                 <p style="color:red">${errorMessage}</p>

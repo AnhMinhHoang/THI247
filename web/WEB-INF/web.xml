@@ -76,6 +76,10 @@
         <servlet-name>UpdateComment</servlet-name>
         <servlet-class>controller.UpdateComment</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ChangePassword</servlet-name>
+        <servlet-class>controller.ChangePassword</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -141,5 +145,9 @@
     <servlet-mapping>
         <servlet-name>UpdateComment</servlet-name>
         <url-pattern>/UpdateComment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangePassword</servlet-name>
+        <url-pattern>/ChangePassword</url-pattern>
     </servlet-mapping>
 </web-app>

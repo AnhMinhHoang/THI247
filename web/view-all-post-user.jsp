@@ -10,6 +10,7 @@
 </script>
 
 <%
+if(session.getAttribute("userID") != null){
 int id = (Integer)session.getAttribute("userID");
 Users user = new UserDAO().findByUserID(id);
 List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
@@ -163,4 +164,7 @@ List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
         };
         
     </script>
+    <%
+        }
+    %>
   <jsp:include page="footer.jsp"></jsp:include>

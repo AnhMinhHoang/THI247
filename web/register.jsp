@@ -17,7 +17,7 @@
                             <!-- Email input -->
                             <h5 class="card-title text-center mb-5 fw-light fs-5">Register</h5>
                             <div class="form-outline mb-4" data-mdb-input-init>
-                                <input type="text" id="form1Example1" class="form-control" name="username" placeholder="Username" required/>
+                                <input type="text" id="form1Example1" minlength="8" class="form-control" name="username" placeholder="Username" required/>
 
                             </div>
                             <div class="form-outline mb-4" data-mdb-input-init>
@@ -27,7 +27,7 @@
 
                             <!-- Password input -->
                             <div class="form-outline mb-4" data-mdb-input-init>
-                                <input type="password" id="form1Example2" class="form-control" name="password" placeholder="Password" required/>
+                                <input type="password" id="form1Example2" minlength="10" class="form-control" name="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Mật khẩu phải có ít nhất 1 chữ cái hoa, 1 chữ cái thường, 1 số và ít nhất là 8 ký tự!" required/>
                             </div>
 
                             <!-- 2 column grid layout for inline styling -->

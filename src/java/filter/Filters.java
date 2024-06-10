@@ -147,6 +147,12 @@ public class Filters implements Filter {
         else if(url.contains("editprofile.jsp") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
         }
+        else if(url.contains("view-all-post-user.jsp") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
+        else if(url.contains("changepassword.jsp") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
         else if(url.contains("update") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
         }
@@ -154,6 +160,24 @@ public class Filters implements Filter {
             httpResponse.sendRedirect("login.jsp");
         }
         else if(url.contains("NewPost") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
+        else if(url.contains("ChangePassword") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
+        else if(url.contains("ViewAllPostUser") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
+        else if(url.contains("PostComments") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
+        else if(url.contains("PostDataPostUpdate") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
+        else if(url.contains("DeleteComment") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
+        else if(url.contains("DeletePost") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
         }
         
