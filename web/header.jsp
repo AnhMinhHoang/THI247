@@ -55,7 +55,7 @@
                 <div class="navbar-nav ms-auto p-4 p-lg-0">
                     <a href="Home" class="nav-item nav-link active">Home</a>
                     <a href="about.jsp" class="nav-item nav-link">About</a>
-                    <a href="courses.jsp" class="nav-item nav-link">Courses</a>
+                    <a href="PassDataExam" class="nav-item nav-link">Exam</a>
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                         <div class="dropdown-menu fade-down m-0">

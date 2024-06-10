@@ -36,6 +36,10 @@
         <servlet-name>RegisterGmail</servlet-name>
         <servlet-class>controller.RegisterGmail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PassDataExam</servlet-name>
+        <servlet-class>controller.PassDataExam</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -60,5 +64,8 @@
         <servlet-name>RegisterGmail</servlet-name>
         <url-pattern>/RegisterGmail</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>PassDataExam</servlet-name>
+        <url-pattern>/PassDataExam</url-pattern>
+    </servlet-mapping>
 </web-app>
