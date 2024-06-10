@@ -2,6 +2,12 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <jsp:include page="header.jsp"></jsp:include>
+<script>
+        var container = document.getElementById("tagID");
+        var tag = container.getElementsByClassName("tag");
+        var current = container.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+</script>
 <style>
         input {
             height: 50px;
@@ -17,12 +23,12 @@
                             <!-- Email input -->
                             <h5 class="card-title text-center mb-5 fw-light fs-5">Login</h5>
                             <div class="form-outline mb-4" data-mdb-input-init>
-                                <input type="email" id="form1Example1" class="form-control" placeholder="Email" name="email" />
+                                <input type="email" id="form1Example1" class="form-control" placeholder="Email" name="email" required/>
                             </div>
 
                             <!-- Password input -->
                             <div class="form-outline mb-4" data-mdb-input-init>
-                                <input type="password" id="form1Example2" class="form-control" placeholder="Password" name="password"/>
+                                <input type="password" id="form1Example2" minlength="10" class="form-control" placeholder="Password" name="password" required/>
                             </div>
                             <c:if test="${not empty errorMessage}">
                                 <p style="color:red">${errorMessage}</p>

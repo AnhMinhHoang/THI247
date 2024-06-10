@@ -6,12 +6,14 @@ package controller;
 
 import DAO.UserDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import model.Users;
 
 /**
@@ -34,43 +36,36 @@ public class UpdateController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String fullname = request.getParameter("fullname");
         String username = request.getParameter("username");
-        String oldPassword = request.getParameter("oldPassword");
-        if(oldPassword == null) oldPassword = "";
-        String newPassword = request.getParameter("newPassword");
-        if(newPassword == null) newPassword = "";
-        String confirmPassword = request.getParameter("confirmPassword");
-        if(confirmPassword == null) confirmPassword = "";
-        
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        String dobStr = request.getParameter("dob");
+        String formattedDobStr = "";
+
+        if (dobStr != null && !dobStr.isEmpty()) {
+            try {
+                // Define the date format for parsing
+                SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                // Parse the date string into a Date object
+                Date dob = originalFormat.parse(dobStr);
+
+                // Define the date format for formatting
+                SimpleDateFormat newFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+                // Format the Date object into the new format
+                formattedDobStr = newFormat.format(dob);
+            } catch (ParseException e) {
+                e.printStackTrace(); // Handle the exception as needed
+            }
+        }
+
         HttpSession session = request.getSession();
         Users user = (Users)session.getAttribute("currentUser");
-        if(user.getPassword().isEmpty()){
-            response.sendRedirect("registerGmail.jsp");
-        }
-        
-        if(!oldPassword.isEmpty() && !newPassword.isEmpty() && !confirmPassword.isEmpty()){
-            if(!oldPassword.equals(user.getPassword())){
-                request.setAttribute("message_password", "Wrong password");
-                request.getRequestDispatcher("editprofile.jsp").forward(request, response);
-            }
-            if(!newPassword.equals(confirmPassword)){
-                request.setAttribute("message_confirm", "Password is not match");
-                request.getRequestDispatcher("editprofile.jsp").forward(request, response);
-            }
-            else{
-                new UserDAO().updateInfo(user.getEmail(), username, fullname, newPassword);
-                request.setAttribute("message", "Success");
-                user = new UserDAO().findByEmail(user.getEmail());
-                session.setAttribute("currentUser", user);
-                request.getRequestDispatcher("profile.jsp").forward(request, response);
-            }
-        }
-        else{
-            new UserDAO().updateInfo(user.getEmail(), username, fullname, user.getPassword());
-            request.setAttribute("message", "Successe");
-            user = new UserDAO().findByEmail(user.getEmail());
-            session.setAttribute("currentUser", user);
-            request.getRequestDispatcher("profile.jsp").forward(request, response);
-        }
+        new UserDAO().updateInfo(user.getEmail(), username, fullname, phone, address, formattedDobStr);
+        request.setAttribute("message", "Cập nhật thành công!");
+        user = new UserDAO().findByEmail(user.getEmail());
+        session.setAttribute("currentUser", user);
+        request.getRequestDispatcher("profile.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

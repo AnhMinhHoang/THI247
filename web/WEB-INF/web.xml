@@ -33,8 +33,52 @@
         <servlet-class>controller.avatarUpdate</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>RegisterGmail</servlet-name>
-        <servlet-class>controller.RegisterGmail</servlet-class>
+        <servlet-name>NewPost</servlet-name>
+        <servlet-class>controller.NewPost</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ForumDetail</servlet-name>
+        <servlet-class>controller.ForumDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PostComments</servlet-name>
+        <servlet-class>controller.PostComments</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UserProfile</servlet-name>
+        <servlet-class>controller.UserProfile</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewAllPost</servlet-name>
+        <servlet-class>controller.ViewAllPost</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewAllPostUser</servlet-name>
+        <servlet-class>controller.ViewAllPostUser</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeletePost</servlet-name>
+        <servlet-class>controller.DeletePost</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PassDataPostUpdate</servlet-name>
+        <servlet-class>controller.PassDataPostUpdate</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdatePost</servlet-name>
+        <servlet-class>controller.UpdatePost</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteComment</servlet-name>
+        <servlet-class>controller.DeleteComment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateComment</servlet-name>
+        <servlet-class>controller.UpdateComment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChangePassword</servlet-name>
+        <servlet-class>controller.ChangePassword</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
@@ -56,8 +100,54 @@
         <servlet-name>avatarUpdate</servlet-name>
         <url-pattern>/avatarUpdate</url-pattern>
     </servlet-mapping>
+    <role rolename="manager-script"/>
+    <user password="admin" roles="manager-script" username="admin"/>
     <servlet-mapping>
-        <servlet-name>RegisterGmail</servlet-name>
-        <url-pattern>/RegisterGmail</url-pattern>
+        <servlet-name>NewPost</servlet-name>
+        <url-pattern>/NewPost</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ForumDetail</servlet-name>
+        <url-pattern>/ForumDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PostComments</servlet-name>
+        <url-pattern>/PostComments</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserProfile</servlet-name>
+        <url-pattern>/UserProfile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewAllPost</servlet-name>
+        <url-pattern>/ViewAllPost</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewAllPostUser</servlet-name>
+        <url-pattern>/ViewAllPostUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeletePost</servlet-name>
+        <url-pattern>/DeletePost</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PassDataPostUpdate</servlet-name>
+        <url-pattern>/PassDataPostUpdate</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdatePost</servlet-name>
+        <url-pattern>/UpdatePost</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteComment</servlet-name>
+        <url-pattern>/DeleteComment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateComment</servlet-name>
+        <url-pattern>/UpdateComment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangePassword</servlet-name>
+        <url-pattern>/ChangePassword</url-pattern>
     </servlet-mapping>
 </web-app>
