@@ -4,20 +4,28 @@
  */
 package controller;
 
-import DAO.UserDAO;
+import DAO.ForumDAO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.Users;
+import jakarta.servlet.http.Part;
+import java.io.File;
 
 /**
  *
  * @author GoldCandy
  */
-public class RegisterGmail extends HttpServlet {
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+                 maxFileSize = 1024 * 1024 * 10,       // 10MB
+                 maxRequestSize = 1024 * 1024 * 50)    // 50MB
+public class UpdateComment extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+    private static final String UPLOAD_DIRECTORY = "uploads/avaUploads";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,20 +39,48 @@ public class RegisterGmail extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirmPassword");
-        if(!password.equals(confirmPassword)){
-            request.setAttribute("errorMessage", "Password not match");
-            request.getRequestDispatcher("registerGmail.jsp").forward(request, response);
+        String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIRECTORY;
+        File uploadDir = new File(uploadPath);
+        int postID = Integer.parseInt(request.getParameter("postID"));
+        String context = request.getParameter("context");
+        String imgURL = request.getParameter("imgURL");
+        if(imgURL.isBlank() || imgURL.equals("null")) imgURL = null;
+        int commentID = Integer.parseInt(request.getParameter("commentID"));
+        HttpSession session = request.getSession();
+        session.setAttribute("postID", postID);
+        boolean check = true;
+        
+        if(!uploadDir.exists()){
+            uploadDir.mkdirs();
         }
-        else{
-            HttpSession session = request.getSession();
-            Users user = (Users)session.getAttribute("currentUser");
-            new UserDAO().updateInfo(user.getEmail(), user.getUsername(), user.getFullname(), password);
-            user = new UserDAO().findByEmail(user.getEmail());
-            session.setAttribute("currentUser", user);
-            response.sendRedirect("Home");
+        
+        for(Part part: request.getParts()){
+            String fileName = getFileName(part);
+            if(fileName != null && !fileName.isEmpty()){
+                String filePath = uploadPath + File.separator + fileName;
+                part.write(filePath);
+                String url;
+                url = UPLOAD_DIRECTORY + "/" + fileName;
+                check = false;
+                new ForumDAO().updateCommentByID(commentID, context, url);
+                response.sendRedirect("forum-detail.jsp");
+            }
         }
+        if(check){
+            new ForumDAO().updateCommentByID(commentID, context, imgURL);
+            response.sendRedirect("forum-detail.jsp");
+        }
+    }
+    
+    private String getFileName(Part part){
+        String contentDisposition = part.getHeader("content-disposition");
+        String[] tokens = contentDisposition.split(";");
+        for(String token: tokens){
+            if(token.trim().startsWith("filename")){
+                return token.substring(token.indexOf("=") + 2, token.length() - 1);
+            }
+        }
+        return null;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

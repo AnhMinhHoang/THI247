@@ -130,36 +130,6 @@ public class Filters implements Filter {
             httpResponse.sendRedirect("Home");
         }
         
-        //Required password when password is null
-        if(url.contains("profile.jsp")){
-            if(session.getAttribute("currentUser") != null){
-                user = (Users)session.getAttribute("currentUser");
-                if(user.getPassword().isEmpty())
-                    httpResponse.sendRedirect("registerGmail.jsp");
-            }
-        }
-        else if(url.contains("editprofile.jsp")){
-            if(session.getAttribute("currentUser") != null){
-                user = (Users)session.getAttribute("currentUser");
-                if(user.getPassword().isEmpty())
-                    httpResponse.sendRedirect("registerGmail.jsp");
-            }
-        }
-        else if(url.contains("avatarUpdate")){
-            if(session.getAttribute("currentUser") != null){
-                user = (Users)session.getAttribute("currentUser");
-                if(user.getPassword().isEmpty())
-                    httpResponse.sendRedirect("registerGmail.jsp");
-            }
-        }
-        else if(url.contains("admin.jsp")){
-            if(session.getAttribute("currentUser") != null){
-                user = (Users)session.getAttribute("currentUser");
-                if(user.getPassword().isEmpty())
-                    httpResponse.sendRedirect("registerGmail.jsp");
-            }
-        }
-        
         //prevent login register when logged in
         if(url.contains("login.jsp") || url.contains("register.jsp")){
             if(session.getAttribute("currentUser") != null){
@@ -177,18 +147,40 @@ public class Filters implements Filter {
         else if(url.contains("editprofile.jsp") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
         }
+        else if(url.contains("view-all-post-user.jsp") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
+        else if(url.contains("changepassword.jsp") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
         else if(url.contains("update") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
         }
         else if(url.contains("avatarUpdate") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
         }
-        else if(url.contains("registerGmail.jsp") && session.getAttribute("currentUser") == null){
+        else if(url.contains("NewPost") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
         }
-        else if(url.contains("RegisterGmail") && session.getAttribute("currentUser") == null){
+        else if(url.contains("ChangePassword") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
         }
+        else if(url.contains("ViewAllPostUser") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
+        else if(url.contains("PostComments") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
+        else if(url.contains("PostDataPostUpdate") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
+        else if(url.contains("DeleteComment") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
+        else if(url.contains("DeletePost") && session.getAttribute("currentUser") == null){
+            httpResponse.sendRedirect("login.jsp");
+        }
+        
         
         //prevent admin page when user is not admin
         if(url.contains("admin.jsp") && session.getAttribute("currentUser") != null){

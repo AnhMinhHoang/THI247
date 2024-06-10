@@ -4,6 +4,7 @@
  */
 package controller;
 
+import DAO.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -17,7 +18,7 @@ import model.Users;
  *
  * @author GoldCandy
  */
-public class Home extends HttpServlet {
+public class ChangePassword extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,8 +33,27 @@ public class Home extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
+        String oldPassword = request.getParameter("oldPassword");
+        String newPassword = request.getParameter("newPassword");
+        String confirmPassword = request.getParameter("confirmPassword");
         Users user = (Users)session.getAttribute("currentUser");
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+        
+        if(oldPassword.isBlank()) oldPassword = user.getPassword();
+        
+        if(!oldPassword.equals(user.getPassword())){
+            request.setAttribute("errorMessage", "Mật khẩu không đúng");
+            request.getRequestDispatcher("changepassword.jsp").forward(request, response);
+        }
+        else if(oldPassword.equals(user.getPassword()) && !newPassword.equals(confirmPassword)){
+            request.setAttribute("errorMessage", "Mật khẩu không khớp");
+            request.getRequestDispatcher("changepassword.jsp").forward(request, response);
+        }
+        else{
+            new UserDAO().changePassWordByEmail(user.getEmail(), newPassword);
+            session.setAttribute("currentUser", new UserDAO().findByEmail(user.getEmail()));
+            request.setAttribute("message", "Đổi mật khẩu thành công!");
+            request.getRequestDispatcher("profile.jsp").forward(request, response);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

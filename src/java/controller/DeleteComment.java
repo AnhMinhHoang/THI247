@@ -4,6 +4,7 @@
  */
 package controller;
 
+import DAO.ForumDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -11,13 +12,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.Users;
 
 /**
  *
  * @author GoldCandy
  */
-public class Home extends HttpServlet {
+public class DeleteComment extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -31,9 +31,13 @@ public class Home extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        int commnentID = Integer.parseInt(request.getParameter("commentID"));
+        int postID = Integer.parseInt(request.getParameter("postID"));
         HttpSession session = request.getSession();
-        Users user = (Users)session.getAttribute("currentUser");
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+        new ForumDAO().deleteCommentByID(commnentID);
+        session.setAttribute("postID", postID);
+        response.sendRedirect("forum-detail.jsp");
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -85,7 +85,7 @@ public class avatarUpdate extends HttpServlet {
         Users user = (Users)session.getAttribute("currentUser");
         
         if(!uploadDir.exists()){
-            uploadDir.mkdir();
+            uploadDir.mkdirs();
         }
         
         for(Part part: request.getParts()){

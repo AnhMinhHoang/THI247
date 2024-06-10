@@ -11,13 +11,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import model.Users;
 
 /**
  *
  * @author GoldCandy
  */
-public class Home extends HttpServlet {
+public class ForumDetail extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,8 +31,9 @@ public class Home extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
-        Users user = (Users)session.getAttribute("currentUser");
-        request.getRequestDispatcher("home.jsp").forward(request, response);
+        int postID = Integer.parseInt(request.getParameter("postID"));
+        session.setAttribute("postID", postID);
+        response.sendRedirect("forum-detail.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

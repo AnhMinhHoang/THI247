@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 
 /**
  *
- * @author ADMIN
+ * @author ADMIN        
  */
 import java.sql.*;
 
@@ -65,8 +65,11 @@ public class UserDAO extends DBConnection{
                     String avatarURL = rs.getString("avatar");
                     int balance = rs.getInt("balance");
                     String passwords = rs.getString("password");
+                    String phone = rs.getString("phone");
+                    String address = rs.getString("localaddress");
+                    String dob = rs.getString("dob");
             
-                    Users us = new Users(iD, username, fullname, passwords, emails, role, avatarURL, balance);
+                    Users us = new Users(iD, username, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
                     return us;
                 }
             }
@@ -92,8 +95,11 @@ public class UserDAO extends DBConnection{
                     String avatarURL = rs.getString("avatar");
                     int balance = rs.getInt("balance");
                     String passwords = rs.getString("password");
-            
-                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance);
+                    String phone = rs.getString("phone");
+                    String address = rs.getString("localaddress");
+                    String dob = rs.getString("dob");
+                    
+                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
                     return us;
                 }
             }
@@ -103,15 +109,64 @@ public class UserDAO extends DBConnection{
         return null;
     }
     
-    public void updateInfo(String email, String username, String fullname, String password){
-        String query = "UPDATE Users SET username = ? , fullname = ? , password = ? WHERE email=?";
+    public Users findByUserID(int userID) {
+        String query = "SELECT * FROM Users WHERE userID=?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userID);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int iD = rs.getInt("userID");
+                    String usernames = rs.getString("username");
+                    String fullname = rs.getString("fullname");
+                    String emails = rs.getString("email");
+                    int role = rs.getInt("roles");
+                    String avatarURL = rs.getString("avatar");
+                    int balance = rs.getInt("balance");
+                    String passwords = rs.getString("password");
+            
+                    String phone = rs.getString("phone");
+                    String address = rs.getString("localaddress");
+                    String dob = rs.getString("dob");
+                    
+                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
+                    return us;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("SDASD");
+        }
+        return null;
+    }
+    
+    public void updateInfo(String email, String username, String fullname, String phone, String address, String dob){
+        String query = "UPDATE Users SET username = ? , fullname = ?, phone = ?, localaddress = ?, dob = ? WHERE email=?";
         try (Connection conn = getConnection();
             PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, username);
             ps.setString(2, fullname);
-            ps.setString(3, password);
-            ps.setString(4, email);
-            System.out.println(query);
+            ps.setString(3, phone);
+            ps.setString(4, address);
+            ps.setString(5, dob);
+            ps.setString(6, email);
+            try{
+                ps.executeUpdate();
+            }
+            catch(Exception e){
+                System.out.println(e);
+            }
+        } catch (Exception e) {
+            System.out.println("SDASD");
+        }
+    }
+    
+    public void changePassWordByEmail(String email, String password){
+        String query = "UPDATE Users SET password=? WHERE email=?";
+        try (Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, password);
+            ps.setString(2, email);
             try{
                 ps.executeUpdate();
             }

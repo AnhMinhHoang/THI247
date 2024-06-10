@@ -1,46 +1,57 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.ParseException" %>
 <jsp:include page="header.jsp"></jsp:include>
-<style>
+
+    <script>
+        var container = document.getElementById("tagID");
+        var tag = container.getElementsByClassName("tag");
+        var current = container.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+    </script>
+
+    <style>
         input {
             height: 50px;
         }
-</style>
-              <!-- Breadcrumb -->
-              <!-- <nav aria-label="breadcrumb" class="main-breadcrumb">
-                <ol class="breadcrumb">
-                  <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                  <li class="breadcrumb-item"><a href="javascript:void(0)">User</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">User Profile</li>
-                </ol>
-              </nav> -->
-              <!-- /Breadcrumb -->
-        <br><br>
-         <%
-        Users user = (Users)session.getAttribute("currentUser");
-        if(user != null && !user.getPassword().isEmpty()){
-        String role;
-        if(user.getRole() == 1) role = "Admin";
-        else if(user.getRole() == 2) role = "Lecture";
-        else role = "Student";
-         %>
-        <div class="container">
-            <div class="main-body">
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <form id="updateForm" action="avatarUpdate" method="POST" enctype="multipart/form-data">
-                                <div class="d-flex flex-column align-items-center text-center">
-                                    <div class="containers">
-                                        <input type="file" name="file" id="imgupload" accept="image/png, image/jpeg" style="display:none" onchange="submitForm()"/>
-                                        <img src="<%=user.getAvatarURL()%>" alt="Admin" class="rounded-circle p-1 bg-primary image" width="150" height="150" onclick="UpdateImage()">
-                                        <div class="middle" onclick="UpdateImage()">
-                                            <i class="fas fa-pen"></i>
-                                        </div>
+    </style>
+    <!-- Breadcrumb -->
+    <!-- <nav aria-label="breadcrumb" class="main-breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+        <li class="breadcrumb-item"><a href="javascript:void(0)">User</a></li>
+        <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+      </ol>
+    </nav> -->
+    <!-- /Breadcrumb -->
+    <br><br>
+<%
+Users user = (Users)session.getAttribute("currentUser");
+if(user != null){
+String role;
+if(user.getRole() == 1) role = "Admin";
+else if(user.getRole() == 2) role = "Lecture";
+else role = "Student";
+%>
+<div class="container">
+    <div class="main-body">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="updateForm" action="avatarUpdate" method="POST" enctype="multipart/form-data">
+                            <div class="d-flex flex-column align-items-center text-center">
+                                <div class="containers">
+                                    <input type="file" name="file" id="imgupload" accept="image/*" style="display:none" onchange="submitForm()"/>
+                                    <img src="<%=user.getAvatarURL()%>" alt="Admin" class="rounded-circle p-1 bg-primary image" width="150" height="150" onclick="UpdateImage()">
+                                    <div class="middle" onclick="UpdateImage()">
+                                        <i class="fas fa-pen"></i>
                                     </div>
-                                    <style>
-                                        .middle {
+                                </div>
+                                <style>
+                                    .middle {
                                         transition: .5s ease;
                                         opacity: 0;
                                         position: absolute;
@@ -49,126 +60,162 @@
                                         transform: translate(-50%, -50%);
                                         -ms-transform: translate(-50%, -50%);
                                         text-align: center;
-                                      }
-                                      .containers:hover .image {
+                                    }
+                                    .containers:hover .image {
                                         opacity: 0.3;
                                         cursor: pointer;
-                                      }
+                                    }
 
-                                      .containers:hover .middle {
+                                    .containers:hover .middle {
                                         opacity: 1;
                                         cursor: pointer;
-                                      }
-                                    </style>
-                                    <script>
-                                        function UpdateImage(){
-                                            document.getElementById("imgupload").click();
-                                      }
-                                        function submitForm() { 
-                                          document.getElementById("updateForm").submit(); 
-                                      } 
-                                    </script>
-                                    <div class="mt-3">
-                                        <h4><%=user.getUsername()%></h4>
-                                        <p class="text-secondary mb-1"><%=role%></p>                                   
-                                    </div>
+                                    }
+                                </style>
+                                <script>
+                                    function UpdateImage() {
+                                        document.getElementById("imgupload").click();
+                                    }
+                                    function submitForm() {
+                                        document.getElementById("updateForm").submit();
+                                    }
+                                </script>
+                                <div class="mt-3">
+                                    <h4><%=user.getUsername()%></h4>
+                                    <p class="text-secondary mb-1"><%=role%></p>                                   
                                 </div>
-                                </form>
-                                <hr class="my-4">
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                        <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-globe me-2 icon-inline"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Website</h6>
-                                        <span class="text-secondary">https://bootdey.com</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                        <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github me-2 icon-inline"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>Github</h6>
-                                        <span class="text-secondary">bootdey</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                        <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-twitter me-2 icon-inline text-info"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>Twitter</h6>
-                                        <span class="text-secondary">@bootdey</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                        <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-instagram me-2 icon-inline text-danger"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>Instagram</h6>
-                                        <span class="text-secondary">bootdey</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                                        <h6 class="mb-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-facebook me-2 icon-inline text-primary"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>Facebook</h6>
-                                        <span class="text-secondary">bootdey</span>
-                                    </li>
-                                </ul>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-8">
-                        <div class="card">
-                            <div class="card-body">
-                                <form action="update" method="POST">
-                                <div class="row mb-3">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Username</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="text" class="form-control" name="username" value="<%=user.getUsername()%>">
-                                    </div>
-                                    <c:if test="${not empty message_username}">
-                                        <p style="color:red">${message_username}</p>
-                                    </c:if>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Full Name</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="text" class="form-control" name="fullname" value="<%=user.getFullname()%>">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Old Password</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="password" class="form-control" name="oldPassword" value="">
-                                    </div>
-                                    <c:if test="${not empty message_password}">
-                                        <p style="color:red">${message_password}</p>
-                                    </c:if>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">New Password</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="password" class="form-control" name="newPassword" value="">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-sm-3">
-                                        <h6 class="mb-0">Confirm Password</h6>
-                                    </div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="password" class="form-control" name="confirmPassword" value="">
-                                    </div>
-                                    <c:if test="${not empty message_confirm}">
-                                        <p style="color:red">${message_confirm}</p>
-                                    </c:if>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-3"></div>
-                                    <div class="col-sm-9 text-secondary">
-                                        <input type="submit" class="btn btn-primary px-4" value="Save Changes">
-                                    </div>
-                                </div>
-                            </form>
-                            </div>
+                        </form>
+                        <hr class="my-4">
+                        <div style="justify-content: center; display: flex">
+                            <button
+                                class="btn btn-primary has-icon px-4"
+                                type="button"
+                                style="justify-content: center; margin: auto"
+                                >
+                                <a href="changepassword.jsp" style="text-decoration: none; color: white">Đổi mật khẩu</a>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="update" method="POST">
+                            <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Username</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" class="form-control" name="username" value="<%=user.getUsername()%>">
+                                </div>
+                                <c:if test="${not empty message_username}">
+                                    <p style="color:red">${message_username}</p>
+                                </c:if>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Họ và tên</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" class="form-control" name="fullname" value="<%= (user.getFullname() != null) ? user.getFullname() : "" %>">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Số điện thoại</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" value="<%=(user.getPhone() != null) ? user.getPhone() : ""%>">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Nơi ở</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" class="form-control" name="address" value="<%= (user.getAddress() != null) ? user.getAddress() : "" %>">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Ngày sinh</h6>
+                                </div>
+                                <%
+                                // Assuming user is already available and has a getDob() method that returns a String
+                                String dobStr = user.getDob();
+                                String formattedDobStr = "";
+
+                                if (dobStr != null && !dobStr.isEmpty()) {
+                                    try {
+                                        // Define the original date format (e.g., dd-MM-yyyy)
+                                        SimpleDateFormat originalFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+                                        // Parse the date string into a Date object
+                                        Date dob = originalFormat.parse(dobStr);
+
+                                        // Define the date format for formatting
+                                        SimpleDateFormat newFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                                        // Format the Date object into the new format
+                                        formattedDobStr = newFormat.format(dob);
+                                    } catch (ParseException e) {
+                                        e.printStackTrace(); // Handle the exception as needed
+                                    }
+                                }
+                                %>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="date" class="form-control" name="dob" value="<%= formattedDobStr %>">
+                                </div>
+                            </div>
+                            <!--                          //       <div class="row mb-3">
+                                                                <div class="col-sm-3">
+                                                                    <h6 class="mb-0">Old Password</h6>
+                                                                </div>
+                                                                <div class="col-sm-9 text-secondary">
+                                                                    <input type="password" class="form-control" name="oldPassword" value="">
+                                                                </div>
+                                                                <c:if test="${not empty message_password}">
+                                                                    <p style="color:red">${message_password}</p>
+                                                                </c:if>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-sm-3">
+                                                                    <h6 class="mb-0">New Password</h6>
+                                                                </div>
+                                                                <div class="col-sm-9 text-secondary">
+                                                                    <input type="password" class="form-control" name="newPassword" value="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-3">
+                                                                <div class="col-sm-3">
+                                                                    <h6 class="mb-0">Confirm Password</h6>
+                                                                </div>
+                                                                <div class="col-sm-9 text-secondary">
+                                                                    <input type="password" class="form-control" name="confirmPassword" value="">
+                                                                </div>
+                                                                <c:if test="${not empty message_confirm}">
+                                                                    <p style="color:red">${message_confirm}</p>
+                                                                </c:if>
+                                                            </div>-->
+                            <div class="row">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-9 text-secondary" style="display: flex; justify-content: space-between">
+                                    <input type="submit" class="btn btn-primary px-4" value="Save Changes">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </div>
-        <%
-            }
-        %>
-        <jsp:include page="footer.jsp"></jsp:include>
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+</div>
+<%
+    }
+%>
+<jsp:include page="footer.jsp"></jsp:include>
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
