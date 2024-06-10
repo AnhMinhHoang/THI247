@@ -16,6 +16,7 @@ import java.util.List;
 import model.QuestionBank;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @author sonhu
@@ -68,14 +69,20 @@ public class TakeExamServlet extends HttpServlet {
 @Override
 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     String examIdStr = request.getParameter("examId");
+    String[] questionIds = request.getParameterValues("questionIds");
 
-    if (examIdStr == null || examIdStr.isEmpty()) {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing examId parameter");
+    // Kiểm tra nếu các tham số không tồn tại
+    if (examIdStr == null || examIdStr.isEmpty() || questionIds == null || questionIds.length == 0) {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing examId or questionIds parameters");
         return;
     }
 
     try {
         int examId = Integer.parseInt(examIdStr);
+
+        // In ra để debug
+        System.out.println("Exam ID: " + examId);
+        System.out.println("Question IDs: " + Arrays.toString(questionIds));
 
         // Retrieve questions for the exam
         List<QuestionBank> questions = new ExamDAO().getQuestionsForExam(examId);
@@ -86,18 +93,47 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
         }
 
         // Process the submitted answers
+        double score = 0.0;
+        int numCorrect = 0;
         List<String> userAnswers = new ArrayList<>();
-        for (QuestionBank question : questions) {
-            String selectedAnswerStr = request.getParameter("answers_" + question.getId());
-            userAnswers.add(selectedAnswerStr);
+        List<String> correctAnswers = new ArrayList<>();
+        List<String> explanations = new ArrayList<>();
+        List<String> questionTexts = new ArrayList<>();
+        List<Boolean> answerCorrectness = new ArrayList<>();
+
+        for (String questionId : questionIds) {
+            String userAnswer = request.getParameter("userAnswer_" + questionId);
+            String correctAnswer = null;
+            String explanation = null;
+            String questionText = null;
+
+            // Get the correct answer and explanation for this question
+            for (QuestionBank question : questions) {
+                if (question.getId() == Integer.parseInt(questionId)) {
+                    correctAnswer = question.getCorrectAnswer();
+                    explanation = question.getExplain();
+                    questionText = question.getQuestionText();
+                    break;
+                }
+            }
+
+            // Compare user's answer with correct answer
+            boolean isCorrect = userAnswer != null && userAnswer.equals(correctAnswer);
+            if (isCorrect) {
+                numCorrect++;
+            }
+
+            userAnswers.add(userAnswer);
+            correctAnswers.add(correctAnswer);
+            explanations.add(explanation);
+            questionTexts.add(questionText);
+            answerCorrectness.add(isCorrect);
         }
 
         // Calculate score
-        double score = new QuestionDAO().calculateScore(userAnswers, questions);
-
-        // Get correct answers
-        List<String> correctAnswers = new QuestionDAO().getCorrectAnswers(questions);
-
+        if (!questions.isEmpty()) {
+            score = ((double) numCorrect / questions.size()) * 100.0;
+        }
 
         // Set attributes in request for result page
         request.setAttribute("examId", examIdStr);
@@ -105,6 +141,9 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
         request.setAttribute("score", score);
         request.setAttribute("userAnswers", userAnswers);
         request.setAttribute("correctAnswers", correctAnswers);
+        request.setAttribute("explanations", explanations);
+        request.setAttribute("questionTexts", questionTexts);
+        request.setAttribute("answerCorrectness", answerCorrectness);
 
         // Forward to examResult.jsp
         request.getRequestDispatcher("examResult.jsp").forward(request, response);
@@ -118,6 +157,19 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 
 
 
+
+private QuestionBank getQuestionById(List<QuestionBank> questions, int questionId) {
+    for (QuestionBank question : questions) {
+        if (question.getId() == questionId) {
+            return question;
+        }
+    }
+    return null;
+}
+
+
+
+@Override
     public String getServletInfo() {
         return "Short description";
     }

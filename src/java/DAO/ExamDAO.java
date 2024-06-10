@@ -127,6 +127,7 @@ public class ExamDAO extends DBConnection {
     String query = "SELECT q.* FROM QuestionBank q INNER JOIN Exam_Questions eq ON q.question_id = eq.question_id WHERE eq.exam_id = ?";
     try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
         stmt.setInt(1, examId);
+        System.out.println("Fetching questions for examId: " + examId);
         try (ResultSet resultSet = stmt.executeQuery()) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("question_id");
@@ -148,6 +149,7 @@ public class ExamDAO extends DBConnection {
     }
     return questions;
 }
+
 
 
 

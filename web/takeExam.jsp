@@ -10,13 +10,85 @@
     <title>Bài kiểm tra</title>
     <!-- CSS Styles -->
     <style>
-        <!-- CSS styles here -->
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            margin-top: 20px;
+        }
+        fieldset {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        legend {
+            font-weight: bold;
+            padding: 0 10px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .question p {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .question label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .question input[type="radio"] {
+            margin-right: 10px;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #ddd;
+            margin: 20px 0;
+        }
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+        .no-questions {
+            text-align: center;
+            color: #666;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Bài kiểm tra</h1>
         <form action="takeExam" method="post">
+            <input type="hidden" name="examId" value="${examId}">
             <fieldset>
                 <legend>Câu hỏi kiểm tra</legend>
                 <% 
@@ -35,16 +107,16 @@
                 %>
                 <div class="question">
                     <p><%= question.getQuestionText() %></p>
+                    <!-- Lưu trữ ID câu hỏi -->
                     <input type="hidden" name="questionIds" value="<%= question.getId() %>">
                     <% 
                         // Hiển thị các lựa chọn
-                        for (int i = 0; i < choices.size(); i++) { 
-                            // Lấy câu trả lời đúng của câu hỏi từ request
-                            String correctAnswerValue = (String) request.getAttribute("correctAnswer_" + question.getId());
+                        for (String choice : choices) { 
                     %>
-                        <label><input type="radio" name="answers_<%= question.getId() %>" value="<%= i %>" 
-                            <% if (correctAnswerValue.equals(Integer.toString(i))) { %> checked <% } %>
-                            > <%= choices.get(i) %></label><br>
+                        <label>
+                            <input type="radio" name="userAnswer_<%= question.getId() %>" value="<%= choice %>">
+                            <%= choice %>
+                        </label><br>
                     <% } %>
                 </div>
                 <% if (questions.indexOf(question) < questions.size() - 1) { %>
@@ -52,14 +124,13 @@
                 <% } %>
                 <% } 
                     } else { %>
-                <p>Không có câu hỏi nào được tìm thấy.</p>
+                <p class="no-questions">Không có câu hỏi nào được tìm thấy.</p>
                 <% } %>
-
                 <!-- Thêm dòng sau để giữ lại examId -->
-               <input type="hidden" name="examId" value="<%= request.getParameter("examId") %>">
-               <input type="hidden" name="examName" value="<%= request.getParameter("examName") %>">
+                <input type="hidden" name="examId" value="<%= request.getParameter("examId") %>">
+                <input type="hidden" name="examName" value="<%= request.getParameter("examName") %>">
             </fieldset>
-            <input type="submit" value="Nộp bài">
+            <input type="submit" value="Nộp bài" class="submit-button">
         </form>
     </div>
 </body>
