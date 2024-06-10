@@ -58,6 +58,11 @@
             vertical-align: middle;
         }
 
+        .question-list {
+            max-height: 200px; /* Đặt chiều cao tối đa của khung cuộn */
+            overflow-y: auto; /* Kích hoạt cuộn */
+        }
+
         button[type="submit"] {
             display: block;
             width: 100%;
@@ -91,23 +96,54 @@
         <form action="createexam" method="post">
             <label for="examName">Exam Name:</label>
             <input type="text" id="examName" name="examName" required><br><br>
+            
+            <!-- Trường nhập số câu hỏi muốn chọn -->
+            <label for="numQuestions">Number of Questions to Select:</label>
+            <input type="number" id="numQuestions" name="numQuestions" min="1" value="1"><br><br>
 
             <!-- Display questions from database -->
             <h2>Select Questions:</h2>
-            <% List<QuestionBank> questions = (List<QuestionBank>) request.getAttribute("questions"); %>
-            <% if (questions != null) { %>
-                <% for (QuestionBank question : questions) { %>
-                    <label>
-                        <input type="checkbox" id="<%=question.getId()%>" name="selectedQuestions" value="<%=question.getId()%>">
-                        <span class="question-label"><%=question.getQuestionText()%></span>
-                    </label><br>
+            <div class="question-list">
+                <% List<QuestionBank> questions = (List<QuestionBank>) request.getAttribute("questions"); %>
+                <% if (questions != null) { %>
+                    <% for (QuestionBank question : questions) { %>
+                        <label>
+                            <input type="checkbox" id="<%=question.getId()%>" name="selectedQuestions" value="<%=question.getId()%>">
+                            <span class="question-label"><%=question.getQuestionText()%></span>
+                        </label><br>
+                    <% } %>
+                <% } else { %>
+                    <p>No questions available.</p>
                 <% } %>
-            <% } else { %>
-                <p>No questions available.</p>
-            <% } %>
+            </div>
 
+            <button type="button" onclick="selectRandomQuestions()">Select Random Questions</button><br><br>
+            
             <button type="submit">Create Exam</button>
         </form>
     </div>
+
+    <script>
+        function selectRandomQuestions() {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            var numQuestions = checkboxes.length;
+            var numToSelect = parseInt(document.getElementById("numQuestions").value);
+            
+            // Bỏ chọn tất cả các checkbox trước đó
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+            
+            // Chọn ngẫu nhiên số lượng câu hỏi được chỉ định
+            var selectedIndices = [];
+            while (selectedIndices.length < numToSelect) {
+                var index = Math.floor(Math.random() * numQuestions);
+                if (!selectedIndices.includes(index)) {
+                    selectedIndices.push(index);
+                    checkboxes[index].checked = true;
+                }
+            }
+        }
+    </script>
 </body>
 </html>
