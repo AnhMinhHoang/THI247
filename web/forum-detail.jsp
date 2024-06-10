@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
 <jsp:include page="header.jsp"></jsp:include>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
@@ -363,7 +365,7 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                         </div>
                         <!-- ket thuc bai post -->
                         <br>
-                        <h3  id="comment-forum" >B�nh lu?n</h3>
+                        <h3  id="comment-forum" >Bình luận</h3>
                         <br><!-- comment -->
                         <!-- phan comment  -->
                         <%
@@ -399,7 +401,7 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                 data-toggle="modal"
                                                 data-target="#<%=EditModalId%>"
                                                 >
-                                                S?a</button>
+                                                Sửa</button>
                                             <br>
                                             <button
                                                 class="btn btn-xoa"
@@ -407,7 +409,7 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                 data-toggle="modal"
                                                 data-target="#<%= modalId %>"  
                                                 >
-                                                Xo�
+                                                Xoá
                                             </button>
                                         </div>
                                     </div>
@@ -419,13 +421,13 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                     <input type="hidden" name="commentID" value="<%=cmt.getCommentID()%>">
                                                     <input type="hidden" name="postID" value="<%=postID%>">
                                                     <div class="modal-header d-flex align-items-center bg-primary text-white">
-                                                        <h6 class="modal-title mb-0" id="threadModalLabel">X�c nh?n x�a b�nh lu?n?</h6>
+                                                        <h6 class="modal-title mb-0" id="threadModalLabel">Xác nhận xóa bình luận?</h6>
                                                     </div>
                                                     <div class="modal-body">
                                                         <div class="form-group">                       
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-light" data-dismiss="modal" >H?y</button>
-                                                                <input type="submit" class="btn btn-primary" style="background-color: red" value="Xo� b�nh lu?n"/>
+                                                                <button type="button" class="btn btn-light" data-dismiss="modal" >Hủy</button>
+                                                                <input type="submit" class="btn btn-primary" style="background-color: red" value="Xoá bình luận"/>
                                                             </div>
                                                         </div> 
                                                     </div>
@@ -449,7 +451,7 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                 <form action="UpdateComment" method="POST" enctype="multipart/form-data">
                                                     <div class="modal-header d-flex align-items-center bg-primary text-white">
                                                         <h6 class="modal-title mb-0" id="threadModalLabel">
-                                                            S?a b�nh lu?n
+                                                            Sửa bình luận
                                                         </h6>
                                                         <button
                                                             type="button"
@@ -457,33 +459,33 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                             data-dismiss="modal"
                                                             aria-label="Close"
                                                             >
-                                                            <span aria-hidden="true">�</span>
+                                                            <span aria-hidden="true">×</span>
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <div class="form-group">
                                                             <div class="form-group">
-                                                                <label for="thread-detail">Chi ti?t</label>
+                                                                <label for="thread-detail">Chi tiết</label>
                                                                 <textarea
                                                                     type="text"
                                                                     class="form-control"
                                                                     name="context"
                                                                     id="threadTitle"
-                                                                    placeholder="Chi ti?t"
+                                                                    placeholder="Chi tiết"
                                                                     required
                                                                     autofocus
                                                                     rows="5" 
                                                                     style="resize: none; overflow: hidden;"
                                                                     ><%=cmt.getCommentContext()%></textarea>
                                                             </div>
-                                                            <!--                    <label for="thread-image">?nh</label>
+                                                            <!--                    <label for="thread-image">Ảnh</label>
                                                                                 <input type="file" name="file" id="imgupload" accept="image/png, image/jpeg" style="display:none" onchange="submitForm()"/>-->
                                                             <div id="image-preview-container">
-                                                                <label for="myfile">Ch?n ?nh:</label>
+                                                                <label for="myfile">Chọn ảnh:</label>
                                                                 <input id="image-upload" type="file" name="image" accept="image/*">
                                                                 <br>
                                                                 <div id="image-preview-wrapper" style="position: relative;">
-                                                                    <img id="image-preview" src="<%=cmt.getCommentURL()%>" alt="Ch?a c� ?nh n�o ???c ch?n">
+                                                                    <img id="image-preview" src="<%=cmt.getCommentURL()%>" alt="Chưa có ảnh nào được chọn">
                                                                     <%if(cmt.getCommentURL() != null){%>
                                                                     <button id="delete-image" style="display: inline-block"><i class="fa fa-times"></i></button>
                                                                         <%
@@ -515,12 +517,12 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                                     class="btn btn-light"
                                                                     data-dismiss="modal"
                                                                     >
-                                                                H?y
+                                                                Hủy
                                                             </button>
                                                             <input type="hidden" name="postID" value="<%=postID%>"/>
                                                             <input type="hidden" name="commentID" value="<%=cmt.getCommentID()%>"/>
                                                             <input type="hidden" id="imgURL" name="imgURL" value="<%=cmt.getCommentURL()%>"/>
-                                                            <input type="submit" class="btn btn-primary" value="C?p nh?t"/>
+                                                            <input type="submit" class="btn btn-primary" value="Cập nhật"/>
                                                         </div>
 
                                                     </div> 
@@ -615,7 +617,7 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                 <%
                                 if(cmts.size() == 0){
                                 %>
-                                <h5  id="comment-forum" >Ch?a c� b�nh lu?n n�o</h5>
+                                <h5  id="comment-forum" >Chưa có bình luận nào</h5>
                                 <%
                                     }
                                 %>
@@ -649,14 +651,14 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                         </label>
                                                         <input id="image-upload2" type="file" name="image" accept="image/*" style="display:none;">
 
-                                                        <textarea id="submit-comment" required name="comment" placeholder="Nh?p b�nh lu?n" rows="1" style="resize: none; overflow: hidden;"></textarea>
+                                                        <textarea id="submit-comment" required name="comment" placeholder="Nhập bình luận" rows="1" style="resize: none; overflow: hidden;"></textarea>
                                                         <button type="submit" class="btn btn-primary">
                                                             <i class="fa fa-paper-plane"></i>
                                                         </button>
                                                         <br>
                                                     </div>
                                                     <div id="image-preview-wrapper2" style="position: relative;">
-                                                        <img id="image-preview2" src="#" alt="Ch?a c� ?nh n�o ???c ch?n" width="400px" height="200px" style="display: none;">
+                                                        <img id="image-preview2" src="#" alt="Chưa có ảnh nào được chọn" width="400px" height="200px" style="display: none;">
                                                         <button id="delete-image2" style="display: none"><i class="fa fa-times"></i></button>
                                                     </div>
                                                 </form>
@@ -793,4 +795,3 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
         document.getElementById('image-upload2').value = '';
     });
 </script>
->>>>>>> origin/master
