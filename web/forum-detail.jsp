@@ -317,6 +317,7 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                             height="40"
                                             alt="User"
                                             /></a>
+                                            <h3>edit</h3>
                                     <div class="media-body">
                                         <h6>
                                             <a
