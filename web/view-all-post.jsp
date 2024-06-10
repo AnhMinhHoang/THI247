@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
 <jsp:include page="header.jsp"></jsp:include>
+<script>
+    var container = document.getElementById("tagID");
+    var tag = container.getElementsByClassName("tag");
+    var current = container.getElementsByClassName("active");
+    current[0].className = current[0].className.replace(" active", "");
+</script>
+    
 <%
 int id = (Integer)session.getAttribute("userID");
 Users user = new UserDAO().findByUserID(id);

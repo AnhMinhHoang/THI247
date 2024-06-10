@@ -6,6 +6,7 @@ package controller;
 
 import DAO.ForumDAO;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
@@ -22,9 +23,10 @@ import java.io.File;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
                  maxFileSize = 1024 * 1024 * 10,       // 10MB
                  maxRequestSize = 1024 * 1024 * 50)    // 50MB
-public class UpdatePost extends HttpServlet {
+public class UpdateComment extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final String UPLOAD_DIRECTORY = "uploads/avaUploads";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -39,14 +41,13 @@ public class UpdatePost extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIRECTORY;
         File uploadDir = new File(uploadPath);
-        String postTitle = request.getParameter("title");
-        String postContext = request.getParameter("context");
-        int userID = Integer.parseInt(request.getParameter("userID"));
         int postID = Integer.parseInt(request.getParameter("postID"));
-        String imgURL = request.getParameter("postIMG");
+        String context = request.getParameter("context");
+        String imgURL = request.getParameter("imgURL");
         if(imgURL.isBlank()) imgURL = null;
+        int commentID = Integer.parseInt(request.getParameter("commentID"));
         HttpSession session = request.getSession();
-        session.setAttribute("userID", userID);
+        session.setAttribute("postID", postID);
         boolean check = true;
         
         if(!uploadDir.exists()){
@@ -61,15 +62,14 @@ public class UpdatePost extends HttpServlet {
                 String url;
                 url = UPLOAD_DIRECTORY + "/" + fileName;
                 check = false;
-                new ForumDAO().updatePostByID(postID, postTitle, postContext, url);
-                response.sendRedirect("view-all-post-user.jsp");
+                new ForumDAO().updateCommentByID(commentID, context, url);
+                response.sendRedirect("forum-detail.jsp");
             }
         }
         if(check){
-            new ForumDAO().updatePostByID(postID, postTitle, postContext, imgURL);
-            response.sendRedirect("view-all-post-user.jsp");
+            new ForumDAO().updateCommentByID(commentID, context, imgURL);
+            response.sendRedirect("forum-detail.jsp");
         }
-        
     }
     
     private String getFileName(Part part){

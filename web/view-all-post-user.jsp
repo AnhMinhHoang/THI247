@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
 <jsp:include page="header.jsp"></jsp:include>
+    
+<script>
+    var container = document.getElementById("tagID");
+    var tag = container.getElementsByClassName("tag");
+    var current = container.getElementsByClassName("active");
+    current[0].className = current[0].className.replace(" active", "");
+</script>
+
 <%
 int id = (Integer)session.getAttribute("userID");
 Users user = new UserDAO().findByUserID(id);
@@ -144,5 +152,15 @@ List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) { 
+            var scrollpos = localStorage.getItem('scrollpos');
+            if (scrollpos) window.scrollTo(0, scrollpos);
+        });
 
+        window.onbeforeunload = function(e) {
+            localStorage.setItem('scrollpos', window.scrollY);
+        };
+        
+    </script>
   <jsp:include page="footer.jsp"></jsp:include>

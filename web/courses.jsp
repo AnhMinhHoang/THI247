@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:include page="header.jsp"></jsp:include>
+<script>
+        var container = document.getElementById("tagID");
+        var tag = container.getElementsByClassName("tag");
+        var current = container.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+        tag[2].className += " active";
+</script>
     <!-- Courses Start -->
     <div class="container-xxl py-5">
         <div class="container">

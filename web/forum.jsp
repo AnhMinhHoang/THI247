@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
 <jsp:include page="header.jsp"></jsp:include>
+<script>
+        var container = document.getElementById("tagID");
+        var tag = container.getElementsByClassName("tag");
+        var current = container.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+        tag[1].className += " active";
+</script>
+
     <style type="text/css">
         body {
-            margin-top: 20px;
             color: #1a202c;
             text-align: left;
             background-color: #e2e8f0;
@@ -439,7 +446,7 @@
                                         <br>
                                         <div id="image-preview-wrapper" style="position: relative;">
                                             <img id="image-preview" src="#" alt="Preview Image" style="display:none;">
-                                            <button id="delete-image" style="display:none;"><i class="fa fa-times"></i></button>
+                                            <button id="delete-image"><i class="fa fa-times"></i></button>
                                         </div>
                                     </div>
                                     <br>
@@ -507,6 +514,13 @@
         // Reset file input
         document.getElementById('image-upload').value = '';
     });
+    
+    function removeURL(){
+        var imgElement = document.getElementById('image-preview');
+        imgElement.src = '#'; // Clear the preview
+        imgElement.style.display = 'none';
+        document.getElementById('image-upload').value = '';
+    }
 
 </script>
   

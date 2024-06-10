@@ -68,6 +68,14 @@
         <servlet-name>UpdatePost</servlet-name>
         <servlet-class>controller.UpdatePost</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteComment</servlet-name>
+        <servlet-class>controller.DeleteComment</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateComment</servlet-name>
+        <servlet-class>controller.UpdateComment</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -125,5 +133,13 @@
     <servlet-mapping>
         <servlet-name>UpdatePost</servlet-name>
         <url-pattern>/UpdatePost</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteComment</servlet-name>
+        <url-pattern>/DeleteComment</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateComment</servlet-name>
+        <url-pattern>/UpdateComment</url-pattern>
     </servlet-mapping>
 </web-app>

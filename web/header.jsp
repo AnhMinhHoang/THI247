@@ -62,11 +62,11 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
-                <div class="navbar-nav ms-auto p-4 p-lg-0">
-                    <a href="Home" class="nav-item nav-link active">Trang Chủ</a>
-                    <a href="forum.jsp" class="nav-item nav-link">Diễn Đàn</a>
-                    <a href="courses.jsp" class="nav-item nav-link">Kiểm Tra</a>
-                    <a href="shop.jsp" class="nav-item nav-link">Cửa Hàng</a>
+                <div class="navbar-nav ms-auto p-4 p-lg-0" id="tagID">
+                    <a href="Home" class="nav-item nav-link tag active">Trang Chủ</a>
+                    <a href="forum.jsp" class="nav-item nav-link tag">Diễn Đàn</a>
+                    <a href="courses.jsp" class="nav-item nav-link tag">Kiểm Tra</a>
+                    <a href="shop.jsp" class="nav-item nav-link tag">Cửa Hàng</a>
 
                 </div>
                 <%
