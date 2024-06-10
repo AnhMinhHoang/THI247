@@ -77,7 +77,7 @@ String postIMG = (String)session.getAttribute("postIMG");
                         <button id="delete-image" style="display: inline-block"><i class="fa fa-times"></i></button>
                         <%
                             }
-                            else{
+                        else if(postIMG == null){
                         %>
                         <button id="delete-image" style="display: none"><i class="fa fa-times"></i></button>
                         <%

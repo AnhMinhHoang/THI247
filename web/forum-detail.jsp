@@ -6,13 +6,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script><!--
                                                                                                                                                                                  
     -->
-<script>
-    var container = document.getElementById("tagID");
-    var tag = container.getElementsByClassName("tag");
-    var current = container.getElementsByClassName("active");
-    current[0].className = current[0].className.replace(" active", "");
-    tag[1].className += " active";
-</script>
+    <script>
+        var container = document.getElementById("tagID");
+        var tag = container.getElementsByClassName("tag");
+        var current = container.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+        tag[1].className += " active";
+    </script>
     <style type="text/css">
         body {
             color: #1a202c;
@@ -207,7 +207,7 @@
             cursor: pointer;
             display: none; /* Initially hidden */
         }
-        
+
 
         #image-preview-wrapper2 {
             position: relative;
@@ -371,11 +371,18 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                         <%
                             List<Comments> cmts = new ForumDAO().findAllCommentsByPostID(postID);
                             for(int i = cmts.size() - 1; i >= 0; i--){
+                              check = false;
                               Comments cmt = cmts.get(i);
                               String img = cmt.getCommentURL();
                               String modalId = "threadModal" + i;
                               String EditModalId = "threadModalE" + i;
                               Users otherUser = new UserDAO().findByUserID(cmt.getUserID());
+                              if(session.getAttribute("currentUser") != null){
+                                    Users realUser = (Users)session.getAttribute("currentUser");
+                                    if(realUser.getUserID() == cmt.getUserID()){
+                                        check = true;
+                                    }
+                                }
                         %>
 
                         <div class="card mb-2" >
@@ -442,9 +449,6 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                         <div class="modal-dialog modal-lg" role="document">
                                             <div class="modal-content">
                                                 <form action="UpdateComment" method="POST" enctype="multipart/form-data">
-                                                    <input type="hidden" name="postID" value="<%=postID%>"/>
-                                                    <input type="hidden" name="commentID" value="<%=cmt.getCommentID()%>"/>
-                                                    <input type="hidden" id="imgURL" name="imgURL" value="<%=cmt.getCommentURL()%>"/>
                                                     <div class="modal-header d-flex align-items-center bg-primary text-white">
                                                         <h6 class="modal-title mb-0" id="threadModalLabel">
                                                             Sửa bình luận
@@ -486,7 +490,7 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                                     <button id="delete-image" style="display: inline-block"><i class="fa fa-times"></i></button>
                                                                         <%
                                                                             }
-                                                                            else{
+                                                                        else if(cmt.getCommentURL() == null){
                                                                         %>
                                                                     <button id="delete-image" style="display: none"><i class="fa fa-times"></i></button>
                                                                         <%
@@ -515,6 +519,9 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                                     >
                                                                 Hủy
                                                             </button>
+                                                            <input type="hidden" name="postID" value="<%=postID%>"/>
+                                                            <input type="hidden" name="commentID" value="<%=cmt.getCommentID()%>"/>
+                                                            <input type="hidden" id="imgURL" name="imgURL" value="<%=cmt.getCommentURL()%>"/>
                                                             <input type="submit" class="btn btn-primary" value="Cập nhật"/>
                                                         </div>
 
@@ -523,20 +530,18 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-
-                                <a
-                                    href="profile.jsp"
-                                    data-target=".forum-content"
-                                    ><img
-                                        src="<%=otherUser.getAvatarURL()%>"
-                                        class="mr-3 rounded-circle"
-                                        width="40"
-                                        height="40"
-                                        alt="User"
-                                        /></a>
-                                <div class="ml-auto">
+                                </div>  
+                                <div class="media forum-item">
+                                    <a
+                                        href="profile.jsp"
+                                        data-target=".forum-content"
+                                        ><img
+                                            src="<%=otherUser.getAvatarURL()%>"
+                                            class="mr-3 rounded-circle"
+                                            width="40"
+                                            height="40"
+                                            alt="User"
+                                            /></a>
                                     <div class="media-body">
                                         <h6>
                                             <a
@@ -546,11 +551,27 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                 style="text-decoration: none;"
                                                 ><%=otherUser.getUsername()%></a
                                             >
-                                            <p style="font-style: italic; color: gray; font-size: 12px"><%=cmt.getCommentDate()%></p></h6>
-                                            <%
-                                                }
-                                            else{
-                                            %>
+
+                                            <p style="font-style: italic; color: gray; font-size: 12px"><%=cmt.getCommentDate()%></p>
+                                        </h6>
+                                        <p class="text-body">
+                                            <%=cmt.getCommentContext()%>
+                                        </p>
+                                        <%
+                                                if(cmt.getCommentURL() != null){
+                                        %>
+                                        <img src="<%=cmt.getCommentURL()%>" width="700" height="400"/>
+                                        <%
+                                            }
+                                        %>
+                                    </div>
+                                </div>
+                                <div class="ml-auto">
+                                    <div class="media-body">
+                                        <%
+                                            }
+                                        else{
+                                        %>
                                         <div class="media forum-item">
                                             <a
                                                 href="UserProfile?userID=<%=cmt.getUserID()%>"
@@ -571,10 +592,8 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                         style="text-decoration: none;"
                                                         ><%=otherUser.getUsername()%></a
                                                     >
-                                                    <p style="font-style: italic; color: gray; font-size: 12px"><%=cmt.getCommentDate()%></p></h6>
-                                                    <%
-                                                        }
-                                                    %>
+                                                    <p style="font-style: italic; color: gray; font-size: 12px"><%=cmt.getCommentDate()%></p>
+                                                </h6>
                                                 <p class="text-body">
                                                     <%=cmt.getCommentContext()%>
                                                 </p>
@@ -582,6 +601,9 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                 if(cmt.getCommentURL() != null){
                                                 %>
                                                 <img src="<%=cmt.getCommentURL()%>" width="700" height="400"/>
+                                                <%
+                                                    }
+                                                %>
                                                 <%
                                                     }
                                                 %>
@@ -624,10 +646,10 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                             <div class="card mb-2">
                                                 <form method="POST" action="PostComments" enctype="multipart/form-data">
                                                     <div class="chat-container">
-                                                            <label for="image-upload2" class="custom-file-upload">
-                                                                <i class="fa fa-image" style="cursor: pointer;"></i>
-                                                            </label>
-                                                            <input id="image-upload2" type="file" name="image" accept="image/*" style="display:none;">
+                                                        <label for="image-upload2" class="custom-file-upload">
+                                                            <i class="fa fa-image" style="cursor: pointer;"></i>
+                                                        </label>
+                                                        <input id="image-upload2" type="file" name="image" accept="image/*" style="display:none;">
 
                                                         <textarea id="submit-comment" required name="comment" placeholder="Nhập bình luận" rows="1" style="resize: none; overflow: hidden;"></textarea>
                                                         <button type="submit" class="btn btn-primary">
@@ -657,117 +679,119 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                 </div>    
             </div>
         </div>
-        <jsp:include page="footer.jsp"></jsp:include>
-        <script>
-            var textarea = document.getElementById("submit-comment");
-            textarea.addEventListener("input", function () {
-                this.style.height = "auto";
-                this.style.height = (this.scrollHeight) + "px";
-            });
-            function removeURL(url) {
-                var imgElement = document.getElementById('image-preview');
-                imgElement.src = url; // Clear the preview
-                document.getElementById('image-upload').value = '';
-            }
-        </script>
+    </div>
+</div>
+<jsp:include page="footer.jsp"></jsp:include>
+<script>
+    var textarea = document.getElementById("submit-comment");
+    textarea.addEventListener("input", function () {
+        this.style.height = "auto";
+        this.style.height = (this.scrollHeight) + "px";
+    });
+    function removeURL(url) {
+        var imgElement = document.getElementById('image-preview');
+        imgElement.src = url; // Clear the preview
+        document.getElementById('image-upload').value = '';
+    }
+</script>
 
 
 
-        <script>
-            /* When the user clicks on the button, 
-             toggle between hiding and showing the dropdown content */
-            function myFunction(commentID) {
-                var dropdown = document.getElementById("myDropdown" + commentID);
-                dropdown.classList.toggle("show");
-            }
+<script>
+    /* When the user clicks on the button, 
+     toggle between hiding and showing the dropdown content */
+    function myFunction(commentID) {
+        var dropdown = document.getElementById("myDropdown" + commentID);
+        dropdown.classList.toggle("show");
+    }
 
-            // Close the dropdown if the user clicks outside of it
-            window.onclick = function (event) {
-                if (!event.target.matches('.dropbtn')) {
-                    var dropdowns = document.getElementsByClassName("dropdown-content");
-                    var i;
-                    for (i = 0; i < dropdowns.length; i++) {
-                        var openDropdown = dropdowns[i];
-                        if (openDropdown.classList.contains('show')) {
-                            openDropdown.classList.remove('show');
-                        }
-                    }
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function (event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            var i;
+            for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
                 }
             }
-        </script>
+        }
+    }
+</script>
 
-        <script>
-            // Function to handle file input change event
-            document.getElementById('image-upload').addEventListener('change', function (event) {
-                var file = event.target.files[0];
-                var reader = new FileReader();
+<script>
+    // Function to handle file input change event
+    document.getElementById('image-upload').addEventListener('change', function (event) {
+        var file = event.target.files[0];
+        var reader = new FileReader();
 
-                reader.onload = function (e) {
-                    var imgElement = document.getElementById('image-preview');
-                    imgElement.src = e.target.result;
-                    imgElement.style.display = 'block';
+        reader.onload = function (e) {
+            var imgElement = document.getElementById('image-preview');
+            imgElement.src = e.target.result;
+            imgElement.style.display = 'block';
 
-                    // Show delete button
-                    document.getElementById('delete-image').style.display = 'inline-block';
-                }
+            // Show delete button
+            document.getElementById('delete-image').style.display = 'inline-block';
+        }
 
-                reader.readAsDataURL(file);
-            });
+        reader.readAsDataURL(file);
+    });
 
-            // Function to handle delete image button click
-            document.getElementById('delete-image').addEventListener('click', function (event) {
-                event.preventDefault(); // Prevent default behavior (page reload)
+    // Function to handle delete image button click
+    document.getElementById('delete-image').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default behavior (page reload)
 
-                var imgElement = document.getElementById('image-preview');
-                imgElement.src = '#'; // Clear the preview
-                imgElement.style.display = 'none';
+        var imgElement = document.getElementById('image-preview');
+        imgElement.src = ''; // Clear the preview
+        imgElement.style.display = 'none';
 
-                // Hide delete button
-                document.getElementById('delete-image').style.display = 'none';
+        // Hide delete button
+        document.getElementById('delete-image').style.display = 'none';
 
-                // Reset file input
-                document.getElementById('image-upload').value = '';
-                document.getElementById('imgURL').value = '';
-            });
+        // Reset file input
+        document.getElementById('image-upload').value = '';
+        document.getElementById('imgURL').value = '';
+    });
 
-            document.addEventListener("DOMContentLoaded", function (event) {
-                var scrollpos = localStorage.getItem('scrollpos');
-                if (scrollpos)
-                    window.scrollTo(0, scrollpos);
-            });
+    document.addEventListener("DOMContentLoaded", function (event) {
+        var scrollpos = localStorage.getItem('scrollpos');
+        if (scrollpos)
+            window.scrollTo(0, scrollpos);
+    });
 
-            window.onbeforeunload = function (e) {
-                localStorage.setItem('scrollpos', window.scrollY);
-            };
+    window.onbeforeunload = function (e) {
+        localStorage.setItem('scrollpos', window.scrollY);
+    };
 
-        </script>
+</script>
 
-        <script>
-            document.getElementById('image-upload2').addEventListener('change', function (event) {
-                var file = event.target.files[0];
-                var reader = new FileReader();
+<script>
+    document.getElementById('image-upload2').addEventListener('change', function (event) {
+        var file = event.target.files[0];
+        var reader = new FileReader();
 
-                reader.onload = function (e) {
-                    var imgElement = document.getElementById('image-preview2');
-                    imgElement.src = e.target.result;
-                    imgElement.style.display = 'block'; // Show the image preview
-                    document.getElementById('delete-image2').style.display = 'inline-block'; // Show the delete button
-                };
+        reader.onload = function (e) {
+            var imgElement = document.getElementById('image-preview2');
+            imgElement.src = e.target.result;
+            imgElement.style.display = 'block'; // Show the image preview
+            document.getElementById('delete-image2').style.display = 'inline-block'; // Show the delete button
+        };
 
-                if (file) {
-                    reader.readAsDataURL(file); // Read the uploaded file as a data URL
-                }
-            });
+        if (file) {
+            reader.readAsDataURL(file); // Read the uploaded file as a data URL
+        }
+    });
 
-            document.getElementById('delete-image2').addEventListener('click', function (event) {
-                event.preventDefault(); // Prevent the default button behavior (page reload)
+    document.getElementById('delete-image2').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent the default button behavior (page reload)
 
-                var imgElement = document.getElementById('image-preview2');
-                imgElement.src = '#'; // Clear the image preview
-                imgElement.style.display = 'none'; // Hide the image preview
-                document.getElementById('delete-image2').style.display = 'none'; // Hide the delete button
+        var imgElement = document.getElementById('image-preview2');
+        imgElement.src = '#'; // Clear the image preview
+        imgElement.style.display = 'none'; // Hide the image preview
+        document.getElementById('delete-image2').style.display = 'none'; // Hide the delete button
 
-                // Clear the file input
-                document.getElementById('image-upload2').value = '';
-            });
-        </script>
+        // Clear the file input
+        document.getElementById('image-upload2').value = '';
+    });
+</script>

@@ -44,7 +44,7 @@ public class UpdateComment extends HttpServlet {
         int postID = Integer.parseInt(request.getParameter("postID"));
         String context = request.getParameter("context");
         String imgURL = request.getParameter("imgURL");
-        if(imgURL.isBlank()) imgURL = null;
+        if(imgURL.isBlank() || imgURL.equals("null")) imgURL = null;
         int commentID = Integer.parseInt(request.getParameter("commentID"));
         HttpSession session = request.getSession();
         session.setAttribute("postID", postID);

@@ -276,7 +276,9 @@
                             <input
                                 type="text"
                                 class="form-control form-control-sm bg-gray-200 border-gray-200 shadow-none mb-4 mt-4"
-                                placeholder="Search forum"
+                                placeholder="Tìm kiếm"
+                                id="userInput" 
+                                onkeyup="searchFuntion()"
                                 />
                         </span>
                     </div>
@@ -296,7 +298,7 @@
                               str = forum.getPostContext();
                           }
                     %>
-                    <div class="card mb-2">
+                    <div class="card mb-2 all">
                         <div class="card-body p-2 p-sm-3">
                             <div class="media forum-item">
                                 <%
@@ -360,12 +362,12 @@
                                             <a
                                                 href="ForumDetail?postID=<%=forum.getPostID()%>"
                                                 data-target=".forum-content"
-                                                class="text-body"
+                                                class="text-body title"
                                                 ><%=forum.getPostTitle()%></a
                                             >
                                         </h4>
                                         <a href="ForumDetail?postID=<%=forum.getPostID()%>" style="text-decoration: none">
-                                            <p class="text-secondary">
+                                            <p class="text-secondary context">
                                                 <%=str%>
                                             </p>
                                         </a>
@@ -522,6 +524,25 @@
         document.getElementById('image-upload').value = '';
     }
 
+</script>
+
+<script>
+    var all = document.getElementsByClassName('all');
+    function searchFuntion() {
+        var input = document.getElementById('userInput');
+        var filter = input.value.toUpperCase();
+        var a, b, txtValue, txtValue2;
+        for (var i = 0; i < all.length; i++) {
+            a = all[i].getElementsByClassName("title")[0];
+            b = all[i].getElementsByClassName("context")[0];
+            txtValue = a.textContent || a.innerText;
+            txtValue2 = b.textContent || b.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1 || txtValue2.toUpperCase().indexOf(filter) > -1)
+                all[i].style.display = 'block';
+            else
+                all[i].style.display = 'none';
+        }
+    }
 </script>
   
           <script>
