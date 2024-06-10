@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DAO;
 
 import java.sql.Connection;
@@ -10,10 +6,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author ADMIN
- */
 public class DBConnection {
 
     public static String url = "jdbc:sqlserver://MSI:1433;databaseName=Thi247;encrypt=true;trustServerCertificate=true";

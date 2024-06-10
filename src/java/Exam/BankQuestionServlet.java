@@ -15,8 +15,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/TeacherServlet")
-public class TeacherServlet extends HttpServlet {
+@WebServlet("/BankQuestionServlet")
+public class BankQuestionServlet extends HttpServlet {
     private QuestionDAO questionDAO = new QuestionDAO();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -51,7 +51,7 @@ public class TeacherServlet extends HttpServlet {
             // Retrieve questions and forward to JSP
             List<QuestionBank> questions = questionDAO.getAllMultipleChoiceQuestions();
             request.setAttribute("questions", questions);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("Teacherquiz.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("BankQuestion.jsp");
             dispatcher.forward(request, response);
         }
     }
@@ -77,7 +77,7 @@ private void addQuestion(HttpServletRequest request, HttpServletResponse respons
     try {
         boolean added = questionDAO.createMultipleChoiceQuestion(question);
         if (added) {
-            response.sendRedirect("TeacherServlet");
+            response.sendRedirect("BankQuestionServlet");
         } else {
             // Xử lý khi thêm câu hỏi thất bại
         }
@@ -107,7 +107,7 @@ private void addQuestion(HttpServletRequest request, HttpServletResponse respons
         try {
             boolean updated = questionDAO.updateMultipleChoiceQuestion(question);
             if (updated) {
-                response.sendRedirect("TeacherServlet");
+                response.sendRedirect("BankQuestionServlet");
             } else {
                 // Handle update failure
             }
@@ -121,7 +121,7 @@ private void addQuestion(HttpServletRequest request, HttpServletResponse respons
         try {
             boolean deleted = questionDAO.deleteMultipleChoiceQuestion(id);
             if (deleted) {
-                response.sendRedirect("TeacherServlet");
+                response.sendRedirect("BankQuestionServlet");
             } else {
                 // Handle delete failure
             }

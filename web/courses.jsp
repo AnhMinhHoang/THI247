@@ -36,7 +36,7 @@
                             <a class="position-relative d-block overflow-hidden" href="">
                                 <img class="img-fluid" src="img/cat-1.jpg" alt="">
                                 <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3" style="margin: 1px;">
-                                    <h5 class="m-0">Web Design</h5>
+                                    <h5 class="m-0">Vật Lý</h5>
                                     <small class="text-primary">49 Courses</small>
                                 </div>
                             </a>
@@ -45,7 +45,7 @@
                             <a class="position-relative d-block overflow-hidden" href="">
                                 <img class="img-fluid" src="img/cat-2.jpg" alt="">
                                 <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3" style="margin: 1px;">
-                                    <h5 class="m-0">Graphic Design</h5>
+                                    <h5 class="m-0">Toán Học</h5>
                                     <small class="text-primary">49 Courses</small>
                                 </div>
                             </a>
@@ -54,7 +54,7 @@
                             <a class="position-relative d-block overflow-hidden" href="">
                                 <img class="img-fluid" src="img/cat-3.jpg" alt="">
                                 <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3" style="margin: 1px;">
-                                    <h5 class="m-0">Video Editing</h5>
+                                    <h5 class="m-0">Hóa Học</h5>
                                     <small class="text-primary">49 Courses</small>
                                 </div>
                             </a>
@@ -65,7 +65,7 @@
                     <a class="position-relative d-block h-100 overflow-hidden" href="">
                         <img class="img-fluid position-absolute w-100 h-100" src="img/cat-4.jpg" alt="" style="object-fit: cover;">
                         <div class="bg-white text-center position-absolute bottom-0 end-0 py-2 px-3" style="margin:  1px;">
-                            <h5 class="m-0">Online Marketing</h5>
+                            <h5 class="m-0">Tiếng Anh</h5>
                             <small class="text-primary">49 Courses</small>
                         </div>
                     </a>

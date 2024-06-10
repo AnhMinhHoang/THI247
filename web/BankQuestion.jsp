@@ -5,10 +5,66 @@
 <head>
     <meta charset="UTF-8">
     <title>Question Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 16px);
+            padding: 6px;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+        }
+
+        input[type="submit"], a {
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover, a:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <h2>List of Multiple Choice Questions</h2>
-    <table border="1">
+    <table>
         <tr>
             <th>ID</th>
             <th>Subject</th>
@@ -21,7 +77,7 @@
         </tr>
         <c:forEach items="${questions}" var="question">
             <tr>
-                <form action="TeacherServlet" method="post">
+                <form action="BankQuestionServlet" method="post">
                     <input type="hidden" name="action" value="update">
                     <input type="hidden" name="id" value="${question.id}">
                     <td>${question.id}</td>
@@ -39,7 +95,7 @@
                     <td><input type="text" name="explain" value="${question.explain}"></td>
                     <td>
                         <input type="submit" value="Update">
-                        <a href="TeacherServlet?action=delete&id=${question.id}">Delete</a>
+                        <a href="BankQuestionServlet?action=delete&id=${question.id}">Delete</a>
                     </td>
                 </form>
             </tr>
@@ -47,7 +103,7 @@
     </table>
 
     <h2>Add New Question</h2>
-    <form action="TeacherServlet" method="post">
+    <form action="BankQuestionServlet" method="post">
         <input type="hidden" name="action" value="add">
         Subject: <input type="text" name="subject"><br>
         User ID: <input type="text" name="userId"><br>

@@ -2,6 +2,7 @@
 <%@ page import="model.QuestionBank" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Collections" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -81,13 +82,14 @@
                     double totalScore = 0;
                     for (QuestionBank question : questions) {
                         double questionScore = 0;
+                        List<String> choices = new ArrayList<>(question.getChoices());
+                        Collections.shuffle(choices); // Randomize the order of choices
                 %>
                     <p><%= question.getQuestionText() %></p>
                     <input type="hidden" name="questionIds" value="<%= question.getId() %>">
                     <%
-                        List<String> choices = question.getChoices();
                         String userChoice = request.getParameter("answers_" + question.getId());
-                        if (userChoice != null) { // Chỉ hiển thị nếu người dùng đã chọn
+                        if (userChoice != null) { // Display only if the user has made a choice
                             String correctAnswer = question.getCorrectAnswer();
                             String explain = question.getExplain();
                             boolean isCorrect = userChoice.equals(correctAnswer);
@@ -107,14 +109,14 @@
                                 }
                             }
                     %>
-                            <%-- Hiển thị choice correct và kết quả --%>
+                            <%-- Display correct choice and result --%>
                             <p>Correct choice: <%= correctAnswer %></p>
                             <p>Result: <%= isCorrect ? "Correct" : "Incorrect" %></p>
-                            <%-- Hiển thị giải thích nếu là sai --%>
+                            <%-- Display explanation if the answer is wrong --%>
                             <% if (!isCorrect) { %>
                                 <p>Explain: <%= explain %></p>
                             <% } %>
-                            <%-- Hiển thị điểm của câu hỏi --%>
+                            <%-- Display the question score --%>
                             <p>Question Score: <%= questionScore * 100 %> %</p>
                     <%
                         } else {
@@ -127,12 +129,12 @@
                     %>
                 <%
                     }
-                    // Tính tổng điểm
-                    double totalMaxScore = 100.0; // Số điểm tối đa của bài kiểm tra
+                    // Calculate total score
+                    double totalMaxScore = 100.0; // Maximum score for the quiz
                     totalScore = (totalScore / questions.size()) * totalMaxScore;
                 %>
             </fieldset>
-            <%-- Hiển thị tổng điểm --%>
+            <%-- Display total score --%>
             <p class="result">Total Score: <%= totalScore %> %</p>
             <input type="submit" value="Submit">
         </form>

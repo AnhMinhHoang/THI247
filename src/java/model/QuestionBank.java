@@ -11,7 +11,6 @@ public class QuestionBank {
     private String correctAnswer;
     private String explain;
 
-    // Constructor
     public QuestionBank(int id, String subject, int userId, String questionText, List<String> choices, String correctAnswer, String explain) {
         this.id = id;
         this.subject = subject;
@@ -23,6 +22,7 @@ public class QuestionBank {
     }
 
     // Getters and Setters
+
     public int getId() {
         return id;
     }
@@ -79,9 +79,17 @@ public class QuestionBank {
         this.explain = explain;
     }
 
+    // toString() method
     @Override
     public String toString() {
-        return "QuestionBank{" + "id=" + id + ", subject=" + subject + ", userId=" + userId + ", questionText=" + questionText + ", choices=" + choices + ", correctAnswer=" + correctAnswer + ", explain=" + explain + '}';
+        return "QuestionBank{" +
+                "id=" + id +
+                ", subject='" + subject + '\'' +
+                ", userId=" + userId +
+                ", questionText='" + questionText + '\'' +
+                ", choices=" + choices +
+                ", correctAnswer='" + correctAnswer + '\'' +
+                ", explain='" + explain + '\'' +
+                '}';
     }
-    
 }

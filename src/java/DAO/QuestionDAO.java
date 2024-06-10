@@ -8,36 +8,34 @@ import java.util.List;
 
 public class QuestionDAO extends DBConnection {
 
-  
     public boolean createMultipleChoiceQuestion(QuestionBank question) throws SQLException {
-    String sql = "INSERT INTO question_bank (subject, userID, question_context, choice_1, choice_2, choice_3, choice_correct, choice_correct_explain) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setString(1, question.getSubject());
-        stmt.setInt(2, question.getUserId());
-        stmt.setString(3, question.getQuestionText());
-        List<String> choices = question.getChoices();
-        stmt.setString(4, choices.get(0));
-        stmt.setString(5, choices.get(1));
-        stmt.setString(6, choices.get(2));
-        stmt.setString(7, question.getCorrectAnswer());
-        stmt.setString(8, question.getExplain());
+        String sql = "INSERT INTO QuestionBank (subject, user_id, question_context, choice_1, choice_2, choice_3, choice_correct, choice_correct_explain) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, question.getSubject());
+            stmt.setInt(2, question.getUserId());
+            stmt.setString(3, question.getQuestionText());
+            List<String> choices = question.getChoices();
+            stmt.setString(4, choices.get(0));
+            stmt.setString(5, choices.get(1));
+            stmt.setString(6, choices.get(2));
+            stmt.setString(7, question.getCorrectAnswer());
+            stmt.setString(8, question.getExplain());
 
-        int rowsAffected = stmt.executeUpdate();
-        return rowsAffected > 0;
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        }
     }
-}
-
 
     // READ
     public List<QuestionBank> getAllMultipleChoiceQuestions() {
         List<QuestionBank> questions = new ArrayList<>();
-        String query = "SELECT * FROM question_bank";
+        String query = "SELECT * FROM QuestionBank";
 
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet resultSet = stmt.executeQuery(query)) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("question_id");
                 String subject = resultSet.getString("subject");
-                int userId = resultSet.getInt("userID");
+                int userId = resultSet.getInt("user_id");
                 String questionText = resultSet.getString("question_context");
                 List<String> choices = Arrays.asList(
                         resultSet.getString("choice_1"),
@@ -59,7 +57,7 @@ public class QuestionDAO extends DBConnection {
 
     // UPDATE
     public boolean updateMultipleChoiceQuestion(QuestionBank question) throws SQLException {
-        String sql = "UPDATE question_bank SET subject = ?, userID = ?, question_context = ?, choice_1 = ?, choice_2 = ?, choice_3 = ?, choice_correct = ?, choice_correct_explain = ? WHERE question_id = ?";
+        String sql = "UPDATE QuestionBank SET subject = ?, user_id = ?, question_context = ?, choice_1 = ?, choice_2 = ?, choice_3 = ?, choice_correct = ?, choice_correct_explain = ? WHERE question_id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, question.getSubject());
             stmt.setInt(2, question.getUserId());
@@ -79,7 +77,7 @@ public class QuestionDAO extends DBConnection {
 
     // DELETE
     public boolean deleteMultipleChoiceQuestion(int id) throws SQLException {
-        String sql = "DELETE FROM question_bank WHERE question_id = ?";
+        String sql = "DELETE FROM QuestionBank WHERE question_id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             int rowsAffected = stmt.executeUpdate();
@@ -104,23 +102,23 @@ public class QuestionDAO extends DBConnection {
     }
 
     // Get correct answers
-    public List<String> getCorrectAnswers(List<QuestionBank> questions) {
-        List<String> correctAnswers = new ArrayList<>();
-        for (QuestionBank question : questions) {
-            correctAnswers.add(question.getCorrectAnswer());
-        }
-        return correctAnswers;
+   public List<String> getCorrectAnswers(List<QuestionBank> questions) {
+    List<String> correctAnswers = new ArrayList<>();
+    for (QuestionBank question : questions) {
+        correctAnswers.add(question.getCorrectAnswer());
     }
+    return correctAnswers;
+}
 
     // GET BY ID
     public QuestionBank getQuestionById(int id) {
-        String query = "SELECT * FROM question_bank WHERE question_id = ?";
+        String query = "SELECT * FROM QuestionBank WHERE question_id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, id);
             try (ResultSet resultSet = stmt.executeQuery()) {
                 if (resultSet.next()) {
                     String subject = resultSet.getString("subject");
-                    int userId = resultSet.getInt("userID");
+                    int userId = resultSet.getInt("user_id");
                     String questionText = resultSet.getString("question_context");
                     List<String> choices = Arrays.asList(
                             resultSet.getString("choice_1"),
@@ -138,6 +136,32 @@ public class QuestionDAO extends DBConnection {
         }
         return null;
     }
-
+  
+   public List<QuestionBank> getAllMultipleChoiceQuestionsByUserId(int userId) throws SQLException {
+    List<QuestionBank> questions = new ArrayList<>();
+    String query = "SELECT * FROM QuestionBank WHERE user_id = ?";
+    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, userId);
+        try (ResultSet resultSet = stmt.executeQuery()) {
+            while (resultSet.next()) {
+                QuestionBank question = new QuestionBank(
+                        resultSet.getInt("question_id"),
+                        resultSet.getString("subject"),
+                        resultSet.getInt("user_id"),
+                        resultSet.getString("question_context"),
+                        Arrays.asList(
+                                resultSet.getString("choice_1"),
+                                resultSet.getString("choice_2"),
+                                resultSet.getString("choice_3")
+                        ),
+                        resultSet.getString("choice_correct"),
+                        resultSet.getString("choice_correct_explain")
+                );
+                questions.add(question);
+            }
+        }
+    }
+    return questions;
+}
 
 }
