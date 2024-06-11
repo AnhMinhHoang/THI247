@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class DBConnection {
 
-    public static String url = "jdbc:sqlserver://MSI:1433;databaseName=Thi247;encrypt=true;trustServerCertificate=true";
+    public static String url = "jdbc:sqlserver://MSI:1433;databaseName=Thi2471;encrypt=true;trustServerCertificate=true";
     public static String user = "sa";
     public static String password = "tuan";
 

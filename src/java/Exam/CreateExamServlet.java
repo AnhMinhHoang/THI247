@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.Exam;
 import model.QuestionBank;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,17 +59,14 @@ public class CreateExamServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
+     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         QuestionDAO questionDAO = new QuestionDAO();
         List<QuestionBank> questions = questionDAO.getAllMultipleChoiceQuestions();
 
-        // Kiểm tra nếu danh sách câu hỏi là null hoặc trống
         if (questions == null || questions.isEmpty()) {
-            // Xử lý trường hợp không có câu hỏi được trả về từ cơ sở dữ liệu
-            // Ví dụ: Hiển thị thông báo lỗi hoặc chuyển hướng đến trang khác
-            response.sendRedirect("no-questions.jsp"); // Điều hướng đến trang thông báo không có câu hỏi
+            response.sendRedirect("no-questions.jsp");
             return;
         }
 
@@ -77,51 +75,49 @@ public class CreateExamServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String examName = request.getParameter("examName");
-        String[] selectedQuestions = request.getParameterValues("selectedQuestions");
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String examName = request.getParameter("examName");
+    String[] selectedQuestions = request.getParameterValues("selectedQuestions");
 
-        // Kiểm tra null cho selectedQuestions trước khi sử dụng
-        if (selectedQuestions == null || selectedQuestions.length == 0) {
-            // Xử lý trường hợp không có câu hỏi nào được chọn
-            // Ví dụ: Hiển thị thông báo lỗi hoặc chuyển hướng đến trang khác
-            response.sendRedirect("create-exam.jsp?error=no-questions-selected");
-            return;
-        }
+    if (selectedQuestions == null || selectedQuestions.length == 0) {
+        response.sendRedirect("create-exam.jsp?error=no-questions-selected");
+        return;
+    }
 
-        Exam exam = new Exam(examName);
-        QuestionDAO questionDAO = new QuestionDAO();
-        for (String questionId : selectedQuestions) {
-            QuestionBank question = questionDAO.getQuestionById(Integer.parseInt(questionId));
-            if (question != null) {
-                exam.addQuestion(question);
+    Exam exam = new Exam(examName);
+    QuestionDAO questionDAO = new QuestionDAO();
+    List<QuestionBank> allQuestions = questionDAO.getAllMultipleChoiceQuestions();
+    List<QuestionBank> selectedQuestionList = new ArrayList<>();
+
+    for (String questionId : selectedQuestions) {
+        int id = Integer.parseInt(questionId);
+        for (QuestionBank question : allQuestions) {
+            if (question.getId() == id) {
+                selectedQuestionList.add(question);
+                break;
             }
-        }
-
-        ExamDAO examDAO = new ExamDAO();
-        try {
-            boolean success = examDAO.createExam(exam);
-            if (success) {
-                response.sendRedirect("exam-created.jsp");
-            } else {
-                response.sendRedirect("create-exam.jsp?error=1");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendRedirect("create-exam.jsp?error=2");
         }
     }
 
+    exam.setQuestions(selectedQuestionList);
+
+    ExamDAO examDAO = new ExamDAO();
+    try {
+        boolean success = examDAO.createExam(exam);
+        if (success) {
+            response.sendRedirect("exam-created.jsp");
+        } else {
+            response.sendRedirect("create-exam.jsp?error=1");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        response.sendRedirect("create-exam.jsp?error=2");
+    }
+}
 
 
-
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }

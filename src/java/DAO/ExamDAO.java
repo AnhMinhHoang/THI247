@@ -1,15 +1,14 @@
 package DAO;
 
 import model.QuestionBank;
+import model.Exam;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import model.Exam;
 
 public class ExamDAO extends DBConnection {
-
 
     // Phương thức để tạo đề thi
     public boolean createExam(Exam exam) throws SQLException {
@@ -85,10 +84,36 @@ public class ExamDAO extends DBConnection {
     }
 
     // Phương thức để xóa đề thi
-    public boolean deleteExam(int id) throws SQLException {
+
+// Phương thức để xóa đề thi
+public boolean deleteExam(int id) throws SQLException {
+    try {
+        ExamDAO examDAO = new ExamDAO(); // Khai báo và khởi tạo đối tượng ExamDAO
+        // Lấy danh sách câu hỏi của đề thi từ bộ nhớ
+        List<QuestionBank> examQuestions = examDAO.getQuestionsByExamId(id);
+        
+        // Xóa các câu hỏi của đề thi khỏi danh sách câu hỏi trong bộ nhớ
+        for (QuestionBank question : examQuestions) {
+            examDAO.deleteQuestionFromExam(id, question.getId()); // Hãy thêm phương thức này vào ExamDAO để xóa câu hỏi từ bộ nhớ
+        }
+        
+        // Tiến hành xóa đề thi từ cơ sở dữ liệu
         String sql = "DELETE FROM Exams WHERE exam_id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+public boolean deleteQuestionFromExam(int examId, int questionId) throws SQLException {
+        String sql = "DELETE FROM Exam_Questions WHERE exam_id = ? AND question_id = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, examId);
+            stmt.setInt(2, questionId);
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
         }
@@ -96,42 +121,17 @@ public class ExamDAO extends DBConnection {
 
     // Phương thức để lấy các câu hỏi theo ID đề thi
     public List<QuestionBank> getQuestionsByExamId(int examId) throws SQLException {
-        List<QuestionBank> questions = new ArrayList<>();
-        String query = "SELECT q.* FROM QuestionBank q INNER JOIN Exam_Questions eq ON q.question_id = eq.question_id WHERE eq.exam_id = ?";
-
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, examId);
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("question_id");
-                    String subject = resultSet.getString("subject");
-                    int userId = resultSet.getInt("user_id");
-                    String questionText = resultSet.getString("question_context");
-                    List<String> choices = Arrays.asList(
-                            resultSet.getString("choice_1"),
-                            resultSet.getString("choice_2"),
-                            resultSet.getString("choice_3"),
-                            resultSet.getString("choice_correct")
-                    );
-                    String correctAnswer = resultSet.getString("choice_correct");
-                    String explain = resultSet.getString("choice_correct_explain");
-                    QuestionBank question = new QuestionBank(id, subject, userId, questionText, choices, correctAnswer, explain);
-                    questions.add(question);
-                }
-            }
-        }
-        return questions;
-    }
-   public List<QuestionBank> getQuestionsForExam(int examId) throws SQLException {
     List<QuestionBank> questions = new ArrayList<>();
-    String query = "SELECT q.* FROM QuestionBank q INNER JOIN Exam_Questions eq ON q.question_id = eq.question_id WHERE eq.exam_id = ?";
+    
+    String query = "SELECT q.*, s.subject_name FROM QuestionBank q INNER JOIN Exam_Questions eq ON q.question_id = eq.question_id INNER JOIN Subjects s ON q.subject_id = s.subject_id WHERE eq.exam_id = ?";
+
     try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
         stmt.setInt(1, examId);
-        System.out.println("Fetching questions for examId: " + examId);
         try (ResultSet resultSet = stmt.executeQuery()) {
             while (resultSet.next()) {
                 int id = resultSet.getInt("question_id");
-                String subject = resultSet.getString("subject");
+                int subjectId = resultSet.getInt("subject_id");
+                String subjectName = resultSet.getString("subject_name"); 
                 int userId = resultSet.getInt("user_id");
                 String questionText = resultSet.getString("question_context");
                 List<String> choices = Arrays.asList(
@@ -142,7 +142,7 @@ public class ExamDAO extends DBConnection {
                 );
                 String correctAnswer = resultSet.getString("choice_correct");
                 String explain = resultSet.getString("choice_correct_explain");
-                QuestionBank question = new QuestionBank(id, subject, userId, questionText, choices, correctAnswer, explain);
+                QuestionBank question = new QuestionBank(id, subjectId, userId, questionText, subjectName, choices, correctAnswer, explain); 
                 questions.add(question);
             }
         }
@@ -152,23 +152,50 @@ public class ExamDAO extends DBConnection {
 
 
 
-
-    public List<Exam> getExamsByUserId(int userId) throws SQLException {
-    List<Exam> exams = new ArrayList<>();
-    String query = "SELECT * FROM Exams WHERE user_id = ?";
+// Phương thức để lấy các câu hỏi cho đề thi
+public List<QuestionBank> getQuestionsForExam(int examId) throws SQLException {
+    List<QuestionBank> questions = new ArrayList<>();
+    String query = "SELECT q.*, s.subject_name FROM QuestionBank q INNER JOIN Exam_Questions eq ON q.question_id = eq.question_id INNER JOIN Subjects s ON q.subject_id = s.subject_id WHERE eq.exam_id = ?";
     try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-        stmt.setInt(1, userId);
+        stmt.setInt(1, examId);
         try (ResultSet resultSet = stmt.executeQuery()) {
             while (resultSet.next()) {
-                int examId = resultSet.getInt("exam_id");
-                String examName = resultSet.getString("exam_name");
-                Exam exam = new Exam(examId, examName, userId);
-                exams.add(exam);
+                int id = resultSet.getInt("question_id");
+                String subjectName = resultSet.getString("subject_name"); // Lấy subjectName từ ResultSet
+                int userId = resultSet.getInt("user_id");
+                String questionText = resultSet.getString("question_context");
+                List<String> choices = Arrays.asList(
+                        resultSet.getString("choice_1"),
+                        resultSet.getString("choice_2"),
+                        resultSet.getString("choice_3"),
+                        resultSet.getString("choice_correct")
+                );
+                String correctAnswer = resultSet.getString("choice_correct");
+                String explain = resultSet.getString("choice_correct_explain");
+                // Sử dụng khởi tạo mới của QuestionBank với subjectName thay vì subjectId
+                QuestionBank question = new QuestionBank(id, 0, userId, questionText, subjectName, choices, correctAnswer, explain);
+                questions.add(question);
             }
         }
     }
-    return exams;
+    return questions;
 }
 
-
+    // Phương thức để lấy các đề thi theo ID của người dùng
+    public List<Exam> getExamsByUserId(int userId) throws SQLException {
+        List<Exam> exams = new ArrayList<>();
+        String query = "SELECT * FROM Exams WHERE user_id = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                while (resultSet.next()) {
+                    int examId = resultSet.getInt("exam_id");
+                    String examName = resultSet.getString("exam_name");
+                    Exam exam = new Exam(examId, examName, userId);
+                    exams.add(exam);
+                }
+            }
+        }
+        return exams;
+    }
 }

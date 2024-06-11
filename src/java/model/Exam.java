@@ -8,18 +8,27 @@ public class Exam {
     private int examId;
     private String examName;
     private Timestamp createdAt;
+    private int userId; // Thêm thuộc tính userId để định danh người tạo đề thi
     private List<QuestionBank> questions;
 
     public Exam(int examId, String examName, int userId) {
         this.examId = examId;
         this.examName = examName;
         this.createdAt = new Timestamp(System.currentTimeMillis());
+        this.userId = userId;
+        this.questions = new ArrayList<>();
+    }
+    public Exam(String examName) {
+        this.examName = examName;
+        this.createdAt = new Timestamp(System.currentTimeMillis());
         this.questions = new ArrayList<>();
     }
 
-    public Exam(String examName) {
+    public Exam(String examName, int userId) {
         this.examName = examName;
-        this.questions = new ArrayList<>(); // Khởi tạo questions ở đây để đảm bảo không null
+        this.userId = userId;
+        this.createdAt = new Timestamp(System.currentTimeMillis());
+        this.questions = new ArrayList<>();
     }
 
     public int getExamId() {
@@ -46,7 +55,14 @@ public class Exam {
         this.createdAt = createdAt;
     }
 
-    
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
     public List<QuestionBank> getQuestions() {
         return questions;
     }
@@ -54,17 +70,21 @@ public class Exam {
     public void setQuestions(List<QuestionBank> questions) {
         this.questions = questions;
     }
- public void addQuestion(QuestionBank question) {
-    if (question != null) {
-        this.questions.add(question);
+
+    public void addQuestion(QuestionBank question) {
+        if (question != null) {
+            this.questions.add(question);
+        }
     }
-}
-
-
 
     @Override
     public String toString() {
-        return "Exam{" + "examId=" + examId + ", examName=" + examName + ", createdAt=" + createdAt + ", questions=" + questions + '}';
+        return "Exam{" +
+                "examId=" + examId +
+                ", examName='" + examName + '\'' +
+                ", createdAt=" + createdAt +
+                ", userId=" + userId +
+                ", questions=" + questions +
+                '}';
     }
-    
 }

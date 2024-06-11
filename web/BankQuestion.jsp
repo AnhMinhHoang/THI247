@@ -4,66 +4,94 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Question Management</title>
+    <title>List of Questions</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
-
         h2 {
-            margin-top: 10px;
-            margin-bottom: 10px;
+            color: #333;
+            margin-top: 20px;
         }
-
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
         }
-
         th, td {
-            padding: 8px;
-            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
-
         th {
-            background-color: #007bff;
-            color: #fff;
+            background-color: #f2f2f2;
         }
-
-        form {
-            margin-bottom: 20px;
+        tr:hover {
+            background-color: #f9f9f9;
         }
-
-        input[type="text"] {
-            width: calc(100% - 16px);
-            padding: 6px;
-            box-sizing: border-box;
-            margin-bottom: 8px;
+        input[type="text"], select {
+            width: calc(100% - 12px);
+            padding: 8px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
         }
-
-        input[type="submit"], a {
-            display: inline-block;
-            padding: 6px 12px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
+        input[type="submit"], button {
+            padding: 10px 20px;
             border: none;
+            background-color: #007bff;
+            color: #fff;
             border-radius: 3px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
-
-        input[type="submit"]:hover, a:hover {
+        input[type="submit"]:hover, button:hover {
             background-color: #0056b3;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        /* Thêm CSS cho ô User ID */
+        input#userId {
+            width: 50px; /* Điều chỉnh kích thước ô User ID */
+            word-wrap: break-word; /* Cho phép text tràn ra nhiều dòng */
         }
     </style>
 </head>
 <body>
-    <h2>List of Multiple Choice Questions</h2>
+    <h2>List of Questions</h2>
+    <form action="BankQuestionServlet" method="get">
+        Filter by Subject:
+        <select name="subjectFilter">
+            <option value="">All</option>
+            <c:forEach items="${availableSubjects}" var="subject">
+                <option value="${subject}">${subject}</option>
+            </c:forEach>
+        </select>
+        <input type="submit" value="Filter">
+    </form>
     <table>
         <tr>
             <th>ID</th>
@@ -82,7 +110,7 @@
                     <input type="hidden" name="id" value="${question.id}">
                     <td>${question.id}</td>
                     <td><input type="text" name="subject" value="${question.subject}"></td>
-                    <td><input type="text" name="userId" value="${question.userId}"></td>
+                    <td><input type="text" name="userId" id="userId" value="${question.userId}"></td>
                     <td><input type="text" name="questionText" value="${question.questionText}"></td>
                     <td>
                         <input type="text" name="choice1" value="${question.choices[0]}"><br>
@@ -105,15 +133,25 @@
     <h2>Add New Question</h2>
     <form action="BankQuestionServlet" method="post">
         <input type="hidden" name="action" value="add">
-        Subject: <input type="text" name="subject"><br>
-        User ID: <input type="text" name="userId"><br>
-        Question: <input type="text" name="questionText"><br>
-        Choice 1: <input type="text" name="choice1"><br>
-        Choice 2: <input type="text" name="choice2"><br>
-        Choice 3: <input type="text" name="choice3"><br>
-        Correct Answer: <input type="text" name="correctAnswer"><br>
-        Explanation: <input type="text" name="explain"><br>
+        <label for="userId">User ID:</label>
+        <input type="text" name="userId" id="userId"><br>
+        <label for="questionText">Question:</label>
+        <input type="text" name="questionText" id="questionText"><br>
+        <label for="subject">Subject:</label>
+        <input type="text" name="subject" id="subject"><br>
+        <label for="choice1">Choice 1:</label>
+        <input type="text" name="choice1" id="choice1"><br>
+        <label for="choice2">Choice 2:</label>
+        <input type="text" name="choice2" id="choice2"><br>
+        <label for="choice3">Choice 3:</label>
+        <input type="text" name="choice3" id="choice3"><br>
+        <label for="correctAnswer">Correct Answer:</label>
+        <input type="text" name="correctAnswer" id="correctAnswer"><br>
+        <label for="explain">Explanation:</label>
+        <input type="text" name="explain" id="explain"><br>
         <input type="submit" value="Add Question">
     </form>
 </body>
+</html>
+
 </html>
