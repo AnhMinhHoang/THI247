@@ -99,7 +99,7 @@ else role = "Student";
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label ">Họ và Tên</div>
-                    <div class="col-lg-9 col-md-8"><%=user.getFullname()%></div>
+                    <div class="col-lg-9 col-md-8"><%= (user.getFullname() != null) ? user.getFullname() : "" %></div>
                   </div>
 
                   <div class="row">
@@ -109,17 +109,17 @@ else role = "Student";
                   
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">Ngày Sinh</div>
-                    <div class="col-lg-9 col-md-8">05/06/2004</div>
+                    <div class="col-lg-9 col-md-8"><%= (user.getDob() != null) ? user.getDob() : "" %></div>
                   </div>
 
                   <div class="row">
-                    <div class="col-lg-3 col-md-4 label">Address</div>
-                    <div class="col-lg-9 col-md-8">A108 Adam Street, New York, NY 535022</div>
+                    <div class="col-lg-3 col-md-4 label">Nơi ở</div>
+                    <div class="col-lg-9 col-md-8"><%= (user.getAddress() != null) ? user.getAddress() : "" %></div>
                   </div>
 
                   <div class="row">
                     <div class="col-lg-3 col-md-4 label">SĐT</div>
-                    <div class="col-lg-9 col-md-8">(436) 486-3538 x29071</div>
+                    <div class="col-lg-9 col-md-8"><%= (user.getPhone() != null) ? user.getPhone() : "" %></div>
                   </div>
 
                   <div class="row">
