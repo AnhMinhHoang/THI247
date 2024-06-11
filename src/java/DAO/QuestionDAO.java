@@ -9,16 +9,21 @@ import java.util.List;
 
 public class QuestionDAO extends DBConnection {
 
-    public boolean createMultipleChoiceQuestion(QuestionBank question) throws SQLException {
+public boolean createMultipleChoiceQuestion(QuestionBank question) throws SQLException {
     String sql = "INSERT INTO QuestionBank (subject_id, user_id, question_context, choice_1, choice_2, choice_3, choice_correct, choice_correct_explain) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
         int subjectId = question.getSubjectId(); // Sử dụng trực tiếp subjectId từ question
+        int userId = question.getUserId(); // Lấy userId từ question
+
         if (getSubjectNameById(subjectId) == null) {
             // Xử lý nếu không tìm thấy subjectName trong cơ sở dữ liệu
             return false;
         }
         stmt.setInt(1, subjectId);
-        stmt.setInt(2, question.getUserId());
+        
+        // Sử dụng userId từ question
+        stmt.setInt(2, userId);
+        
         stmt.setString(3, question.getQuestionText());
         List<String> choices = question.getChoices();
         stmt.setString(4, choices.get(0));
@@ -33,7 +38,41 @@ public class QuestionDAO extends DBConnection {
 }
 
 
-    public List<QuestionBank> getAllMultipleChoiceQuestions() {
+
+    public List<QuestionBank> getAllMultipleChoiceQuestions(int userId) {
+    List<QuestionBank> questions = new ArrayList<>();
+    String query = "SELECT * FROM QuestionBank WHERE user_id = ?";
+
+    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, userId);
+        try (ResultSet resultSet = stmt.executeQuery()) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("question_id");
+                int subjectId = resultSet.getInt("subject_id");
+                String questionText = resultSet.getString("question_context");
+                List<String> choices = Arrays.asList(
+                        resultSet.getString("choice_1"),
+                        resultSet.getString("choice_2"),
+                        resultSet.getString("choice_3"),
+                        resultSet.getString("choice_correct")
+                );
+                String correctAnswer = resultSet.getString("choice_correct");
+                String explain = resultSet.getString("choice_correct_explain");
+
+                // Lấy tên của môn học từ subjectId
+                String subjectName = getSubjectNameById(subjectId);
+
+                QuestionBank question = new QuestionBank(id, subjectId, userId, questionText, subjectName, choices, correctAnswer, explain);
+                questions.add(question);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return questions;
+}
+   public List<QuestionBank> getAllMultipleChoiceQuestions() {
     List<QuestionBank> questions = new ArrayList<>();
     String query = "SELECT * FROM QuestionBank";
 
@@ -67,18 +106,17 @@ public class QuestionDAO extends DBConnection {
 
 
     public boolean updateMultipleChoiceQuestion(QuestionBank question) throws SQLException {
-        String sql = "UPDATE QuestionBank SET subject_id = ?, user_id = ?, question_context = ?, choice_1 = ?, choice_2 = ?, choice_3 = ?, choice_correct = ?, choice_correct_explain = ? WHERE question_id = ?";
+        String sql = "UPDATE QuestionBank SET user_id = ?, question_context = ?, choice_1 = ?, choice_2 = ?, choice_3 = ?, choice_correct = ?, choice_correct_explain = ? WHERE question_id = ?";
         try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, question.getSubjectId());
-            stmt.setInt(2, question.getUserId());
-            stmt.setString(3, question.getQuestionText());
+            stmt.setInt(1, question.getUserId());
+            stmt.setString(2, question.getQuestionText());
             List<String> choices = question.getChoices();
-            stmt.setString(4, choices.get(0));
-            stmt.setString(5, choices.get(1));
-            stmt.setString(6, choices.get(2));
-            stmt.setString(7, question.getCorrectAnswer());
-            stmt.setString(8, question.getExplain());
-            stmt.setInt(9, question.getId());
+            stmt.setString(3, choices.get(0));
+            stmt.setString(4, choices.get(1));
+            stmt.setString(5, choices.get(2));
+            stmt.setString(6, question.getCorrectAnswer());
+            stmt.setString(7, question.getExplain());
+            stmt.setInt(8, question.getId());
 
             int rowsAffected = stmt.executeUpdate();
             return rowsAffected > 0;
@@ -168,15 +206,17 @@ public class QuestionDAO extends DBConnection {
 
 public List<String> getAllSubjects() throws SQLException {
     List<String> subjects = new ArrayList<>();
-    String query = "SELECT DISTINCT subject FROM QuestionBank";
+    String query = "SELECT DISTINCT subject_name FROM Subjects";
     try (Connection conn = getConnection(); Statement stmt = conn.createStatement(); ResultSet resultSet = stmt.executeQuery(query)) {
         while (resultSet.next()) {
-            String subject = resultSet.getString("subject");
+            String subject = resultSet.getString("subject_name");
             subjects.add(subject);
         }
     }
     return subjects;
 }
+
+
 public String getSubjectNameById(int subjectId) throws SQLException {
     String subjectName = "";
     String query = "SELECT subject_name FROM Subjects WHERE subject_id = ?";
@@ -190,6 +230,25 @@ public String getSubjectNameById(int subjectId) throws SQLException {
     }
     return subjectName;
 }
+
+public int getSubjectIdByName(String subject) {
+    String query = "SELECT subject_id FROM Subjects WHERE subject_name = ?";
+    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setString(1, subject);
+        try (ResultSet resultSet = stmt.executeQuery()) {
+            if (resultSet.next()) {
+                return resultSet.getInt("subject_id");
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+    }catch(Exception err){
+        System.out.println(err);
+    }
+    return 0;
+}
+
 public List<QuestionBank> getQuestionsBySubject(String subject) throws SQLException {
     List<QuestionBank> questions = new ArrayList<>();
     String query = "SELECT * FROM QuestionBank WHERE subject = ?";

@@ -14,6 +14,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.Exam;
 import model.QuestionBank;
 import java.sql.SQLException;
@@ -59,62 +60,71 @@ public class CreateExamServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+  @Override
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    HttpSession session = request.getSession(false);
+    if (session != null && session.getAttribute("userId") != null) {
+        int userId = (int) session.getAttribute("userId");
         QuestionDAO questionDAO = new QuestionDAO();
-        List<QuestionBank> questions = questionDAO.getAllMultipleChoiceQuestions();
-
+        List<QuestionBank> questions = questionDAO.getAllMultipleChoiceQuestions(userId);
         if (questions == null || questions.isEmpty()) {
             response.sendRedirect("no-questions.jsp");
             return;
         }
-
         request.setAttribute("questions", questions);
         request.getRequestDispatcher("create-exam.jsp").forward(request, response);
-    }
-
-    @Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String examName = request.getParameter("examName");
-    String[] selectedQuestions = request.getParameterValues("selectedQuestions");
-
-    if (selectedQuestions == null || selectedQuestions.length == 0) {
-        response.sendRedirect("create-exam.jsp?error=no-questions-selected");
-        return;
-    }
-
-    Exam exam = new Exam(examName);
-    QuestionDAO questionDAO = new QuestionDAO();
-    List<QuestionBank> allQuestions = questionDAO.getAllMultipleChoiceQuestions();
-    List<QuestionBank> selectedQuestionList = new ArrayList<>();
-
-    for (String questionId : selectedQuestions) {
-        int id = Integer.parseInt(questionId);
-        for (QuestionBank question : allQuestions) {
-            if (question.getId() == id) {
-                selectedQuestionList.add(question);
-                break;
-            }
-        }
-    }
-
-    exam.setQuestions(selectedQuestionList);
-
-    ExamDAO examDAO = new ExamDAO();
-    try {
-        boolean success = examDAO.createExam(exam);
-        if (success) {
-            response.sendRedirect("exam-created.jsp");
-        } else {
-            response.sendRedirect("create-exam.jsp?error=1");
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        response.sendRedirect("create-exam.jsp?error=2");
+    } else {
+        response.sendRedirect("login.jsp");
     }
 }
 
+@Override
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    HttpSession session = request.getSession(false);
+    if (session != null && session.getAttribute("userId") != null) {
+        int userId = (int) session.getAttribute("userId");
+        String examName = request.getParameter("examName");
+        String[] selectedQuestions = request.getParameterValues("selectedQuestions");
+
+        if (selectedQuestions == null || selectedQuestions.length == 0) {
+            response.sendRedirect("create-exam.jsp?error=no-questions-selected");
+            return;
+        }
+
+        Exam exam = new Exam(examName);
+        QuestionDAO questionDAO = new QuestionDAO();
+        List<QuestionBank> allQuestions = questionDAO.getAllMultipleChoiceQuestions(userId);
+        List<QuestionBank> selectedQuestionList = new ArrayList<>();
+
+        for (String questionId : selectedQuestions) {
+            int id = Integer.parseInt(questionId);
+            for (QuestionBank question : allQuestions) {
+                if (question.getId() == id) {
+                    selectedQuestionList.add(question);
+                    break;
+                }
+            }
+        }
+
+        exam.setQuestions(selectedQuestionList);
+
+        ExamDAO examDAO = new ExamDAO();
+        try {
+            boolean success = examDAO.createExam(exam, userId);
+            if (success) {
+                response.sendRedirect("exam-created.jsp");
+            } else {
+                response.sendRedirect("create-exam.jsp?error=1");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendRedirect("create-exam.jsp?error=2");
+        }
+    } else {
+        response.sendRedirect("login.jsp");
+    }
+}
 
     @Override
     public String getServletInfo() {

@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.QuestionBank;
 import java.sql.SQLException;
@@ -41,11 +42,12 @@ public class TakeExamServlet extends HttpServlet {
             // Retrieve questions for the exam from your data source
             List<QuestionBank> questions = new ExamDAO().getQuestionsByExamId(examId);
             // Set attributes in request
-            request.setAttribute("examId", examIdStr);
-            request.setAttribute("questions", questions);
-
+            HttpSession session = request.getSession();
+            session.setAttribute("examId", examId);
+            session.setAttribute("questions", questions);
+            session.setAttribute("isShuffle", true);
             // Forward request to JSP page
-            request.getRequestDispatcher("takeExam.jsp").forward(request, response);
+            response.sendRedirect("takeExam.jsp");
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid examId parameter");
         } catch (SQLException e) {

@@ -12,6 +12,15 @@ public class QuestionBank {
     private String correctAnswer;
     private String explain;
     
+    public QuestionBank(int subjectId, int userId, String questionText, List<String> choices, String correctAnswer, String explain) {
+    this.subjectId = subjectId;
+    this.userId = userId;
+    this.questionText = questionText;
+    this.choices = choices;
+    this.correctAnswer = correctAnswer;
+    this.explain = explain;
+}
+    
 public QuestionBank(int id, int subjectId, int userId, String questionText, List<String> choices, String correctAnswer, String explain) {
     this.id = id;
     this.subjectId = subjectId;
@@ -36,6 +45,14 @@ public QuestionBank(int id, int subjectId, int userId, String questionText, List
      public QuestionBank(int id, int userId, String questionText, String subject, List<String> choices, String correctAnswer, String explain) {
         this.id = id;
         this.userId = userId;
+        this.questionText = questionText;
+        this.subject = subject;
+        this.choices = choices;
+        this.correctAnswer = correctAnswer;
+        this.explain = explain;
+    }
+     public QuestionBank(int id, String questionText, String subject, List<String> choices, String correctAnswer, String explain) {
+        this.id = id;
         this.questionText = questionText;
         this.subject = subject;
         this.choices = choices;

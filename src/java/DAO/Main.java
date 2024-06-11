@@ -13,133 +13,75 @@ import java.util.Scanner;
 
 //public class Main {
 //    public static void main(String[] args) {
-//        ExamDAO examDAO = new ExamDAO();
+//        // Thay thế userId và các thông tin câu hỏi tùy theo nhu cầu của bạn
+//        int userId = 7;
+//        int questionIdToUpdate = 2; // ID của câu hỏi cần cập nhật
+//
+//        // Tạo một đối tượng QuestionBank mới với thông tin cập nhật
+//        QuestionBank question = new QuestionBank(2, 2, 7, "What is Java?", "Programming", Arrays.asList("A", "B", "C"), "A", "Java is a programming language.");
+//
+//        // Khởi tạo đối tượng QuestionDAO
+//        QuestionDAO questionDAO = new QuestionDAO();
 //
 //        try {
-//            // Tạo đề thi mới
-//            Exam newExam = new Exam("Final Exam");
-//            examDAO.createExam(newExam);
-//            System.out.println("Created new exam with ID: " + newExam.getExamId());
-//
-//            // Lấy tất cả các đề thi và in ra thông tin
-//            List<Exam> exams = examDAO.getAllExams();
-//            System.out.println("All exams:");
-//            for (Exam exam : exams) {
-//                System.out.println("Exam ID: " + exam.getExamId() + ", Name: " + exam.getExamName() + ", Created At: " + exam.getCreatedAt());
-//            }
-//
-//            // Lấy đề thi theo ID và in ra thông tin
-//            int examId = 1; // Assuming exam ID 1 exists
-//            Exam retrievedExam = examDAO.getExamById(examId);
-//            if (retrievedExam != null) {
-//                System.out.println("Retrieved exam with ID " + examId + ": " + retrievedExam.getExamName());
+//            // Gọi phương thức updateMultipleChoiceQuestion
+//            boolean updated = questionDAO.updateMultipleChoiceQuestion(question);
+//            if (updated) {
+//                System.out.println("Cập nhật câu hỏi thành công");
 //            } else {
-//                System.out.println("Exam with ID " + examId + " not found.");
+//                System.out.println("Cập nhật câu hỏi thất bại");
 //            }
-//
-//            // Lấy tất cả câu hỏi cho một đề thi và in ra thông tin
-//            List<QuestionBank> questionsForExam = examDAO.getQuestionsForExam(examId);
-//System.out.println("Questions for exam " + examId + ":");
-//for (QuestionBank question : questionsForExam) {
-//    System.out.println("Question ID: " + question.getId() + ", Subject: " + question.getSubject() + ", Text: " + question.getQuestionText());
-//}
-//
-//            // Xóa đề thi
-//            boolean isDeleted = examDAO.deleteExam(examId);
-//            if (isDeleted) {
-//                System.out.println("Exam with ID " + examId + " deleted successfully.");
-//            } else {
-//                System.out.println("Failed to delete exam with ID " + examId);
-//            }
-//
 //        } catch (SQLException e) {
+//            System.out.println("Lỗi SQL: " + e.getMessage());
 //            e.printStackTrace();
 //        }
 //    }
 //}
-public class Main {
-    public static void main(String[] args) {
-        QuestionDAO questionDAO = new QuestionDAO();
 
-        // Test createMultipleChoiceQuestion method
+//public class Main {
+//    public static void main(String[] args) {
+//        // Tạo một câu hỏi mới
+//        int subjectId = 1; // Thay thế 1 bằng id thực của một môn học trong cơ sở dữ liệu của bạn
+//        int userId = 1; // Thay thế 1 bằng id thực của một người dùng trong cơ sở dữ liệu của bạn
+//        String questionText = "What is the capital of France?";
+//        List<String> choices = Arrays.asList("London", "Paris", "Berlin", "Rome");
+//        String correctAnswer = "Paris";
+//        String explain = "Paris is the capital of France.";
+//        
+//        QuestionBank newQuestion = new QuestionBank(0, subjectId, userId, questionText, choices, correctAnswer, explain);
+//
+//        // Thử nghiệm hàm createMultipleChoiceQuestion
 //        try {
-//            QuestionBank newQuestion = new QuestionBank(0, 1, 1, "What is the capital of France?", "Geography",
-//                    List.of("Paris", "London", "Berlin"), "Paris", "Paris is the capital of France");
-//            boolean questionCreated = questionDAO.createMultipleChoiceQuestion(newQuestion);
-//            if (questionCreated) {
+//            QuestionDAO questionDAO = new QuestionDAO();
+//            boolean success = questionDAO.createMultipleChoiceQuestion(newQuestion);
+//            if (success) {
 //                System.out.println("Question created successfully.");
 //            } else {
 //                System.out.println("Failed to create question.");
 //            }
 //        } catch (SQLException e) {
 //            e.printStackTrace();
+//            System.out.println("An error occurred while creating question.");
 //        }
+//    }
+//}
+public class Main {
+    public static void main(String[] args) {
+        try {
+            // Tạo một đối tượng QuestionDAO
+            QuestionDAO questionDAO = new QuestionDAO();
 
-        // Test getAllMultipleChoiceQuestions method
-        List<QuestionBank> allQuestions = questionDAO.getAllMultipleChoiceQuestions();
-        System.out.println("All questions:");
-        for (QuestionBank question : allQuestions) {
-            System.out.println(question);
+            // Gọi phương thức getAllSubjects() để lấy danh sách các môn học từ cơ sở dữ liệu
+            List<String> subjects = questionDAO.getAllSubjects();
+
+            // In ra danh sách các môn học
+            System.out.println("Danh sách các môn học:");
+            for (String subject : subjects) {
+                System.out.println(subject);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Đã xảy ra lỗi khi truy vấn cơ sở dữ liệu.");
         }
-
-//        // Test updateMultipleChoiceQuestion method
-//        try {
-//            QuestionBank updatedQuestion = new QuestionBank(1, 1, 1, "What is the capital of France?", "Geography",
-//                    List.of("Paris", "London", "Berlin"), "Paris", "Paris is the capital of France");
-//            boolean questionUpdated = questionDAO.updateMultipleChoiceQuestion(updatedQuestion);
-//            if (questionUpdated) {
-//                System.out.println("Question updated successfully.");
-//            } else {
-//                System.out.println("Failed to update question.");
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        // Test deleteMultipleChoiceQuestion method
-//        try {
-//            boolean questionDeleted = questionDAO.deleteMultipleChoiceQuestion(1);
-//            if (questionDeleted) {
-//                System.out.println("Question deleted successfully.");
-//            } else {
-//                System.out.println("Failed to delete question.");
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        // Test getQuestionsByUserId method
-//        List<QuestionBank> userQuestions = questionDAO.getQuestionsByUserId(1);
-//        System.out.println("Questions by user:");
-//        for (QuestionBank question : userQuestions) {
-//            System.out.println(question);
-//        }
-//
-//        // Test getQuestionCountBySubjectId method
-//        int questionCount = questionDAO.getQuestionCountBySubjectId(1);
-//        System.out.println("Question count by subject ID: " + questionCount);
-//
-//        // Test getQuestionsForExam method
-//        try {
-//            List<QuestionBank> examQuestions = questionDAO.getQuestionsForExam(1);
-//            System.out.println("Questions for exam:");
-//            for (QuestionBank question : examQuestions) {
-//                System.out.println(question);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        // Test calculateScore method
-//        List<String> userAnswers = List.of("Paris", "London", "Berlin");
-//        double score = questionDAO.calculateScore(userAnswers, allQuestions);
-//        System.out.println("Score: " + score);
-//
-//        // Test getCorrectAnswers method
-//        List<String> correctAnswers = questionDAO.getCorrectAnswers(allQuestions);
-//        System.out.println("Correct answers:");
-//        for (String answer : correctAnswers) {
-//            System.out.println(answer);
-//        }
     }
 }
