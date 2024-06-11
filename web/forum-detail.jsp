@@ -264,6 +264,10 @@
         button.btn.btn-xoa:hover{
             background-color: #ddd;
         }
+        .btn-xoa{
+            background-color: transparent;
+            color: black;
+        }
 
         .show {
             display: block;
