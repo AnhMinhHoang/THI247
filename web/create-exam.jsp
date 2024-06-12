@@ -8,6 +8,7 @@
     <meta charset="UTF-8">
     <title>Create Exam</title>
     <style>
+        /* CSS đã được cập nhật */
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
@@ -41,7 +42,7 @@
             margin-bottom: 5px;
         }
 
-        input[type="text"] {
+        input[type="text"], input[type="number"] {
             margin-bottom: 10px;
             width: 100%;
             box-sizing: border-box;
@@ -59,11 +60,11 @@
         }
 
         .question-list {
-            max-height: 200px; /* Đặt chiều cao tối đa của khung cuộn */
-            overflow-y: auto; /* Kích hoạt cuộn */
+            max-height: 200px;
+            overflow-y: auto;
         }
 
-        button[type="submit"] {
+        button[type="submit"], button[type="button"] {
             display: block;
             width: 100%;
             padding: 10px;
@@ -73,9 +74,10 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            margin-top: 10px;
         }
 
-        button[type="submit"]:hover {
+        button[type="submit"]:hover, button[type="button"]:hover {
             background-color: #0056b3;
         }
 
@@ -120,6 +122,9 @@
             <button type="button" onclick="selectRandomQuestions()">Select Random Questions</button><br><br>
             
             <button type="submit">Create Exam</button>
+        </form>
+        <form action="Teacher.jsp">
+            <button type="submit">Back</button>
         </form>
     </div>
 

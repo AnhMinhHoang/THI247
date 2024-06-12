@@ -152,8 +152,6 @@
         </tbody>
     </table>
 
-    <body>
-    <body>
     <h2>Add Question</h2>
 <form action="BankQuestionServlet" method="get">
     <input type="hidden" name="action" value="add">
@@ -185,6 +183,8 @@
     
     <input type="submit" value="Submit">
 </form>
-
+<form action="Teacher.jsp">
+            <button type="submit">Back</button>
+        </form>
 </body>
 </html>
