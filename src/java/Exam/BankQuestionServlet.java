@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import model.Users;
@@ -78,43 +77,7 @@ public class BankQuestionServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
-        if (action != null) {
-            switch (action) {
-                case "delete":
-                    deleteQuestion(request, response);
-                    break;
-                default:
-                // Handle other actions
-            }
-        } else {
-            // Retrieve userId from session
-            HttpSession session = request.getSession(false);
-            if (session != null && session.getAttribute("userId") != null) {
-                int userId = (int) session.getAttribute("userId");
-                try {
-                    // Retrieve questions created by the logged-in user and forward to JSP
-                    List<QuestionBank> questions = questionDAO.getAllMultipleChoiceQuestions(userId);
-
-                    for (QuestionBank question : questions) {
-                        String subjectName = questionDAO.getSubjectNameById(question.getSubjectId()); // Lấy subjectName từ subjectId
-                        question.setSubject(subjectName); // Đặt subjectName vào đối tượng QuestionBank
-                    }
-
-                    request.setAttribute("questions", questions);
-
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("BankQuestion.jsp");
-                    dispatcher.forward(request, response);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    // Handle SQL exception
-                    response.sendRedirect("error.jsp");
-                }
-            } else {
-                // Handle unauthorized access
-                response.sendRedirect("login.jsp");
-            }
-        }
+      
     }
 
     private void addQuestion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -23,7 +23,12 @@ public class Exam {
         this.createdAt = new Timestamp(System.currentTimeMillis());
         this.questions = new ArrayList<>();
     }
-
+public Exam(String examName, int userId, Timestamp createdAt) {
+        this.examName = examName;
+        this.userId = userId;
+        this.createdAt = createdAt;
+        this.questions = new ArrayList<>();
+    }
     public Exam(String examName, int userId) {
         this.examName = examName;
         this.userId = userId;

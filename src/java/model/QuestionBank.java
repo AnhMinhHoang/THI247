@@ -11,7 +11,7 @@ public class QuestionBank {
     private List<String> choices;
     private String correctAnswer;
     private String explain;
-    
+    private int examId;
     public QuestionBank(int subjectId, int userId, String questionText, List<String> choices, String correctAnswer, String explain) {
     this.subjectId = subjectId;
     this.userId = userId;
@@ -20,7 +20,10 @@ public class QuestionBank {
     this.correctAnswer = correctAnswer;
     this.explain = explain;
 }
-    
+     public QuestionBank(int id, int examId) {
+        this.id = id;
+        this.examId = examId;
+    }
 public QuestionBank(int id, int subjectId, int userId, String questionText, List<String> choices, String correctAnswer, String explain) {
     this.id = id;
     this.subjectId = subjectId;
@@ -123,21 +126,19 @@ public QuestionBank(int id, int subjectId, int userId, String questionText, List
         this.explain = explain;
     }
 
-    // Getters and Setters
-    // Đã bao gồm trong mã tự động của IDE, bạn có thể tạo các phương thức Getter và Setter cho các trường mới.
+    public int getExamId() {
+        return examId;
+    }
 
-    // toString() method
+    public void setExamId(int examId) {
+        this.examId = examId;
+    }
+
     @Override
     public String toString() {
-        return "QuestionBank{" +
-                "id=" + id +
-                ", subjectId=" + subjectId +
-                ", userId=" + userId +
-                ", questionText='" + questionText + '\'' +
-                ", subject='" + subject + '\'' +
-                ", choices=" + choices +
-                ", correctAnswer='" + correctAnswer + '\'' +
-                ", explain='" + explain + '\'' +
-                '}';
+        return "QuestionBank{" + "id=" + id + ", subjectId=" + subjectId + ", userId=" + userId + ", questionText=" + questionText + ", subject=" + subject + ", choices=" + choices + ", correctAnswer=" + correctAnswer + ", explain=" + explain + ", examId=" + examId + '}';
     }
+
+    
+    
 }

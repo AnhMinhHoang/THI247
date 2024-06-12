@@ -41,7 +41,7 @@
                     <div class="course-item bg-light">
                         <div class="position-relative overflow-hidden"></div>
                         <div class="text-center p-4 pb-0">
-                            <a href="action" style="text-decoration: none">
+                            <a href="ExamReviewServlet" style="text-decoration: none">
                                 <h3 class="mb-0">Các bài kiểm tra có sẵn</h3>
                             </a>  
                         </div>

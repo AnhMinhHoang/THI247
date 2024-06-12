@@ -81,21 +81,35 @@
         }
     </style>
 </head>
-<body>
-    <h2>List of Questions</h2>
-    <c:if test="${not empty message}">
-        <p style="color:green">${message}</p>
-    </c:if>
-    <form action="BankQuestionServlet" method="get">
-        Filter by Subject:
-        <select name="subjectFilter">
-            <option value="">All</option>
-            <c:forEach items="${availableSubjects}" var="subject">
-                <option value="${subject}">${subject}</option>
-            </c:forEach>
-        </select>
-        <input type="submit" value="Filter">
-    </form>
+<h1>Lọc Câu Hỏi</h1>
+<form id="filterForm" action="QuestionFilterServlet" method="post">
+    <label for="subject">Chọn một môn học:</label>
+    <select name="subject" id="subject">
+        <c:forEach items="${subjects}" var="subject">
+            <option value="${subject}">${subject}</option>
+        </c:forEach>
+    </select>
+    <input type="hidden" name="userId" value="${userId}">
+    <button type="submit">Lọc</button>
+</form>
+
+<script>
+    // JavaScript để lưu trữ và khôi phục giá trị đã chọn
+    document.addEventListener("DOMContentLoaded", function() {
+        var subjectDropdown = document.getElementById("subject");
+        var selectedSubject = localStorage.getItem("selectedSubject");
+
+        // Khôi phục giá trị đã chọn (nếu có)
+        if (selectedSubject) {
+            subjectDropdown.value = selectedSubject;
+        }
+
+        // Lưu giá trị môn học đã chọn khi form được gửi đi
+        document.getElementById("filterForm").addEventListener("submit", function() {
+            localStorage.setItem("selectedSubject", subjectDropdown.value);
+        });
+    });
+</script>
     <table border="1">
         <thead>
             <tr>
@@ -144,7 +158,7 @@
 <form action="BankQuestionServlet" method="get">
     <input type="hidden" name="action" value="add">
     <label for="questionText">Question Text:</label><br>
-    <textarea id="questionText" name="questionText" rows="4" cols="50"></textarea><br>
+    <input type="text" id="questionText" name="questionText" ><br>
     
     <!-- Dropdown list to select subject -->
     <label for="subject">Subject:</label><br>
@@ -167,7 +181,7 @@
     <input type="text" id="correctAnswer" name="correctAnswer"><br>
     
     <label for="explain">Explanation:</label><br>
-    <textarea id="explain" name="explain" rows="4" cols="50"></textarea><br>
+    <input type="text" id="explain" name="explain" ><br>
     
     <input type="submit" value="Submit">
 </form>

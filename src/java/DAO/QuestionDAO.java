@@ -176,33 +176,93 @@ public boolean createMultipleChoiceQuestion(QuestionBank question) throws SQLExc
         return 0;
     }
 
-    public List<QuestionBank> getQuestionsForExam(int examId) throws SQLException {
-        List<QuestionBank> questions = new ArrayList<>();
-        String query = "SELECT q.*, s.subject_name FROM QuestionBank q INNER JOIN Exam_Questions eq ON q.question_id = eq.question_id INNER JOIN Subjects s ON q.subject_id = s.subject_id WHERE eq.exam_id = ?";
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, examId);
-            try (ResultSet resultSet = stmt.executeQuery()) {
-                while (resultSet.next()) {
-                    int id = resultSet.getInt("question_id");
-                    int subjectId = resultSet.getInt("subject_id");
-                    String subjectName = resultSet.getString("subject_name");
-                    int userId = resultSet.getInt("user_id");
-                    String questionText = resultSet.getString("question_context");
-                    List<String> choices = Arrays.asList(
-                            resultSet.getString("choice_1"),
-                            resultSet.getString("choice_2"),
-                            resultSet.getString("choice_3"),
-                            resultSet.getString("choice_correct")
-                    );
-                    String correctAnswer = resultSet.getString("choice_correct");
-                   String explain = resultSet.getString("choice_correct_explain");
-                    QuestionBank question = new QuestionBank(id, subjectId, userId, questionText, choices, correctAnswer, explain);
-                    questions.add(question);
-                }
+  public List<QuestionBank> getQuestionsForExam(int examId, int userId) throws SQLException {
+    List<QuestionBank> questions = new ArrayList<>();
+    String query = "SELECT q.question_id, q.subject_id, q.question_context, q.choice_1, q.choice_2, q.choice_3, q.choice_correct, q.choice_correct_explain, s.subject_name " +
+                   "FROM QuestionBank q " +
+                   "INNER JOIN Exam_Questions eq ON q.question_id = eq.question_id " +
+                   "INNER JOIN Exams e ON eq.exam_id = e.exam_id " +
+                   "INNER JOIN Subjects s ON q.subject = s.subject_name " +
+                   "WHERE e.exam_id = ? AND e.user_id = ?";
+    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setInt(1, examId);
+        stmt.setInt(2, userId);
+        try (ResultSet resultSet = stmt.executeQuery()) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("question_id");
+                int subjectId = resultSet.getInt("subject_id");
+                String questionText = resultSet.getString("question_context");
+                List<String> choices = Arrays.asList(
+                        resultSet.getString("choice_1"),
+                        resultSet.getString("choice_2"),
+                        resultSet.getString("choice_3"),
+                        resultSet.getString("choice_correct")
+                );
+                String correctAnswer = resultSet.getString("choice_correct");
+                String explain = resultSet.getString("choice_correct_explain");
+                String subjectName = resultSet.getString("subject_name");
+                QuestionBank question = new QuestionBank(id, subjectId, userId, questionText, subjectName, choices, correctAnswer, explain);
+                questions.add(question);
             }
         }
-        return questions;
     }
+    return questions;
+}
+// Phương thức để thêm câu hỏi vào đề thi của một người dùng
+public boolean addQuestionToExam(int examId, int questionId, int userId) throws SQLException {
+    // Kiểm tra xem câu hỏi thuộc về người dùng hiện tại hay không
+    String checkOwnershipQuery = "SELECT 1 FROM QuestionBank WHERE question_id = ? AND user_id = ?";
+    try (Connection conn = getConnection(); PreparedStatement checkStmt = conn.prepareStatement(checkOwnershipQuery)) {
+        checkStmt.setInt(1, questionId);
+        checkStmt.setInt(2, userId);
+        try (ResultSet resultSet = checkStmt.executeQuery()) {
+            if (!resultSet.next()) {
+                // Nếu câu hỏi không thuộc về người dùng hiện tại, trả về false
+                return false;
+            }
+        }
+    } 
+    // Nếu câu hỏi thuộc về người dùng hiện tại, thêm vào đề thi và trả về true
+    // Thêm câu hỏi vào bảng Exam_Questions
+    String addQuestionQuery = "INSERT INTO Exam_Questions (exam_id, question_id) VALUES (?, ?)";
+    try (Connection conn = getConnection(); PreparedStatement addStmt = conn.prepareStatement(addQuestionQuery)) {
+        addStmt.setInt(1, examId);
+        addStmt.setInt(2, questionId);
+        addStmt.executeUpdate();
+    }
+    return true;
+}
+public boolean updateQuestionInExam(int examId, int questionId, String updatedQuestionText, List<String> updatedChoices, String updatedCorrectAnswer, String updatedExplain) throws SQLException {
+    // Kiểm tra xem câu hỏi thuộc về đề thi có mã examId không
+    String checkQuestionInExamQuery = "SELECT 1 FROM Exam_Questions WHERE exam_id = ? AND question_id = ?";
+    try (Connection conn = getConnection(); PreparedStatement checkStmt = conn.prepareStatement(checkQuestionInExamQuery)) {
+        checkStmt.setInt(1, examId);
+        checkStmt.setInt(2, questionId);
+        try (ResultSet resultSet = checkStmt.executeQuery()) {
+            if (!resultSet.next()) {
+                // Nếu câu hỏi không thuộc về đề thi, không cập nhật và trả về false
+                return false;
+            }
+        }
+    } 
+    
+    // Cập nhật thông tin của câu hỏi trong bảng QuestionBank
+    String updateQuestionQuery = "UPDATE QuestionBank SET question_context = ?, choice_1 = ?, choice_2 = ?, choice_3 = ?, choice_correct = ?, choice_correct_explain = ? WHERE question_id = ?";
+    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(updateQuestionQuery)) {
+        stmt.setString(1, updatedQuestionText);
+        stmt.setString(2, updatedChoices.get(0));
+        stmt.setString(3, updatedChoices.get(1));
+        stmt.setString(4, updatedChoices.get(2));
+        stmt.setString(5, updatedCorrectAnswer);
+        stmt.setString(6, updatedExplain);
+        stmt.setInt(7, questionId);
+        int rowsAffected = stmt.executeUpdate();
+        return rowsAffected > 0;
+    }
+}
+
+
+
 
 public List<String> getAllSubjects() throws SQLException {
     List<String> subjects = new ArrayList<>();
@@ -279,6 +339,65 @@ public List<QuestionBank> getQuestionsBySubject(String subject) throws SQLExcept
     }
     return questions;
 }
+// lấy các câu hỏi trong id môn học
+public List<QuestionBank> getQuestionsBySubjectId(int subjectId) throws SQLException {
+        List<QuestionBank> questions = new ArrayList<>();
+        String query = "SELECT * FROM QuestionBank WHERE subject_id = ?";
+        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, subjectId);
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("question_id");
+                    int userId = resultSet.getInt("user_id");
+                    String questionText = resultSet.getString("question_context");
+                    List<String> choices = Arrays.asList(
+                            resultSet.getString("choice_1"),
+                            resultSet.getString("choice_2"),
+                            resultSet.getString("choice_3"),
+                            resultSet.getString("choice_correct")
+                    );
+                    String correctAnswer = resultSet.getString("choice_correct");
+                    String explain = resultSet.getString("choice_correct_explain");
+
+                    // Lấy tên của môn học từ subjectId
+                    String subjectName = getSubjectNameById(subjectId);
+
+                    QuestionBank question = new QuestionBank(id, subjectId, userId, questionText, subjectName, choices, correctAnswer, explain);
+                    questions.add(question);
+                }
+            }
+        }
+        return questions;
+    }
+// lấy câu hỏi từ user id và subject id
+public List<QuestionBank> getQuestionsBySubjectIdAndUserId(int subjectId, int userId) throws SQLException {
+    List<QuestionBank> questions = new ArrayList<>();
+    String query = "SELECT * FROM QuestionBank WHERE subject_id = ? AND user_id = ?";
+
+    try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(query)) {
+        statement.setInt(1, subjectId);
+        statement.setInt(2, userId);
+        try (ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                int id = resultSet.getInt("question_id");
+                String questionText = resultSet.getString("question_context");
+                List<String> choices = Arrays.asList(
+                        resultSet.getString("choice_1"),
+                        resultSet.getString("choice_2"),
+                        resultSet.getString("choice_3")
+                );
+                String correctAnswer = resultSet.getString("choice_correct");
+                String explain = resultSet.getString("choice_correct_explain");
+
+                QuestionBank question = new QuestionBank(id, subjectId, userId, questionText, choices, correctAnswer, explain);
+                questions.add(question);
+            }
+        }
+    }
+
+    return questions;
+}
+
 
    public double calculateScore(List<String> userAnswers, List<QuestionBank> questions) {
     if (userAnswers.size() != questions.size()) {

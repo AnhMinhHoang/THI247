@@ -10,7 +10,7 @@ public class DBConnection {
 
     public static String url = "jdbc:sqlserver://MSI:1433;databaseName=Thi2471;encrypt=true;trustServerCertificate=true";
     public static String user = "sa";
-    public static String password = "minhvn2004";
+    public static String password = "tuan";
 
     public static Connection getConnection() {
         Connection con = null;
