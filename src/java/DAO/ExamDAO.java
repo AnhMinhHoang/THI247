@@ -58,14 +58,15 @@ public boolean addQuestionToExam(int examId, int questionId, int userId) throws 
     return true;
 }
 public boolean removeQuestionFromExam(int examId, int questionId) throws SQLException {
-    String sql = "DELETE FROM Exam_Questions WHERE exam_id = ? AND question_id = ?";
-    try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-        stmt.setInt(1, examId);
-        stmt.setInt(2, questionId);
-        int rowsAffected = stmt.executeUpdate();
-        return rowsAffected > 0;
+        String query = "DELETE FROM Exam_Questions WHERE exam_id = ? AND question_id = ?";
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, examId);
+            preparedStatement.setInt(2, questionId);
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        }
     }
-}
 public boolean updateQuestionInExam(int examId, int questionId, String updatedQuestionText, List<String> updatedChoices, String updatedCorrectAnswer, String updatedExplain) throws SQLException {
     // Kiểm tra xem câu hỏi thuộc về đề thi có mã examId không
     String checkQuestionInExamQuery = "SELECT 1 FROM Exam_Questions WHERE exam_id = ? AND question_id = ?";

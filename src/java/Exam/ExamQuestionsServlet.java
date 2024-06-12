@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import model.QuestionBank;
 /**
@@ -67,7 +68,7 @@ public class ExamQuestionsServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
+     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
@@ -76,21 +77,21 @@ public class ExamQuestionsServlet extends HttpServlet {
                 case "add":
                     addQuestionToExam(request, response);
                     break;
-                case "remove":
-                    removeQuestionFromExam(request, response);
-                    break;
                 case "update":
                     updateQuestionInExam(request, response);
+                    break;
+                case "delete":
+                    deleteQuestionFromExam(request, response);
                     break;
                 default:
                     // Handle other actions
             }
         } else {
-            // Load questions for the selected exam
             int examId = Integer.parseInt(request.getParameter("examId"));
             try {
                 List<QuestionBank> questions = examDAO.getQuestionsForExam(examId);
                 request.setAttribute("questions", questions);
+                request.setAttribute("examId", examId);
                 request.getRequestDispatcher("examQuestions.jsp").forward(request, response);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -98,27 +99,28 @@ public class ExamQuestionsServlet extends HttpServlet {
             }
         }
     }
-private void addQuestionToExam(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    int examId = Integer.parseInt(request.getParameter("examId"));
-    int questionId = Integer.parseInt(request.getParameter("questionId"));
 
-    HttpSession session = request.getSession();
-    int userId = (int) session.getAttribute("userId");
+    private void addQuestionToExam(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int examId = Integer.parseInt(request.getParameter("examId"));
+        int questionId = Integer.parseInt(request.getParameter("questionId"));
 
-    try {
-        boolean added = examDAO.addQuestionToExam(examId, questionId, userId);
-        if (added) {
-            response.sendRedirect("ExamQuestionsServlet?examId=" + examId);
-        } else {
-            // Handle add failure
+        HttpSession session = request.getSession();
+        int userId = (int) session.getAttribute("userId");
+
+        try {
+            boolean added = examDAO.addQuestionToExam(examId, questionId, userId);
+            if (added) {
+                response.sendRedirect("ExamQuestionsServlet?examId=" + examId);
+            } else {
+                // Handle add failure
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
-}
 
-    private void removeQuestionFromExam(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void deleteQuestionFromExam(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int examId = Integer.parseInt(request.getParameter("examId"));
         int questionId = Integer.parseInt(request.getParameter("questionId"));
 
@@ -127,7 +129,7 @@ private void addQuestionToExam(HttpServletRequest request, HttpServletResponse r
             if (deleted) {
                 response.sendRedirect("ExamQuestionsServlet?examId=" + examId);
             } else {
-                // Handle delete failure
+                response.getWriter().write("Failed to delete question from exam.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -135,36 +137,35 @@ private void addQuestionToExam(HttpServletRequest request, HttpServletResponse r
         }
     }
 
-
-
     private void updateQuestionInExam(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     int examId = Integer.parseInt(request.getParameter("examId"));
     int questionId = Integer.parseInt(request.getParameter("questionId"));
     String updatedQuestionText = request.getParameter("updatedQuestionText");
-    String updatedChoice1 = request.getParameter("updatedChoice1");
-    String updatedChoice2 = request.getParameter("updatedChoice2");
-    String updatedChoice3 = request.getParameter("updatedChoice3");
+    String[] updatedChoices = request.getParameterValues("updatedChoices");
     String updatedCorrectAnswer = request.getParameter("updatedCorrectAnswer");
     String updatedExplain = request.getParameter("updatedExplain");
-    
-    // Tạo danh sách các lựa chọn mới
-    List<String> updatedChoices = Arrays.asList(updatedChoice1, updatedChoice2, updatedChoice3);
+
+    // Khởi tạo một danh sách để lưu trữ các lựa chọn
+    List<String> updatedChoicesList = new ArrayList<>();
+
+    // Kiểm tra xem mảng lựa chọn đã được trả về hay không
+    if (updatedChoices != null) {
+        // Nếu mảng không null, thêm tất cả các lựa chọn vào danh sách
+        updatedChoicesList.addAll(Arrays.asList(updatedChoices));
+    }
 
     try {
-        boolean updated = examDAO.updateQuestionInExam(examId, questionId, updatedQuestionText, updatedChoices, updatedCorrectAnswer, updatedExplain);
+        boolean updated = examDAO.updateQuestionInExam(examId, questionId, updatedQuestionText, updatedChoicesList, updatedCorrectAnswer, updatedExplain);
         if (updated) {
             response.sendRedirect("ExamQuestionsServlet?examId=" + examId);
         } else {
-            // Handle update failure
+            // Xử lý khi cập nhật thất bại
         }
     } catch (SQLException e) {
         e.printStackTrace();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
 }
-
-
-
 
 
 

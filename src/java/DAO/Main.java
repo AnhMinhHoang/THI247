@@ -107,27 +107,47 @@ import java.util.Scanner;
 //        }
 //    }
 //}
-public class Main {
-    public static void main(String[] args) {
-        int examId = 6; // Thay đổi giá trị này bằng examId thực tế bạn muốn kiểm tra
-        int userId = 7; // Thay đổi giá trị này bằng userId thực tế của người dùng đã đăng nhập
+//public class Main {
+//    public static void main(String[] args) {
+//        int examId = 6; // Thay đổi giá trị này bằng examId thực tế bạn muốn kiểm tra
+//        int userId = 7; // Thay đổi giá trị này bằng userId thực tế của người dùng đã đăng nhập
+//
+//        // Gọi hàm getQuestionsForExam và in ra các câu hỏi
+//        try {
+//            ExamDAO examDAO = new ExamDAO();
+//            List<QuestionBank> questions = examDAO.getQuestionsForExam(examId, userId);
+//            for (QuestionBank question : questions) {
+//                System.out.println("Question ID: " + question.getId());
+//                System.out.println("Subject ID: " + question.getSubjectId());
+//                System.out.println("Question Text: " + question.getQuestionText());
+//                System.out.println("Subject Name: " + question.getSubject());
+//                System.out.println("Choices: " + question.getChoices());
+//                System.out.println("Correct Answer: " + question.getCorrectAnswer());
+//                System.out.println("Explanation: " + question.getExplain());
+//                System.out.println("----------------------------------------");
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//}
+public class Main{
+public static void main(String[] args) {
+        ExamDAO examDAO = new ExamDAO();
 
-        // Gọi hàm getQuestionsForExam và in ra các câu hỏi
+        // Thay đổi các giá trị examId và questionId theo dữ liệu thực tế trong cơ sở dữ liệu của bạn
+        int examId = 11; // Giá trị exam_id trong Exam_Questions mà bạn muốn kiểm tra
+        int questionId = 1048; // Giá trị question_id trong Exam_Questions mà bạn muốn kiểm tra
+
         try {
-            ExamDAO examDAO = new ExamDAO();
-            List<QuestionBank> questions = examDAO.getQuestionsForExam(examId, userId);
-            for (QuestionBank question : questions) {
-                System.out.println("Question ID: " + question.getId());
-                System.out.println("Subject ID: " + question.getSubjectId());
-                System.out.println("Question Text: " + question.getQuestionText());
-                System.out.println("Subject Name: " + question.getSubject());
-                System.out.println("Choices: " + question.getChoices());
-                System.out.println("Correct Answer: " + question.getCorrectAnswer());
-                System.out.println("Explanation: " + question.getExplain());
-                System.out.println("----------------------------------------");
+            boolean result = examDAO.removeQuestionFromExam(examId, questionId);
+            if (result) {
+                System.out.println("Question successfully removed from exam.");
+            } else {
+                System.out.println("Failed to remove question from exam.");
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println("An error occurred while removing the question from the exam.");
         }
-    }
-}
+}  }
