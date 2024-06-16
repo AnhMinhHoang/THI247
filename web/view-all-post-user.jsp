@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
 <jsp:include page="header.jsp"></jsp:include>
+<style>
+    .btn-xoa{
+        color: black;
+    }
     
+</style>
 <script>
     var container = document.getElementById("tagID");
     var tag = container.getElementsByClassName("tag");
