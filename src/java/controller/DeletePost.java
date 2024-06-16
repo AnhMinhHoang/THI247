@@ -35,7 +35,6 @@ public class DeletePost extends HttpServlet {
         new ForumDAO().deletePostByID(postID);
         HttpSession session = request.getSession();
         session.setAttribute("userID", userID);
-        request.getRequestDispatcher("view-all-post-user.jsp").forward(request, response);
         response.sendRedirect("view-all-post-user.jsp");
     }
 
