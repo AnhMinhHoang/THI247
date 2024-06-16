@@ -109,9 +109,10 @@ public class ForumDAO extends DBConnection {
     }
 
     public void deletePostByID(int postID) {
-        String query = "delete from forum_post where post_id = ?";
+        String query = "delete from forum_comment where post_id=? delete from forum_post where post_id=?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, postID);
+            ps.setInt(2, postID);
             try {
                 ps.executeUpdate();
             } catch (Exception e) {
