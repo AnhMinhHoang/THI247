@@ -45,4 +45,9 @@ public class Subjects {
     public void setSubjectName(String subjectName) {
         this.subjectName = subjectName;
     }
+
+    @Override
+    public String toString() {
+        return "Subjects{" + "subjectID=" + subjectID + ", subjectName=" + subjectName + ", subjectImg=" + subjectImg + '}';
+    }
 }

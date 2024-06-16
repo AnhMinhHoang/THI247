@@ -80,6 +80,18 @@
         <servlet-name>ChangePassword</servlet-name>
         <servlet-class>controller.ChangePassword</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateExam</servlet-name>
+        <servlet-class>examController.CreateExam</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChangeSubject</servlet-name>
+        <servlet-class>examController.ChangeSubject</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CreateRandomExam</servlet-name>
+        <servlet-class>examController.CreateRandomExam</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -149,5 +161,17 @@
     <servlet-mapping>
         <servlet-name>ChangePassword</servlet-name>
         <url-pattern>/ChangePassword</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateExam</servlet-name>
+        <url-pattern>/CreateExam</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangeSubject</servlet-name>
+        <url-pattern>/ChangeSubject</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateRandomExam</servlet-name>
+        <url-pattern>/CreateRandomExam</url-pattern>
     </servlet-mapping>
 </web-app>
