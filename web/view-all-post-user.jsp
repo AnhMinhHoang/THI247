@@ -81,13 +81,13 @@ List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
                                   class="btn btn-xoa"
                                   type="button"
                                   data-toggle="modal"
-                                  data-target="#<%= modalId %>"  
+                                  data-target="#<%=modalId%>"  
                                 >
                                   Xoá
                                 </button>
                             </div>
           
-                    <div class="modal fade" id="<%= modalId %>" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="<%=modalId%>" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg" role="document">
                             <div class="modal-content" style="width: 500px; margin: auto">
                                 <form action="DeletePost" method="POST">
