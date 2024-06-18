@@ -66,7 +66,7 @@
                 <div class="navbar-nav ms-auto p-4 p-lg-0" id="tagID">
                     <a href="Home" class="nav-item nav-link tag active">Trang Chủ</a>
                     <a href="forum.jsp" class="nav-item nav-link tag">Diễn Đàn</a>
-                    <a href="courses.jsp" class="nav-item nav-link tag">Kiểm Tra</a>
+                    <a href="teacher.jsp" class="nav-item nav-link tag">Kiểm Tra</a>
                     <a href="shop.jsp" class="nav-item nav-link tag">Cửa Hàng</a>
 
                 </div>

@@ -19,6 +19,22 @@
             text-align: left;
             background-color: #e2e8f0;
         }
+        
+        h3{
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+        
+        a{
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        p{
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+        
         .inner-wrapper {
             position: relative;
             height: calc(100vh - 3.5rem);

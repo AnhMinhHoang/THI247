@@ -92,6 +92,50 @@
         <servlet-name>CreateRandomExam</servlet-name>
         <servlet-class>examController.CreateRandomExam</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteExam</servlet-name>
+        <servlet-class>examController.DeleteExam</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PassDataExamUpdate</servlet-name>
+        <servlet-class>examController.PassDataExamUpdate</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteQuestionInExam</servlet-name>
+        <servlet-class>examController.DeleteQuestionInExam</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewQuestionDetail</servlet-name>
+        <servlet-class>examController.ViewQuestionDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PassDataExamAdd</servlet-name>
+        <servlet-class>examController.PassDataExamAdd</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddQuestionToExam</servlet-name>
+        <servlet-class>examController.AddQuestionToExam</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChangeExamName</servlet-name>
+        <servlet-class>examController.ChangeExamName</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddRandomQuestionToExam</servlet-name>
+        <servlet-class>examController.AddRandomQuestionToExam</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChangeSubjectSystem</servlet-name>
+        <servlet-class>examController.ChangeSubjectSystem</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChangeSubjectUser</servlet-name>
+        <servlet-class>examController.ChangeSubjectUser</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PassDataQuestionAdd</servlet-name>
+        <servlet-class>examController.PassDataQuestionAdd</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -173,5 +217,49 @@
     <servlet-mapping>
         <servlet-name>CreateRandomExam</servlet-name>
         <url-pattern>/CreateRandomExam</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteExam</servlet-name>
+        <url-pattern>/DeleteExam</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PassDataExamUpdate</servlet-name>
+        <url-pattern>/PassDataExamUpdate</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteQuestionInExam</servlet-name>
+        <url-pattern>/DeleteQuestionInExam</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewQuestionDetail</servlet-name>
+        <url-pattern>/ViewQuestionDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PassDataExamAdd</servlet-name>
+        <url-pattern>/PassDataExamAdd</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddQuestionToExam</servlet-name>
+        <url-pattern>/AddQuestionToExam</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangeExamName</servlet-name>
+        <url-pattern>/ChangeExamName</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddRandomQuestionToExam</servlet-name>
+        <url-pattern>/AddRandomQuestionToExam</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangeSubjectSystem</servlet-name>
+        <url-pattern>/ChangeSubjectSystem</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangeSubjectUser</servlet-name>
+        <url-pattern>/ChangeSubjectUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PassDataQuestionAdd</servlet-name>
+        <url-pattern>/PassDataQuestionAdd</url-pattern>
     </servlet-mapping>
 </web-app>
