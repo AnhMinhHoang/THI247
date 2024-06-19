@@ -218,148 +218,53 @@
       </li><!-- End Profile Page Nav -->
     </ul>
   </aside><!-- End Sidebar-->
+  
   <main id="main" class="main">
-    <div class="pagetitle">
-      <h1>Dashboard</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item active">Dashboard</li>
-        </ol>
-      </nav>
-    </div><!-- End Page Title -->
+      <h2 class="text-primary">Người dùng</h2>
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th class="text-primary" scope="col">#</th>
+                    <th class="text-primary" scope="col">Avatar</th>
+                    <th class="text-primary" scope="col">Tên người dùng</th>
+                    <th class="text-primary" scope="col">Họ và tên</th>
+                    <th class="text-primary" scope="col">Chức vụ</th>
+                    <th class="text-primary" scope="col">Thông tin cá nhân</th>
+                    <th class="text-primary" scope="col">Tác vụ</th>
+                </tr>
+            </thead>
+            <tbody>
+               
+                
+<!--            list all user    -->
+            <tr>
+                <td>abc</td>
+                <td>getUserImg</td>
+                <td>getUsername</td>
+                <td>getFullname</td>
+                <td>getRole</td>
+                <td>redirect to profile</td>
+                <td><input type="submit" class="btn btn-ban" style="background-color: red" value="Ban"/></td>
 
-    <section class="section dashboard">
-      <div class="row">
-        <!-- Left side columns -->
-        <div class="col-lg-8">
-          <div class="row">
-            <!-- Sales Card -->
-            <div class="col-xxl-4 col-md-6">
-              <div class="card info-card sales-card">
-                <div class="card-body">
-                  <h5 class="card-title">Users</h5>
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-people-fill"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6>###</h6>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div><!-- End Sales Card -->
-            <!-- Revenue Card -->
-            <div class="col-xxl-4 col-md-6">
-              <div class="card info-card revenue-card">
-                <div class="card-body">
-                  <h5 class="card-title">Student</h5>
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-people-fill"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6>###</h6>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div><!-- End Revenue Card -->
-            <!-- Customers Card -->
-            <div class="col-xxl-4 col-xl-12">
+            </tr>
+<!--                ket thuc list all user-->
 
-              <div class="card info-card customers-card">
-                <div class="card-body">
-                  <h5 class="card-title">Lecturer <span></span></h5>
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-people-fill"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6>###</h6>
-                    </div>
-                  </div>
 
-                </div>
-              </div>
+<tr>
+                <td>abc</td>
+                <td>getUserImg</td>
+                <td>getUsername</td>
+                <td>getFullname</td>
+                <td>getRole</td>
+                <td>redirect to profile</td>
+                <td><input type="submit" class="btn btn-primary" value="Unban"/></td>
 
-            </div><!-- End Customers Card -->
-
-           
-
-            <!-- Recent Sales -->
+            </tr>
+            </tbody>
             
-            <!-- Recent Sales -->
-            <div class="col-12">
-              <div class="card recent-sales overflow-auto">
-                <div class="card-body">
-                  <h5 class="card-title">Yêu cầu giáo viên<span></span></h5>
-                  <table class="table table-borderless datatable">
-                    <thead>
-                      <tr>
-                        <th scope="col">Tên người dùng</th>
-                        <th scope="col">Họ và tên</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Xem chi tiết</th>
-                        <th scope="col"style="margin-left: auto">Trạng thái</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-<!--                        1 yeu cau giao vien-->
-                      <tr>
-                        <th scope="row"><a href="#">getUsername</a></th>
-                        <td>getUserfullname</td>
-                        <td>getuserEmail</td>
-                        <td><span class="badge bg-success"></span></td>
-                        <td>
-                            <input type="submit" class="btn btn-primary" value="Chấp thuận"/>
-                            <input type="submit" class="btn btn-primary" value="Loại"/>
-                        </td>
-                      </tr> 
-<!--                      ket thuc 1 yeu cau giao vien-->
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div><!-- End Recent Sales -->
-            <div class="col-12">
-              <div class="card recent-sales overflow-auto">
-                <div class="card-body">
-                  <h5 class="card-title">Bảng tố cáo<span></span></h5>
-                  <table class="table table-borderless datatable">
-                    <thead>
-                      <tr>
-                        <th scope="col">Người tố cáo</th>
-                        <th scope="col">Tên người dùng</th>
-                        <th scope="col">Chi tiết</th>
-                        <th scope="col">Tác vụ</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-<!--                        1 report-->
-                      <tr>
-                        <th scope="row"><a href="#">#2457</a></th>
-                        <th scope="row"><a href="#">#2457</a></th>
-                        <td><a href="#" class="text-primary">At praesentium minu</a></td>
-                        <td><span class="badge bg-success">Chấp thuận</span></td>
-                        <td><span class="badge bg-danger">Từ chối</span></td>
-                        <td><span class="badge bg-warning">Đang xử lí...</span></td>
-                      </tr>
-<!--                    ket thuc 1 report-->
-
-                    </tbody>
-                  </table>
-
-                </div>
-
-              </div>
-            </div>
-        </div><!-- End Left side columns -->
-
-        <!-- Right side columns -->
-      </div>
-    </section>
+        </table>
+    </div>
   </main><!-- End #main -->
 
 
@@ -381,3 +286,6 @@
 
 
   
+
+
+
