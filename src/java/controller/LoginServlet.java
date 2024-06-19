@@ -56,20 +56,15 @@ public class LoginServlet extends HttpServlet {
             String password = request.getParameter("password");
 
             UserDAO userDAO = new UserDAO();
-            String token = userDAO.checkLogin(email, password);
+            String status = userDAO.checkLogin(email, password);
 
-            if (token != null) {
+            if (status != null) {
                 // Lưu thông tin người dùng vào session
                 HttpSession session = request.getSession();
                 int role = userDAO.getUserType(email);
                 Users user = userDAO.findByEmail(email);
                 session.setAttribute("currentUser", user);
                 session.setMaxInactiveInterval(600); // Thời gian hết hiệu lực của session
-
-                // Lưu token vào cookie để gửi về client
-                Cookie tokenCookie = new Cookie("token", token);
-                tokenCookie.setMaxAge(3600); // Thời gian sống của cookie (1 giờ)
-                response.addCookie(tokenCookie);
 
                 // Chuyển hướng đến trang tương ứng với vai trò người dùng
                 if (role == 3) {

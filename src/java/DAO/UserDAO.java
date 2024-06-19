@@ -21,7 +21,7 @@ public class UserDAO extends DBConnection{
 
     private static final String LOGIN_QUERY = "SELECT userID, roles FROM Users WHERE email=? AND password=?";
     private static final String USER_TYPE_QUERY = "SELECT roles FROM Users WHERE email=?";
-    private static final String INSERT_TOKEN_QUERY = "INSERT INTO Users (userID, token, expiry_time) VALUES (?, ?, ?)";
+    
     public String checkLogin(String email, String password) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -35,10 +35,7 @@ public class UserDAO extends DBConnection{
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-                int userId = rs.getInt("userID");
-                String token = generateToken();
-                saveToken(conn, userId, token);
-                return token;
+                return "Ok";
             } else {
                 System.out.println("Login failed: Invalid username or password");
             }
@@ -49,19 +46,6 @@ public class UserDAO extends DBConnection{
         }
 
         return null;
-    }
-
-    private String generateToken() {
-        return UUID.randomUUID().toString();
-    }
-
-    private void saveToken(Connection conn, int userId, String token) throws SQLException {
-        try (PreparedStatement stmt = conn.prepareStatement(INSERT_TOKEN_QUERY)) {
-            stmt.setInt(1, userId);
-            stmt.setString(2, token);
-            stmt.setTimestamp(3, new java.sql.Timestamp(System.currentTimeMillis() + 300000));
-            stmt.executeUpdate();
-        }
     }
 
    
@@ -345,16 +329,6 @@ public class UserDAO extends DBConnection{
     }*/
        public static void main(String[] args) {
         // Địa chỉ email cần tìm userId
-        String email = "sonhuynh22002@gmail.com";
-
-        // Thực thi hàm getUserIdByEmail
-        int userId = UserDAO.getUserIdByEmail(email);
-
-        // In kết quả
-        if (userId != -1) {
-            System.out.println("User ID found: " + userId);
-        } else {
-            System.out.println("User ID not found for email: " + email);
-        }
+        new UserDAO().checkLogin("student1@gmail.com", "student123");
     }
 }

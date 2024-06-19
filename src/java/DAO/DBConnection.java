@@ -16,9 +16,9 @@ import java.util.logging.Logger;
  */
 public class DBConnection {
 
-    public static String url = "jdbc:sqlserver://MSI:1433;databaseName=THI247;encrypt=true;trustServerCertificate=true";
+    public static String url = "jdbc:sqlserver://LAPTOP-GAPSJ907;databaseName=THI247;encrypt=true;trustServerCertificate=true";
     public static String user = "sa";
-    public static String password = "tuan";
+    public static String password = "12345678";
 
     public static Connection getConnection() {
         Connection con = null;
