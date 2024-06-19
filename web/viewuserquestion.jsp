@@ -61,7 +61,7 @@ session.setAttribute("backlink", "viewuserquestion.jsp");
                                 <%
                                 String context;
                                 String answer;
-                                for(int i = 0; i < qbs.size(); i++){
+                                for(int i = qbs.size() - 1; i >= 0; i--){
                                     QuestionBank qb = qbs.get(i);
                                     if(qb.getQuestionContext().length() > 40) 
                                         context = qb.getQuestionContext().substring(0, 40) + "...";
@@ -95,8 +95,9 @@ session.setAttribute("backlink", "viewuserquestion.jsp");
                                         <div class="modal fade" id="<%= modalId %>" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-lg" role="document">
                                                 <div class="modal-content" style="width: 500px; margin: auto">
-                                                    <form action="DeleteQuestionInExam" method="POST">
+                                                    <form action="DeleteQuestionInBank" method="POST">
                                                         <input type="hidden" name="questionID" value="<%=qb.getQuestionId()%>">
+                                                        <input type="hidden" name="subjectID" value="<%=subjectID%>">
                                                         <div class="modal-header d-flex align-items-center bg-primary text-white">
                                                             <h6 class="modal-title mb-0" id="threadModalLabel">Xác nhận xóa câu hỏi?</h6>
                                                         </div>

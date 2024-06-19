@@ -444,7 +444,7 @@
                                             required
                                             autofocus
                                             rows="5" 
-                                            style="resize: none; overflow: hidden;"
+                                            style="resize: none; overflow: hidden; box-sizing: border-box;"
                                             ></textarea>
                                     </div>
                                     <!--                    <label for="thread-image">Ảnh</label>
@@ -553,7 +553,7 @@
         </script>
 
         <script>
-            var textarea = document.getElementById("submit-comment");
+            var textarea = document.getElementById("threadTitle");
             textarea.addEventListener("input", function () {
                 this.style.height = "auto";
                 this.style.height = (this.scrollHeight) + "px";

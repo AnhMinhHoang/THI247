@@ -136,6 +136,14 @@
         <servlet-name>PassDataQuestionAdd</servlet-name>
         <servlet-class>examController.PassDataQuestionAdd</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddQuestionBank</servlet-name>
+        <servlet-class>examController.AddQuestionBank</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteQuestionInBank</servlet-name>
+        <servlet-class>examController.DeleteQuestionInBank</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -261,5 +269,13 @@
     <servlet-mapping>
         <servlet-name>PassDataQuestionAdd</servlet-name>
         <url-pattern>/PassDataQuestionAdd</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddQuestionBank</servlet-name>
+        <url-pattern>/AddQuestionBank</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteQuestionInBank</servlet-name>
+        <url-pattern>/DeleteQuestionInBank</url-pattern>
     </servlet-mapping>
 </web-app>

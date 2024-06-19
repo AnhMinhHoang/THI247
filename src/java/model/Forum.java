@@ -14,20 +14,18 @@ public class Forum {
     private String postTitle;
     private String postContext;
     private String postDate;
-    private boolean postApproved;
     private int postReact;
     private String postImg;
 
     public Forum() {
     }
 
-    public Forum(int postID, int userID, String postTitle, String postContext, String postDate, boolean postApproved, int postReact, String postImg) {
+    public Forum(int postID, int userID, String postTitle, String postContext, String postDate, int postReact, String postImg) {
         this.postID = postID;
         this.userID = userID;
         this.postTitle = postTitle;
         this.postContext = postContext;
         this.postDate = postDate;
-        this.postApproved = postApproved;
         this.postReact = postReact;
         this.postImg = postImg;
     }
@@ -80,14 +78,6 @@ public class Forum {
         this.postDate = postDate;
     }
 
-    public boolean isPostApproved() {
-        return postApproved;
-    }
-
-    public void setPostApproved(boolean postApproved) {
-        this.postApproved = postApproved;
-    }
-
     public int getPostReact() {
         return postReact;
     }
@@ -98,6 +88,6 @@ public class Forum {
 
     @Override
     public String toString() {
-        return "Forum{" + "postID=" + postID + ", userID=" + userID + ", postTitle=" + postTitle + ", postContext=" + postContext + ", postDate=" + postDate + ", postApproved=" + postApproved + ", postReact=" + postReact + ", postImg=" + postImg + '}';
+        return "Forum{" + "postID=" + postID + ", userID=" + userID + ", postTitle=" + postTitle + ", postContext=" + postContext + ", postDate=" + postDate + ", postReact=" + postReact + ", postImg=" + postImg + '}';
     }
 }

@@ -2,31 +2,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller;
+package examController;
 
-import DAO.ForumDAO;
+import DAO.ExamDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.Part;
-import java.io.File;
+import java.util.List;
+import model.QuestionBank;
 import model.Users;
 
 /**
  *
  * @author GoldCandy
  */
-@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
-                 maxFileSize = 1024 * 1024 * 10,       // 10MB
-                 maxRequestSize = 1024 * 1024 * 50)    // 50MB
-public class NewPost extends HttpServlet {
-    private static final long serialVersionUID = 1L;
-    private static final String UPLOAD_DIRECTORY = "uploads/avaUploads";
+public class DeleteQuestionInBank extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,45 +34,15 @@ public class NewPost extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIRECTORY;
-        File uploadDir = new File(uploadPath);
         HttpSession session = request.getSession();
         Users user = (Users)session.getAttribute("currentUser");
-        String postTitle = request.getParameter("title");
-        String postContext = request.getParameter("context");
-        boolean check = true;
+        int subjectID = Integer.parseInt(request.getParameter("subjectID"));
+        int questionID = Integer.parseInt(request.getParameter("questionID"));
         
-        if(!uploadDir.exists()){
-            uploadDir.mkdirs();
-        }
-        
-        for(Part part: request.getParts()){
-            String fileName = getFileName(part);
-            if(fileName != null && !fileName.isEmpty()){
-                String filePath = uploadPath + File.separator + fileName;
-                part.write(filePath);
-                String url = UPLOAD_DIRECTORY + "/" + fileName;
-                check = false;
-                new ForumDAO().createNewPost(user.getUserID(), postTitle, postContext, url);
-                response.sendRedirect("forum.jsp");
-            }
-        }
-        
-        if(check){
-            new ForumDAO().createNewPost(user.getUserID(), postTitle, postContext, null);
-            response.sendRedirect("forum.jsp");
-        }
-    }
-    
-    private String getFileName(Part part){
-        String contentDisposition = part.getHeader("content-disposition");
-        String[] tokens = contentDisposition.split(";");
-        for(String token: tokens){
-            if(token.trim().startsWith("filename")){
-                return token.substring(token.indexOf("=") + 2, token.length() - 1);
-            }
-        }
-        return null;
+        new ExamDAO().deleteQuestion(questionID);
+        List<QuestionBank> list = new ExamDAO().getAllUserQuestionByID(subjectID, user.getUserID());
+        session.setAttribute("questionList", list);
+        response.sendRedirect("viewuserquestion.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -108,7 +72,6 @@ public class NewPost extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-        
     }
 
     /**

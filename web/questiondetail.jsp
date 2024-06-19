@@ -57,13 +57,23 @@ QuestionBank qb = new ExamDAO().getQuestionByID(questionID);
 String link = (String)session.getAttribute("backlink");
 %>
 <body>
+    <%
+    Us
+    %>
     <div class="container">
         <br><br>
-        <button class="btn"><a href="<%=link%>" style="text-decoration: none">Back</a></button>
+        <button class="btn btn-light"><a href="<%=link%>" style="text-decoration: none; color: black">Back</a></button>
             <fieldset>
                 <legend>Câu hỏi</legend>
                 <p style="overflow-wrap:break-word;"><%=qb.getQuestionContext()%></p>
                 <p style="font-weight: bold">Câu trả lời</p>
+                <%
+                if(qb.getQuestionImg() != null){
+                %>
+                <img src="<%=qb.getQuestionImg()%>" width="400px" height="400px"/>
+                <%
+                    }
+                %>
 
                 <p style="overflow-wrap:break-word;"><label style="font-weight: bold">A:</label> <%=qb.getChoice1()%></p>
 
@@ -75,6 +85,13 @@ String link = (String)session.getAttribute("backlink");
 
                 <p style="overflow-wrap:break-word;"><label style="font-weight: bold">Đáp án:</label> <%=qb.getChoiceCorrect()%></p>
                 <p style="overflow-wrap:break-word;"><label style="font-weight: bold">Giải thích:</label> <%=qb.getExplain()%></p>
+                <%
+                if(qb.getExplainImg() != null){
+                %>
+                <img src="<%=qb.getExplainImg()%>" width="400px" height="400px"/>
+                <%
+                    }
+                %>
             </fieldset>
     </div>
     <%

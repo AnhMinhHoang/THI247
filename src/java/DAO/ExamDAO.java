@@ -25,6 +25,20 @@ public class ExamDAO extends DBConnection {
 
     //Update question
     //Delete question
+    public void deleteQuestion(int questionID){
+        String query = "delete from QuestionBank where question_id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, questionID);
+            try {
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        } catch (Exception err) {
+            System.out.println(err);
+        }
+    }
+    
     //Add exam
     public void addExam(String examName, int userID, int subjectID) {
         String query = "insert into Exam(exam_name, create_date, userID, subject_id) values(?, ?, ?, ?)";
@@ -160,6 +174,33 @@ public class ExamDAO extends DBConnection {
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, questionID);
             ps.setInt(2, examID);
+            try {
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        } catch (Exception err) {
+            System.out.println(err);
+        }
+    }
+    
+    //Add question to questionBank by userID and subjectID
+    public void addQuestionToQuestionBank(QuestionBank qb) {
+        String query = "insert into QuestionBank(subject_id, question_context, question_choice_1, "
+                + "question_choice_2, question_choice_3, question_choice_correct, question_explain, "
+                + "question_img, question_explain_img, userID) "
+                + "Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, qb.getSubjectId());
+            ps.setString(2, qb.getQuestionContext());
+            ps.setString(3, qb.getChoice1());
+            ps.setString(4, qb.getChoice2());
+            ps.setString(5, qb.getChoice3());
+            ps.setString(6, qb.getChoiceCorrect());
+            ps.setString(7, qb.getExplain());
+            ps.setString(8, qb.getQuestionImg());
+            ps.setString(9, qb.getExplainImg());
+            ps.setInt(10, qb.getUserID());
             try {
                 ps.executeUpdate();
             } catch (SQLException e) {
