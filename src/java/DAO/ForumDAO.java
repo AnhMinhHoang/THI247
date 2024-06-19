@@ -6,13 +6,11 @@ package DAO;
 
 import java.sql.PreparedStatement;
 import java.sql.*;
-import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import model.Comments;
 import model.Forum;
-import model.Users;
 
 /**
  *

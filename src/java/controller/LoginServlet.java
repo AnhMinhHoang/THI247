@@ -9,6 +9,7 @@ import DAO.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -53,17 +54,24 @@ public class LoginServlet extends HttpServlet {
         try {
             String email = request.getParameter("email");
             String password = request.getParameter("password");
-            UserDAO ud = new UserDAO();
-            HttpSession session = request.getSession();
-            boolean result = ud.checkLogin(email, password);
-            
-            if (result) {
-                // Xác định loại người dùng từ UserDAO
-                int role = ud.getUserType(email);
-                Users user = ud.findByEmail(email);
+
+            UserDAO userDAO = new UserDAO();
+            String token = userDAO.checkLogin(email, password);
+
+            if (token != null) {
+                // Lưu thông tin người dùng vào session
+                HttpSession session = request.getSession();
+                int role = userDAO.getUserType(email);
+                Users user = userDAO.findByEmail(email);
                 session.setAttribute("currentUser", user);
-                session.setMaxInactiveInterval(600);
-                
+                session.setMaxInactiveInterval(600); // Thời gian hết hiệu lực của session
+
+                // Lưu token vào cookie để gửi về client
+                Cookie tokenCookie = new Cookie("token", token);
+                tokenCookie.setMaxAge(3600); // Thời gian sống của cookie (1 giờ)
+                response.addCookie(tokenCookie);
+
+                // Chuyển hướng đến trang tương ứng với vai trò người dùng
                 if (role == 3) {
                     // Người dùng thường (user)
                     response.sendRedirect("Home");
@@ -79,6 +87,7 @@ public class LoginServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
+
 
 
     @Override

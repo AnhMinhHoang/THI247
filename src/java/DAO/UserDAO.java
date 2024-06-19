@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import Email.PasswordResetUtil;
 import model.Users;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,14 +15,14 @@ import java.sql.ResultSet;
  * @author ADMIN        
  */
 import java.sql.*;
+import java.util.UUID;
 
 public class UserDAO extends DBConnection{
 
     private static final String LOGIN_QUERY = "SELECT userID, roles FROM Users WHERE email=? AND password=?";
     private static final String USER_TYPE_QUERY = "SELECT roles FROM Users WHERE email=?";
-
-    public boolean checkLogin(String email, String password) {
-        boolean loggedIn = false;
+    private static final String INSERT_TOKEN_QUERY = "INSERT INTO Users (userID, token, expiry_time) VALUES (?, ?, ?)";
+    public String checkLogin(String email, String password) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -34,10 +35,11 @@ public class UserDAO extends DBConnection{
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-                // Đăng nhập thành công
-                loggedIn = true;
+                int userId = rs.getInt("userID");
+                String token = generateToken();
+                saveToken(conn, userId, token);
+                return token;
             } else {
-                // Đăng nhập thất bại
                 System.out.println("Login failed: Invalid username or password");
             }
         } catch (SQLException e) {
@@ -46,8 +48,25 @@ public class UserDAO extends DBConnection{
             closeResources(conn, stmt, rs);
         }
 
-        return loggedIn;
+        return null;
     }
+
+    private String generateToken() {
+        return UUID.randomUUID().toString();
+    }
+
+    private void saveToken(Connection conn, int userId, String token) throws SQLException {
+        try (PreparedStatement stmt = conn.prepareStatement(INSERT_TOKEN_QUERY)) {
+            stmt.setInt(1, userId);
+            stmt.setString(2, token);
+            stmt.setTimestamp(3, new java.sql.Timestamp(System.currentTimeMillis() + 300000));
+            stmt.executeUpdate();
+        }
+    }
+
+   
+
+
     
     public Users findByEmail(String email) {
         String query = "SELECT * FROM Users WHERE email=?";
@@ -78,6 +97,27 @@ public class UserDAO extends DBConnection{
         }
         return null;
     }
+    public static int getUserIdByEmail(String email) {
+    int userId = -1; // Default value if user_id is not found
+
+    String query = "SELECT userID FROM Users WHERE email = ?";
+    try (Connection conn = getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        pstmt.setString(1, email);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                userId = rs.getInt("userID");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return userId;
+}
+
+
+
     
     public Users findByUserName(String username) {
         String query = "SELECT * FROM Users WHERE username=?";
@@ -303,8 +343,18 @@ public class UserDAO extends DBConnection{
             System.out.println("Only admin can register new admins");
         }
     }*/
-    public static void main(String[] args) {
-        UserDAO userDAO = new UserDAO();
-        System.out.println(userDAO.checkLogin("anhminhnamly1@gmail.com", "minhvn2004"));
+       public static void main(String[] args) {
+        // Địa chỉ email cần tìm userId
+        String email = "sonhuynh22002@gmail.com";
+
+        // Thực thi hàm getUserIdByEmail
+        int userId = UserDAO.getUserIdByEmail(email);
+
+        // In kết quả
+        if (userId != -1) {
+            System.out.println("User ID found: " + userId);
+        } else {
+            System.out.println("User ID not found for email: " + email);
+        }
     }
 }
