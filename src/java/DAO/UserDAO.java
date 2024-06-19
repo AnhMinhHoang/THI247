@@ -4,6 +4,7 @@
  */
 package DAO;
 
+import Email.PasswordResetUtil;
 import model.Users;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,14 +15,14 @@ import java.sql.ResultSet;
  * @author ADMIN        
  */
 import java.sql.*;
+import java.util.UUID;
 
 public class UserDAO extends DBConnection{
 
     private static final String LOGIN_QUERY = "SELECT userID, roles FROM Users WHERE email=? AND password=?";
     private static final String USER_TYPE_QUERY = "SELECT roles FROM Users WHERE email=?";
-
-    public boolean checkLogin(String email, String password) {
-        boolean loggedIn = false;
+    
+    public String checkLogin(String email, String password) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -34,10 +35,8 @@ public class UserDAO extends DBConnection{
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-                // Đăng nhập thành công
-                loggedIn = true;
+                return "Ok";
             } else {
-                // Đăng nhập thất bại
                 System.out.println("Login failed: Invalid username or password");
             }
         } catch (SQLException e) {
@@ -46,8 +45,12 @@ public class UserDAO extends DBConnection{
             closeResources(conn, stmt, rs);
         }
 
-        return loggedIn;
+        return null;
     }
+
+   
+
+
     
     public Users findByEmail(String email) {
         String query = "SELECT * FROM Users WHERE email=?";
@@ -78,6 +81,27 @@ public class UserDAO extends DBConnection{
         }
         return null;
     }
+    public static int getUserIdByEmail(String email) {
+    int userId = -1; // Default value if user_id is not found
+
+    String query = "SELECT userID FROM Users WHERE email = ?";
+    try (Connection conn = getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        pstmt.setString(1, email);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                userId = rs.getInt("userID");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return userId;
+}
+
+
+
     
     public Users findByUserName(String username) {
         String query = "SELECT * FROM Users WHERE username=?";
@@ -303,8 +327,8 @@ public class UserDAO extends DBConnection{
             System.out.println("Only admin can register new admins");
         }
     }*/
-    public static void main(String[] args) {
-        UserDAO userDAO = new UserDAO();
-        System.out.println(userDAO.checkLogin("anhminhnamly1@gmail.com", "minhvn2004"));
+       public static void main(String[] args) {
+        // Địa chỉ email cần tìm userId
+        new UserDAO().checkLogin("student1@gmail.com", "student123");
     }
 }
