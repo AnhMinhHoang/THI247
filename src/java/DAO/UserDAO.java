@@ -4,7 +4,6 @@
  */
 package DAO;
 
-import Email.PasswordResetUtil;
 import model.Users;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +14,6 @@ import java.sql.ResultSet;
  * @author ADMIN        
  */
 import java.sql.*;
-import java.util.UUID;
 
 public class UserDAO extends DBConnection{
 
