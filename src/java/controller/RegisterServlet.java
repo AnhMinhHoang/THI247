@@ -1,6 +1,7 @@
 package controller;
 
 import DAO.UserDAO;
+import Email.EmailSender;
 import Email.OTP;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -59,7 +60,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                 OTP.saveOtpToDatabase(userId, otp, false);
 
                 // Send OTP to user's email
-                OTP.sendOtpToEmail(email, otp);
+                EmailSender.sendOtpToEmail(email, otp);
 
                 // Store email in session
                 HttpSession session = request.getSession();

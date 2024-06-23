@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Users;
 
 /**
  *
@@ -70,11 +71,13 @@ public class OtpVerificationServlet extends HttpServlet {
         String otpEntered = request.getParameter("otp");
         HttpSession session = request.getSession();
         String email = (String) session.getAttribute("email");
- System.out.println("Received POST request with otppppp: " + otpEntered + ", email: " + email); // Log in
         // Verify OTP
         if (OTP.verifyOtp(email, otpEntered)) {
             // OTP verified successfully
+            Users user = new UserDAO().findByEmail(email);
+            session.setAttribute("currentUser", user);
             session.setAttribute("otp_verified", true);
+            
             response.sendRedirect("Home");
         } else {
             // OTP verification failed

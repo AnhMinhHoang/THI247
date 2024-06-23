@@ -3,16 +3,11 @@ package Email;
 import DAO.DBConnection;
 import DAO.UserDAO;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.Random;
-import java.util.Scanner;
 
 public class OTP extends DBConnection {
 
@@ -45,59 +40,25 @@ public class OTP extends DBConnection {
         }
     }
 
-    // Phương thức yêu cầu và gửi OTP qua email
-    public static void requestAndSendOtp(String email) {
-        String otp_code = generateOTP();
-        UserDAO userDAO = new UserDAO();
-        int userId = userDAO.getUserIdByEmail(email);
+//    // Phương thức yêu cầu và gửi OTP qua email
+//    public static void requestAndSendOtp(String email) {
+//        String otp_code = generateOTP();
+//        UserDAO userDAO = new UserDAO();
+//        int userId = userDAO.getUserIdByEmail(email);
+//
+//        if (userId != -1) {
+//            // Lưu mã OTP vào cơ sở dữ liệu
+//            saveOtpToDatabase(userId, otp_code, false);
+//
+//            // Gửi email chứa mã OTP đến người dùng
+//            sendOtpToEmail(email, otp_code);
+//
+//            System.out.println("OTP sent to " + email);
+//        } else {
+//            System.out.println("User with email " + email + " not found.");
+//        }
+//    }
 
-        if (userId != -1) {
-            // Lưu mã OTP vào cơ sở dữ liệu
-            saveOtpToDatabase(userId, otp_code, false);
-
-            // Gửi email chứa mã OTP đến người dùng
-            sendOtpToEmail(email, otp_code);
-
-            System.out.println("OTP sent to " + email);
-        } else {
-            System.out.println("User with email " + email + " not found.");
-        }
-    }
-
-    // Phương thức gửi email chứa mã OTP
-    public static void sendOtpToEmail(String recipientEmail, String otp_code) {
-        final String username = "tuantpde170492@fpt.edu.vn"; // Thay bằng email của bạn
-        final String password = "xelm aagm oppl exkg"; // Thay bằng mật khẩu của bạn
-
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-
-        Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
-                    }
-                });
-
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(recipientEmail));
-            message.setSubject("OTP Verification");
-            message.setText("Your OTP for verification is: " + otp_code);
-
-            Transport.send(message);
-
-            System.out.println("Email sent to " + recipientEmail);
-
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     // Phương thức xác minh OTP
     public static boolean verifyOtp(String email, String otp_code) {
@@ -158,29 +119,29 @@ public class OTP extends DBConnection {
             e.printStackTrace();
         }
     }
-
-   public static void main(String[] args) {
-        // Gửi OTP đến email để test
-        String to = "sonhuynh22002@gmail.com";
-        OTP.requestAndSendOtp(to);
-
-        // Nhập OTP từ bàn phím hoặc set trực tiếp
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter OTP: ");
-        String otp = scanner.nextLine();
-
-        // Thay email ở đây bằng email bạn dùng để nhận OTP
-        String email = "sonhuynh22002@gmail.com";
-        
-        // Thực hiện xác minh OTP
-        boolean verified = OTP.verifyOtp(email, otp);
-        
-        if (verified) {
-            System.out.println("OTP verified successfully.");
-        } else {
-            System.out.println("OTP verification failed.");
-        }
-
-        scanner.close();
-    }
+//
+//   public static void main(String[] args) {
+//        // Gửi OTP đến email để test
+//        String to = "sonhuynh22002@gmail.com";
+//        OTP.requestAndSendOtp(to);
+//
+//        // Nhập OTP từ bàn phím hoặc set trực tiếp
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.print("Enter OTP: ");
+//        String otp = scanner.nextLine();
+//
+//        // Thay email ở đây bằng email bạn dùng để nhận OTP
+//        String email = "sonhuynh22002@gmail.com";
+//        
+//        // Thực hiện xác minh OTP
+//        boolean verified = OTP.verifyOtp(email, otp);
+//        
+//        if (verified) {
+//            System.out.println("OTP verified successfully.");
+//        } else {
+//            System.out.println("OTP verification failed.");
+//        }
+//
+//        scanner.close();
+//    }
 }

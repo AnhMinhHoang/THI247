@@ -27,45 +27,50 @@ public class LoginGoogleHandler extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String code = request.getParameter("code");
-        String accessToken = getToken(code);
-        UserGoogleDto user = getUserInfo(accessToken);
-        UserDAO userDAO = new UserDAO();
-        Users userFound = userDAO.findByEmail(user.getEmail());
-        HttpSession session = request.getSession();
+      protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    String code = request.getParameter("code");
+    String accessToken = getToken(code);
+    UserGoogleDto user = getUserInfo(accessToken);
+    UserDAO userDAO = new UserDAO();
+    Users userFound = userDAO.findByEmail(user.getEmail());
+    HttpSession session = request.getSession();
 
-        if (userFound == null) {
-            // User not found, insert into database and send OTP for verification
-            boolean inserted = userDAO.registerUser(user.getGiven_name(), "", user.getEmail(), false);
-            if (inserted) {
-                userFound = userDAO.findByEmail(user.getEmail());
+    if (userFound == null) {
+        // Người dùng chưa tồn tại, thêm vào cơ sở dữ liệu và gửi OTP để xác minh
+        boolean inserted = userDAO.registerUser(user.getGiven_name(), "", user.getEmail(), false);
+        if (inserted) {
+            userFound = userDAO.findByEmail(user.getEmail());
 
-                // Generate OTP and send to user's email
-                String otp = OTP.generateOTP();
-                OTP.saveOtpToDatabase(userFound.getUserID(), otp, false);
-                OTP.sendOtpToEmail(user.getEmail(), otp);
+            // Tạo OTP và gửi đến email của người dùng
+            String otp = OTP.generateOTP();
+            OTP.saveOtpToDatabase(userFound.getUserID(), otp, false);
+            EmailSender.sendOtpToEmail(user.getEmail(), otp);
 
-                // Set session attribute
-                session.setAttribute("currentUser", userFound);
-                session.setAttribute("otp", user.getEmail());
+            // Đặt các thuộc tính trong phiên
+ 
+            session.setAttribute("email", user.getEmail()); // Sử dụng "email" thay vì "otp"
 
-                // Redirect to OTP verification page
-                response.sendRedirect("otp_verification.jsp");
-            } else {
-                response.sendRedirect("404.jsp");
-            }
+            // Chuyển hướng đến trang xác minh OTP
+            response.sendRedirect("otp_verification.jsp");
         } else {
-            // User already exists, set session attribute and redirect to home
+            response.sendRedirect("404.jsp");
+        }
+    } else {
+        // Người dùng đã tồn tại, kiểm tra trạng thái otp_verified
+        Users verifiedUser = userDAO.verifiedByEmail(user.getEmail());
+        if (verifiedUser != null && verifiedUser.isOtp_verified()) {
+            // Đặt các thuộc tính trong phiên và chuyển hướng đến trang chủ
             session.setAttribute("currentUser", userFound);
             response.sendRedirect("Home");
+        } else {
+            // Người dùng tồn tại nhưng chưa xác minh OTP, chuyển hướng đến trang xác minh OTP
+            session.setAttribute("email", user.getEmail()); // Sử dụng "email" thay vì "otp"
+            response.sendRedirect("otp_verification.jsp");
         }
-    
-
-// Redirect to home page
-// Replace "home.jsp" with the actual URL of your home page
     }
+}
+
 
     public static String getToken(String code) throws ClientProtocolException, IOException {
         // call api to get token
