@@ -3,8 +3,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package Email;
+package OTP;
 
+import OTP.OTP;
+import DAO.UserDAO;
+import Email.EmailSender;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,14 +15,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpSession;
+import java.sql.Timestamp;
 /**
  *
  * @author sonhu
  */
-@WebServlet("/PasswordResetServlet")
-public class PasswordResetServlet extends HttpServlet {
-  
+@WebServlet(name="ResendOtpServlet", urlPatterns={"/ResendOtpServlet"})
+public class ResendOtpServlet extends HttpServlet {
+   
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -35,10 +39,10 @@ public class PasswordResetServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet NewServlet</title>");  
+            out.println("<title>Servlet ResendOtpServlet</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet NewServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet ResendOtpServlet at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -53,9 +57,10 @@ public class PasswordResetServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       
-    }
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        processRequest(request, response);
+    } 
 
     /** 
      * Handles the HTTP <code>POST</code> method.
@@ -65,36 +70,41 @@ public class PasswordResetServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String token = request.getParameter("token");
-        String newPassword = request.getParameter("newPassword");
-      
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        String email = (String) session.getAttribute("email");
 
-      
+        if (email != null) {
+            // Generate new OTP
+            String otp = OTP.generateOTP();
+            int userId = new UserDAO().getUserIdByEmail(email);
+            Timestamp expiryTime = new Timestamp(System.currentTimeMillis() + (1 * 60 * 1000));
+            OTP.saveOtpToDatabase(userId, otp, expiryTime, false);
 
-        // Proceed with password update
-        String userId = PasswordResetUtil.getUserIdByToken(token);
-        if (userId != null) {
-            // Token hợp lệ, tiếp tục xử lý đổi mật khẩu
-            boolean updated = PasswordResetUtil.updatePassword(userId, newPassword);
+            // Send OTP to user's email
+            EmailSender.sendOtpToEmail(email, otp);
 
-            if (updated) {
-                // Xóa token sau khi cập nhật mật khẩu (nếu cần thiết)
-                PasswordResetUtil.deleteToken(token);
-                response.sendRedirect(request.getContextPath() + "/login.jsp"); // Đổi mật khẩu thành công
-            } else {
-                request.setAttribute("errorMessage", "Đổi mật khẩu thất bại, mật khẩu nhập không trùng");
-                // Forward to resetpassword.jsp with token parameter
-                request.getRequestDispatcher("/resetpassword.jsp?token=" + token).forward(request, response);
-            }
+            // Update session with new OTP and expiry time
+            session.setAttribute("otpExpiryTime", expiryTime.getTime());
+
+            // Redirect back to OTP verification page with success message
+            session.setAttribute("successMessage", "New OTP sent successfully. Please check your email.");
+            response.sendRedirect("otp_verification.jsp");
         } else {
-            // Token không hợp lệ hoặc đã hết hạn
-            response.sendRedirect(request.getContextPath() + "/invalidToken.jsp");
+            session.setAttribute("errorMessage", "Error: Email not found.");
+            response.sendRedirect("otp_verification.jsp");
         }
     }
 
+
+    /** 
+     * Returns a short description of the servlet.
+     * @return a String containing servlet description
+     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }
+    }// </editor-fold>
+
 }

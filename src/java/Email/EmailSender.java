@@ -93,6 +93,7 @@ public class EmailSender {
             throw new RuntimeException(e);
         }
     }
+
    public static String generateOTP() {
         // Tạo mã OTP ngẫu nhiên
         Random random = new Random();
@@ -104,5 +105,8 @@ public class EmailSender {
         }
 
         return otp.toString();
+    }
+    public static String generateToken() {
+        return UUID.randomUUID().toString();
     }
 }

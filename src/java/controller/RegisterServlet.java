@@ -2,7 +2,7 @@ package controller;
 
 import DAO.UserDAO;
 import Email.EmailSender;
-import Email.OTP;
+import OTP.OTP;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Timestamp;
 
 @WebServlet(name = "RegisterServlet", urlPatterns = { "/RegisterServlet" })
 public class RegisterServlet extends HttpServlet {
@@ -57,7 +58,8 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
                 // Generate OTP and save to database
                 String otp = OTP.generateOTP();
                 int userId = userDAO.getUserIdByEmail(email);
-                OTP.saveOtpToDatabase(userId, otp, false);
+                Timestamp expiryTime = new Timestamp(System.currentTimeMillis() + (5 * 60 * 1000));
+            OTP.saveOtpToDatabase(userId, otp, expiryTime, false);
 
                 // Send OTP to user's email
                 EmailSender.sendOtpToEmail(email, otp);

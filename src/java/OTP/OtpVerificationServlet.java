@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package Email;
+package OTP;
 
 import DAO.UserDAO;
 import java.io.IOException;
@@ -44,19 +44,7 @@ public class OtpVerificationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-//       String otpEntered = request.getParameter("otp");
-//        HttpSession session = request.getSession();
-//        String email = (String) session.getAttribute("otp");
-//        // Kiểm tra xem OTP nhập vào có khớp với mã OTP đã lưu trong session không
-//        if (OTP.verifyOtp(email, otpEntered)) {
-//            // Xác thực thành công, redirect đến trang chủ hoặc trang thành công
-//            session.setAttribute("otp_verified", true);
-//            response.sendRedirect("Home");
-//        } else {
-//            // Xác thực thất bại, redirect lại trang nhập OTP với thông báo lỗi
-//            session.setAttribute("verificationError", "Invalid OTP. Please try again.");
-//            response.sendRedirect("otp_verification.jsp");
-//        }
+
     } 
 
     /** 
