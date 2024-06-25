@@ -5,6 +5,7 @@
 package Report;
 
 import DAO.ReportDAO;
+import DAO.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -48,7 +49,8 @@ public class NewReport extends HttpServlet {
         String uploadPath = getServletContext().getRealPath("") + File.separator + UPLOAD_DIRECTORY;
         File uploadDir = new File(uploadPath);
         HttpSession session = request.getSession();
-        Users userBeingReported = (Users) session.getAttribute("currentUser");
+        int userBeingReportedID = Integer.parseInt(request.getParameter("otherUserID"));
+        Users userBeingReported = new UserDAO().findByUserID(userBeingReportedID);
 
         Users currentUser = (Users) session.getAttribute("currentUser");
         int userReportedId = currentUser.getUserID();

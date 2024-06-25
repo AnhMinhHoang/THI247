@@ -28,6 +28,22 @@
             overflow-wrap: break-word;
             word-break: break-word;
         }
+        #image-preview-wrapper {
+            position: relative;
+            display: inline-block; /* Ensure it wraps around the image */
+        }
+
+        #delete-image {
+            position: absolute;
+            top: 5px; /* Adjust as needed */
+            right: 5px; /* Adjust as needed */
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: none; /* Initially hidden */
+        }
     </style>   
 <%
 int id = (Integer)session.getAttribute("userID");
@@ -159,6 +175,7 @@ else role = "Student";
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <form action="NewReport" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="otherUserID" value="<%=id%>"/>
                                 <div class="modal-header d-flex align-items-center bg-primary text-white">
                                     <h6 class="modal-title mb-0" id="threadModalLabel">
                                         Report
@@ -233,17 +250,17 @@ else role = "Student";
                                         </div>
                                         <!--                    <label for="thread-image">Ảnh</label>
                                                         <input type="file" name="file" id="imgupload" accept="image/png, image/jpeg" style="display:none" onchange="submitForm()"/>-->
-                                        <!--                                    <div id="image-preview-container">
-                                                                                <label for="myfile">Chọn ảnh:</label>
-                                                                                <input id="image-upload" type="file" name="image" accept="image/*">
-                                                                                <br>
-                                                                                <div id="image-preview-wrapper" style="position: relative;">
-                                                                                    <img id="image-preview" src="#" alt="Preview Image" style="display:none;">
-                                                                                    <button id="delete-image"><i class="fa fa-times"></i></button>
-                                                                                </div>
-                                                                            </div>
-                                                                            <br>
-                                                                            <br><br>-->
+                                        <div id="image-preview-container">
+                                            <label for="myfile">Chọn ảnh:</label>
+                                            <input id="image-upload" type="file" name="image" accept="image/*">
+                                            <br>
+                                            <div id="image-preview-wrapper" style="position: relative;">
+                                                <img id="image-preview" src="#" width="400" height="400" alt="Preview Image" style="display:none;">
+                                                <button id="delete-image"><i class="fa fa-times"></i></button>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <br><br>
                                         <textarea
                                             class="form-control summernote"
                                             style="display: none"
@@ -280,6 +297,47 @@ else role = "Student";
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript"></script>
+<script>
+            // Function to handle file input change event
+            document.getElementById('image-upload').addEventListener('change', function (event) {
+                var file = event.target.files[0];
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    var imgElement = document.getElementById('image-preview');
+                    imgElement.src = e.target.result;
+                    imgElement.style.display = 'block';
+
+                    // Show delete button
+                    document.getElementById('delete-image').style.display = 'inline-block';
+                }
+
+                reader.readAsDataURL(file);
+            });
+
+            // Function to handle delete image button click
+            document.getElementById('delete-image').addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent default behavior (page reload)
+
+                var imgElement = document.getElementById('image-preview');
+                imgElement.src = '#'; // Clear the preview
+                imgElement.style.display = 'none';
+
+                // Hide delete button
+                document.getElementById('delete-image').style.display = 'none';
+
+                // Reset file input
+                document.getElementById('image-upload').value = '';
+            });
+
+            function removeURL() {
+                var imgElement = document.getElementById('image-preview');
+                imgElement.src = '#'; // Clear the preview
+                imgElement.style.display = 'none';
+                document.getElementById('image-upload').value = '';
+            }
+
+        </script>
 <jsp:include page="footer.jsp"></jsp:include>
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
