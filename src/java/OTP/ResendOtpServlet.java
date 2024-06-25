@@ -34,17 +34,28 @@ public class ResendOtpServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ResendOtpServlet</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ResendOtpServlet at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        HttpSession session = request.getSession();
+        String email = (String) session.getAttribute("email");
+
+        if (email != null) {
+            // Generate new OTP
+            String otp = OTP.generateOTP();
+            int userId = new UserDAO().getUserIdByEmail(email);
+            Timestamp expiryTime = new Timestamp(System.currentTimeMillis() + (1 * 60 * 1000));
+            OTP.saveOtpToDatabase(userId, otp, expiryTime, false);
+
+            // Send OTP to user's email
+            EmailSender.sendOtpToEmail(email, otp);
+
+            // Update session with new OTP and expiry time
+            session.setAttribute("otpExpiryTime", expiryTime.getTime());
+
+            // Redirect back to OTP verification page with success message
+            session.setAttribute("successMessage", "New OTP sent successfully. Please check your email.");
+            response.sendRedirect("otp_verification.jsp");
+        } else {
+            session.setAttribute("errorMessage", "Error: Email not found.");
+            response.sendRedirect("otp_verification.jsp");
         }
     } 
 
@@ -72,29 +83,6 @@ public class ResendOtpServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        String email = (String) session.getAttribute("email");
-
-        if (email != null) {
-            // Generate new OTP
-            String otp = OTP.generateOTP();
-            int userId = new UserDAO().getUserIdByEmail(email);
-            Timestamp expiryTime = new Timestamp(System.currentTimeMillis() + (1 * 60 * 1000));
-            OTP.saveOtpToDatabase(userId, otp, expiryTime, false);
-
-            // Send OTP to user's email
-            EmailSender.sendOtpToEmail(email, otp);
-
-            // Update session with new OTP and expiry time
-            session.setAttribute("otpExpiryTime", expiryTime.getTime());
-
-            // Redirect back to OTP verification page with success message
-            session.setAttribute("successMessage", "New OTP sent successfully. Please check your email.");
-            response.sendRedirect("otp_verification.jsp");
-        } else {
-            session.setAttribute("errorMessage", "Error: Email not found.");
-            response.sendRedirect("otp_verification.jsp");
-        }
     }
 
 
