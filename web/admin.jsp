@@ -56,8 +56,6 @@
                     <a href="Home" class="nav-item nav-link tag active">Trang Chủ</a>
                     <a href="forum.jsp" class="nav-item nav-link tag">Diễn Đàn</a>
                     <a href="teacher.jsp" class="nav-item nav-link tag">Kiểm Tra</a>
-                    <a href="shop.jsp" class="nav-item nav-link tag">Cửa Hàng</a>
-
                 </div>
                 <%
                     if(session.getAttribute("currentUser") == null){
@@ -221,12 +219,6 @@
   <main id="main" class="main">
     <div class="pagetitle">
       <h1>Dashboard</h1>
-      <nav>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-          <li class="breadcrumb-item active">Dashboard</li>
-        </ol>
-      </nav>
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
@@ -333,7 +325,7 @@
                         <th scope="col">Người tố cáo</th>
                         <th scope="col">Tên người dùng</th>
                         <th scope="col">Chi tiết</th>
-                        <th scope="col">Tác vụ</th>
+                        <th style="margin-left: 100px" scope="col">Tác vụ</th>
                       </tr>
                     </thead>
                     <tbody>
