@@ -134,9 +134,8 @@ public class ForumDAO extends DBConnection {
                 forum.setPostTitle(rs.getString(3));
                 forum.setPostContext(rs.getString(4));
                 forum.setPostDate(rs.getString(5));
-                forum.setPostApproved(rs.getBoolean(6));
-                forum.setPostReact(rs.getInt(7));
-                forum.setPostImg(rs.getString(8));
+                forum.setPostReact(rs.getInt(6));
+                forum.setPostImg(rs.getString(7));
                 list.add(forum);
             }
         } catch (Exception e) {
@@ -159,9 +158,8 @@ public class ForumDAO extends DBConnection {
                 forum.setPostTitle(rs.getString(3));
                 forum.setPostContext(rs.getString(4));
                 forum.setPostDate(rs.getString(5));
-                forum.setPostApproved(rs.getBoolean(6));
-                forum.setPostReact(rs.getInt(7));
-                forum.setPostImg(rs.getString(8));
+                forum.setPostReact(rs.getInt(6));
+                forum.setPostImg(rs.getString(7));
                 list.add(forum);
             }
         } catch (Exception e) {
@@ -218,16 +216,7 @@ public class ForumDAO extends DBConnection {
     }
 
     public static void main(String args[]) {
-        List<Forum> forums = new ForumDAO().getAllPostFromUserID(2);
-        String str;
-        for (Forum forum : forums) {
-            if (forum.getPostTitle().length() > 60) {
-                str = forum.getPostTitle().substring(1, 60) + "...";
-            } else {
-                str = forum.getPostTitle();
-            }
-            System.out.println(str);
-        }
-
+        List<Forum> forums = new ForumDAO().getAllPost();
+        System.out.println(forums.size());
     }
 }
