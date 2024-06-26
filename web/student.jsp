@@ -5,6 +5,7 @@
 <%
 if(session.getAttribute("currentUser") != null){
 Users user = (Users)session.getAttribute("currentUser");
+if(user.getRole() == 3){
 Tests test = new StudentExamDAO().getLatestTest(user.getUserID());
     if(test == null){
 %>   
@@ -45,6 +46,7 @@ Tests test = new StudentExamDAO().getLatestTest(user.getUserID());
     </div>
     <%
         }
+}
 }
     %>
 <jsp:include page="footer.jsp"></jsp:include>

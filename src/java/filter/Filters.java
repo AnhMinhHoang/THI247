@@ -26,17 +26,17 @@ import model.Users;
  * @author GoldCandy
  */
 public class Filters implements Filter {
-    
+
     private static final boolean debug = true;
 
     // The filter configuration object we are associated with.  If
     // this value is null, this filter instance is not currently
     // configured. 
     private FilterConfig filterConfig = null;
-    
+
     public Filters() {
-    }    
-    
+    }
+
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
@@ -63,8 +63,8 @@ public class Filters implements Filter {
 	    log(buf.toString());
 	}
          */
-    }    
-    
+    }
+
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
@@ -102,13 +102,13 @@ public class Filters implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
-        
+
         if (debug) {
             log("Filter:doFilter()");
         }
-        
+
         doBeforeProcessing(request, response);
-        
+
         Throwable problem = null;
         try {
             chain.doFilter(request, response);
@@ -119,107 +119,116 @@ public class Filters implements Filter {
             problem = t;
             t.printStackTrace();
         }
-        
+
         doAfterProcessing(request, response);
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         String url = httpRequest.getServletPath();
         HttpSession session = httpRequest.getSession(false);
         Users user;
-        
+
         //auto Home
-        if(url.contains("home.jsp")){
+        if (url.contains("home.jsp")) {
             httpResponse.sendRedirect("Home");
             return;
         }
-        
+
         //prevent login register when logged in
-        if(url.contains("login.jsp") || url.contains("register.jsp")){
-            if(session.getAttribute("currentUser") != null){
+        if (url.contains("login.jsp") || url.contains("register.jsp")) {
+            if (session.getAttribute("currentUser") != null) {
                 httpResponse.sendRedirect("Home");
                 return;
             }
         }
-        
+
         //redirect to login when session is null
-        if(url.contains("admin.jsp") && session.getAttribute("currentUser") == null){
+        if (url.contains("admin.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        } else if (url.contains("profile.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        } else if (url.contains("editprofile.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        } else if (url.contains("view-all-post-user.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        } else if (url.contains("changepassword.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        } else if (url.contains("update") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        } else if (url.contains("avatarUpdate") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        } else if (url.contains("NewPost") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        } else if (url.contains("ChangePassword") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        } else if (url.contains("ViewAllPostUser") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        } else if (url.contains("PostComments") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        } else if (url.contains("PostDataPostUpdate") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        } else if (url.contains("DeleteComment") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        } else if (url.contains("DeletePost") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        }else if (url.contains("student.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        }else if (url.contains("teacher.jsp") && session.getAttribute("currentUser") == null) {
             httpResponse.sendRedirect("login.jsp");
             return;
         }
-        else if(url.contains("profile.jsp") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("login.jsp");
-            return;
-        }
-        else if(url.contains("editprofile.jsp") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("login.jsp");
-            return;
-        }
-        else if(url.contains("view-all-post-user.jsp") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("login.jsp");
-            return;
-        }
-        else if(url.contains("changepassword.jsp") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("login.jsp");
-            return;
-        }
-        else if(url.contains("update") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("login.jsp");
-            return;
-        }
-        else if(url.contains("avatarUpdate") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("login.jsp");
-            return;
-        }
-        else if(url.contains("NewPost") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("login.jsp");
-            return;
-        }
-        else if(url.contains("ChangePassword") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("login.jsp");
-            return;
-        }
-        else if(url.contains("ViewAllPostUser") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("login.jsp");
-            return;
-        }
-        else if(url.contains("PostComments") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("login.jsp");
-            return;
-        }
-        else if(url.contains("PostDataPostUpdate") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("login.jsp");
-            return;
-        }
-        else if(url.contains("DeleteComment") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("login.jsp");
-            return;
-        }
-        else if(url.contains("DeletePost") && session.getAttribute("currentUser") == null){
-            httpResponse.sendRedirect("login.jsp");
-            return;
-        }
-       
+        
+        
+        
+        //prevent redirect to other role page
         if(url.contains("student.jsp") && session.getAttribute("currentUser") != null){
-            user = (Users)session.getAttribute("currentUser");
-            Tests test = new StudentExamDAO().getLatestTest(user.getUserID());
-            if(test != null && test.getTimeLeft() != 0){
-                httpResponse.sendRedirect("ExamDetail?examID="+test.getExamID());
-                return;
+            user = (Users) session.getAttribute("currentUser");
+            if (user.getRole() == 2) {
+                httpResponse.sendRedirect("teacher.jsp");
             }
         }
-        
-        
+        else if(url.contains("teacher.jsp") && session.getAttribute("currentUser") != null){
+            user = (Users) session.getAttribute("currentUser");
+            if (user.getRole() == 3) {
+                httpResponse.sendRedirect("student.jsp");
+            }
+        }
+
+        if (url.contains("student.jsp") && session.getAttribute("currentUser") != null) {
+            user = (Users) session.getAttribute("currentUser");
+            if (user.getRole() == 3) {
+                Tests test = new StudentExamDAO().getLatestTest(user.getUserID());
+                if (test != null && test.getTimeLeft() != 0) {
+                    httpResponse.sendRedirect("ExamDetail?examID=" + test.getExamID());
+                    return;
+                }
+            }
+        }
+
         //prevent admin page when user is not admin
-        if(url.contains("admin.jsp") && session.getAttribute("currentUser") != null){
-            user = (Users)session.getAttribute("currentUser");
-            if(user.getRole() != 1){
+        if (url.contains("admin.jsp") && session.getAttribute("currentUser") != null) {
+            user = (Users) session.getAttribute("currentUser");
+            if (user.getRole() != 1) {
                 httpResponse.sendRedirect("404.jsp");
                 return;
             }
         }
-        
-        //Check if user still have exam to do
 
+        //Check if user still have exam to do
         // If there was a problem, we want to rethrow it if it is
         // a known type, otherwise log it.
         if (problem != null) {
@@ -252,16 +261,16 @@ public class Filters implements Filter {
     /**
      * Destroy method for this filter
      */
-    public void destroy() {        
+    public void destroy() {
     }
 
     /**
      * Init method for this filter
      */
-    public void init(FilterConfig filterConfig) {        
+    public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
-            if (debug) {                
+            if (debug) {
                 log("Filter:Initializing filter");
             }
         }
@@ -280,20 +289,20 @@ public class Filters implements Filter {
         sb.append(")");
         return (sb.toString());
     }
-    
+
     private void sendProcessingError(Throwable t, ServletResponse response) {
-        String stackTrace = getStackTrace(t);        
-        
+        String stackTrace = getStackTrace(t);
+
         if (stackTrace != null && !stackTrace.equals("")) {
             try {
                 response.setContentType("text/html");
                 PrintStream ps = new PrintStream(response.getOutputStream());
-                PrintWriter pw = new PrintWriter(ps);                
+                PrintWriter pw = new PrintWriter(ps);
                 pw.print("<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n"); //NOI18N
 
                 // PENDING! Localize this for next official release
-                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");                
-                pw.print(stackTrace);                
+                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");
+                pw.print(stackTrace);
                 pw.print("</pre></body>\n</html>"); //NOI18N
                 pw.close();
                 ps.close();
@@ -310,7 +319,7 @@ public class Filters implements Filter {
             }
         }
     }
-    
+
     public static String getStackTrace(Throwable t) {
         String stackTrace = null;
         try {
@@ -324,9 +333,9 @@ public class Filters implements Filter {
         }
         return stackTrace;
     }
-    
+
     public void log(String msg) {
-        filterConfig.getServletContext().log(msg);        
+        filterConfig.getServletContext().log(msg);
     }
-    
+
 }
