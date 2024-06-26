@@ -188,3 +188,5 @@ int subjectID = (Integer)session.getAttribute("subjectID");
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript"></script>
     <jsp:include page="footer.jsp"></jsp:include>
+    
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

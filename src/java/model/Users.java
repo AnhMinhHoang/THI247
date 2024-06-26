@@ -20,11 +20,13 @@ public class Users {
     private String phone;
     private String address;
     private String dob;
-    
+    private String resetToken;
+    private String otp_code;
+    private boolean otp_verified;
     public Users() {
     }
 
-    public Users(int userID, String username, String fullname, String password, String email, int role, String avatarURL, int balance, String phone, String address, String dob) {
+    public Users(int userID, String username, String fullname, String password, String email, int role, String avatarURL, int balance, String phone, String address, String dob, String resetToken) {
         this.userID = userID;
         this.username = username;
         this.fullname = fullname;
@@ -36,8 +38,23 @@ public class Users {
         this.phone = phone;
         this.address = address;
         this.dob = dob;
+        this.resetToken = resetToken;
     }
-
+     
+public Users(int userID, String username, String fullname, String password, String email, int role, String avatarURL, int balance, String phone, String address, String dob) {
+        this.userID = userID;
+        this.username = username;
+        this.fullname = fullname;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.avatarURL = avatarURL;
+        this.balance = balance;
+        this.phone = phone;
+        this.address = address;
+        this.dob = dob;
+        
+    }
     public int getUserID() {
         return userID;
     }
@@ -53,13 +70,12 @@ public class Users {
     public void setUsername(String username) {
         this.username = username;
     }
-    
-    public String getFullname(){
+
+    public String getFullname() {
         return fullname;
     }
-    
-    public void setFullname(String fullname){
-        if(fullname == null) fullname = "";
+
+    public void setFullname(String fullname) {
         this.fullname = fullname;
     }
 
@@ -127,8 +143,35 @@ public class Users {
         this.dob = dob;
     }
 
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public String getOtp_code() {
+        return otp_code;
+    }
+
+    public void setOtp_code(String otp_code) {
+        this.otp_code = otp_code;
+    }
+
+    public boolean isOtp_verified() {
+        return otp_verified;
+    }
+
+    public void setOtp_verified(boolean otp_verified) {
+        this.otp_verified = otp_verified;
+    }
+
     @Override
     public String toString() {
-        return "Users{" + "userID=" + userID + ", username=" + username + ", fullname=" + fullname + ", password=" + password + ", email=" + email + ", role=" + role + ", avatarURL=" + avatarURL + ", balance=" + balance + ", phone=" + phone + ", address=" + address + ", dob=" + dob + '}';
+        return "Users{" + "userID=" + userID + ", username=" + username + ", fullname=" + fullname + ", password=" + password + ", email=" + email + ", role=" + role + ", avatarURL=" + avatarURL + ", balance=" + balance + ", phone=" + phone + ", address=" + address + ", dob=" + dob + ", resetToken=" + resetToken + ", otp_code=" + otp_code + ", otp_verified=" + otp_verified + '}';
     }
+
+    
+
 }

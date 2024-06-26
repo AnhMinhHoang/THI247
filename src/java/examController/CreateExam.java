@@ -35,10 +35,14 @@ public class CreateExam extends HttpServlet {
         HttpSession session = request.getSession();
         Users user = (Users)session.getAttribute("currentUser");
         int subjectID = Integer.parseInt(request.getParameter("subjectID"));
+        int examHours = Integer.parseInt(request.getParameter("examHours"));
+        int examMinutes = Integer.parseInt(request.getParameter("examMinutes"));
         String examName = request.getParameter("examName");
         String[] QuestionIDs = request.getParameterValues("selectedQuestions");
         
-        new ExamDAO().addExam(examName, user.getUserID(), subjectID);
+        int examTime = (examHours * 3600) + (examMinutes * 60);
+        
+        new ExamDAO().addExam(examName, user.getUserID(), subjectID, examTime);
         int examID = new ExamDAO().getLastestExam().getExamID();
         for (String QuestionID : QuestionIDs) {
             new ExamDAO().addQuestionToExam(Integer.parseInt(QuestionID), examID);

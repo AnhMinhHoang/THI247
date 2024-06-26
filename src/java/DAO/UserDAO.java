@@ -17,11 +17,10 @@ import java.sql.*;
 
 public class UserDAO extends DBConnection{
 
-    private static final String LOGIN_QUERY = "SELECT userID, roles FROM Users WHERE email=? AND password=?";
+    private static final String LOGIN_QUERY = "SELECT userID, roles FROM Users WHERE email=? AND password=? AND otp_verified > 0";
     private static final String USER_TYPE_QUERY = "SELECT roles FROM Users WHERE email=?";
-
-    public boolean checkLogin(String email, String password) {
-        boolean loggedIn = false;
+    
+    public String checkLogin(String email, String password) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -31,13 +30,12 @@ public class UserDAO extends DBConnection{
             stmt = conn.prepareStatement(LOGIN_QUERY);
             stmt.setString(1, email);
             stmt.setString(2, password);
+          
             rs = stmt.executeQuery();
 
             if (rs.next()) {
-                // Đăng nhập thành công
-                loggedIn = true;
+                return "Ok";
             } else {
-                // Đăng nhập thất bại
                 System.out.println("Login failed: Invalid username or password");
             }
         } catch (SQLException e) {
@@ -46,9 +44,9 @@ public class UserDAO extends DBConnection{
             closeResources(conn, stmt, rs);
         }
 
-        return loggedIn;
+        return null;
     }
-    
+  
     public Users findByEmail(String email) {
         String query = "SELECT * FROM Users WHERE email=?";
         try (Connection conn = getConnection();
@@ -68,6 +66,7 @@ public class UserDAO extends DBConnection{
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
+                   
             
                     Users us = new Users(iD, username, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
                     return us;
@@ -78,6 +77,53 @@ public class UserDAO extends DBConnection{
         }
         return null;
     }
+      public Users verifiedByEmail(String email) {
+        Users user = null;
+        String query = "SELECT * FROM users WHERE email = ? AND otp_verified = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setString(1, email);
+            stmt.setBoolean(2, true); // Only select if otp_verified is true
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    user = new Users();
+                    user.setUserID(rs.getInt("user_id"));
+                    user.setEmail(rs.getString("email"));
+                    user.setOtp_verified(rs.getBoolean("otp_verified"));
+                    // Set other properties as needed
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return user;
+    }
+
+    public static int getUserIdByEmail(String email) {
+    int userId = -1; // Default value if user_id is not found
+
+    String query = "SELECT userID FROM Users WHERE email = ?";
+    try (Connection conn = getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        pstmt.setString(1, email);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                userId = rs.getInt("userID");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return userId;
+}
+
+
+
     
     public Users findByUserName(String username) {
         String query = "SELECT * FROM Users WHERE username=?";
@@ -98,7 +144,7 @@ public class UserDAO extends DBConnection{
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
-                    
+                
                     Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
                     return us;
                 }
@@ -129,6 +175,7 @@ public class UserDAO extends DBConnection{
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
+                   
                     
                     Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
                     return us;
@@ -202,7 +249,7 @@ public class UserDAO extends DBConnection{
 
         try {
             conn = DBConnection.getConnection();
-            String sql = "INSERT INTO users (username, password, email, roles, avatar) VALUES (?, ?, ?, ?, ?)";
+            String sql = "DBCC CHECKIDENT (Users, RESEED, 0); DBCC CHECKIDENT (Users, RESEED); INSERT INTO Users (username, password, email, roles, avatar) VALUES (?, ?, ?, ?, ?)";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
@@ -303,8 +350,8 @@ public class UserDAO extends DBConnection{
             System.out.println("Only admin can register new admins");
         }
     }*/
-    public static void main(String[] args) {
-        UserDAO userDAO = new UserDAO();
-        System.out.println(userDAO.checkLogin("anhminhnamly1@gmail.com", "minhvn2004"));
+       public static void main(String[] args) {
+        // Địa chỉ email cần tìm userId
+        new UserDAO().checkLogin("student1@gmail.com", "student123");
     }
 }

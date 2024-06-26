@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -85,13 +86,15 @@
             <form action="VerifyOtpServlet" method="post">
                 Nhập OTP:
                 <input type="text" name="otp" required>
+                
                 <div class="button-container">
                     <button class="btn btn-primary" type="submit">Xác minh OTP</button>
-                    <form action="ResendOtpServlet" method="post">
-                        <button class="btn btn-primary" style="width: 133px" type="submit" class="resend">Gửi lại</button>
-                    </form>
+                    <button class="btn btn-primary" style="width: 133px" type="submit" class="resend" formnovalidate>
+                        <a href="ResendOtpServlet" style="text-decoration: none; color: black">Gửi lại</a>
+                    </button>
                 </div>
             </form>
+           
         </div>
         <jsp:include page="footer.jsp"></jsp:include>
     </body>

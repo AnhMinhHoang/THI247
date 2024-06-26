@@ -6,7 +6,6 @@ package controller;
 
 import DAO.ForumDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
@@ -63,6 +62,7 @@ public class NewPost extends HttpServlet {
                 response.sendRedirect("forum.jsp");
             }
         }
+        
         if(check){
             new ForumDAO().createNewPost(user.getUserID(), postTitle, postContext, null);
             response.sendRedirect("forum.jsp");

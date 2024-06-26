@@ -157,8 +157,8 @@
             margin-top: 15px;
         }
         #image-preview {
-            max-width: 400px; /* Adjust max width as needed */
-            max-height: 400px; /* Adjust max height as needed */
+            max-width: 400px; 
+            max-height: 400px; 
         }
 
         #image-preview-wrapper {
@@ -444,7 +444,7 @@
                                             required
                                             autofocus
                                             rows="5" 
-                                            style="resize: none; overflow: hidden;"
+                                            style="resize: none; overflow: hidden; box-sizing: border-box;"
                                             ></textarea>
                                     </div>
                                     <!--                    <label for="thread-image">Ảnh</label>
@@ -488,6 +488,8 @@
             </div>
         </div>
         <jsp:include page="footer.jsp"></jsp:include>
+        
+        <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
         <script type="text/javascript"></script>
@@ -553,7 +555,7 @@
         </script>
 
         <script>
-            var textarea = document.getElementById("submit-comment");
+            var textarea = document.getElementById("threadTitle");
             textarea.addEventListener("input", function () {
                 this.style.height = "auto";
                 this.style.height = (this.scrollHeight) + "px";

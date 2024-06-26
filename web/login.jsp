@@ -43,7 +43,7 @@
                                             Remember password
                                         </label>
                                     </div>
-                                    <a href="#" style="text-decoration: none">Forgot password ?</a>
+                                    <a href="RequestPasswordServlet" style="text-decoration: none">Forgot password ?</a>
                                 </div>
                             </div>
                             <div class="col">
