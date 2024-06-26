@@ -21,9 +21,10 @@ import javax.mail.internet.MimeMessage;
  * @author sonhu
  */
 public class EmailSender {
-  public static void sendOTP(String toEmail, String otp) {
-        String fromEmail = "tuantpde170492@fpt.edu.vn"; // Thay thế bằng email của bạn
-        String password = "xelm aagm oppl exkg"; // Thay thế bằng mật khẩu email của bạn
+      // Phương thức gửi email chứa mã OTP
+    public static void sendOtpToEmail(String recipientEmail, String otp_code) {
+        final String username = "tuantpde170492@fpt.edu.vn"; // Thay bằng email của bạn
+        final String password = "xelm aagm oppl exkg"; // Thay bằng mật khẩu của bạn
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -32,23 +33,23 @@ public class EmailSender {
         props.put("mail.smtp.port", "587");
 
         Session session = Session.getInstance(props,
-          new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(fromEmail, password);
-            }
-          });
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
 
         try {
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(fromEmail));
+            message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO,
-                InternetAddress.parse(toEmail));
+                    InternetAddress.parse(recipientEmail));
             message.setSubject("OTP Verification");
-            message.setText("Your OTP for registration is: " + otp);
+            message.setText("Your OTP for verification is: " + otp_code);
 
             Transport.send(message);
 
-            System.out.println("Email sent successfully!");
+            System.out.println("Email sent to " + recipientEmail);
 
         } catch (MessagingException e) {
             throw new RuntimeException(e);
@@ -92,6 +93,7 @@ public class EmailSender {
             throw new RuntimeException(e);
         }
     }
+
    public static String generateOTP() {
         // Tạo mã OTP ngẫu nhiên
         Random random = new Random();
@@ -103,5 +105,8 @@ public class EmailSender {
         }
 
         return otp.toString();
+    }
+    public static String generateToken() {
+        return UUID.randomUUID().toString();
     }
 }

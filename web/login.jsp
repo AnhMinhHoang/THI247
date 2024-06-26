@@ -13,8 +13,6 @@
             height: 50px;
         }
 </style>
-<div class="container">
-       
     <div id="intro" class="bg-image shadow-2-strong">
         <div class="mask d-flex align-items-center h-100">
             <div class="container">
@@ -37,7 +35,7 @@
                             </c:if>
                             <!-- 2 column grid layout for inline styling -->
                             <div class="row mb-4">
-                                <div class="col d-flex">
+                                <div class="col d-flex" style="justify-content: space-between">
                                     <!-- Checkbox -->
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value="" id="form1Example3" />
@@ -45,6 +43,7 @@
                                             Remember password
                                         </label>
                                     </div>
+                                    <a href="RequestPasswordServlet" style="text-decoration: none">Forgot password ?</a>
                                 </div>
                             </div>
                             <div class="col">

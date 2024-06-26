@@ -3,8 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package Email;
+package ResetPassword;
 
+import DAO.UserDAO;
+import Email.EmailSender;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,14 +14,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
 
 /**
  *
  * @author sonhu
  */
-@WebServlet("/PasswordResetServlet")
-public class PasswordResetServlet extends HttpServlet {
-  
+@WebServlet("/RequestPasswordServlet")
+public class RequestPasswordServlet extends HttpServlet {
+   
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -35,10 +38,10 @@ public class PasswordResetServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet NewServlet</title>");  
+            out.println("<title>Servlet NewServlet1</title>");  
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet NewServlet at " + request.getContextPath () + "</h1>");
+            out.println("<h1>Servlet NewServlet1 at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -53,8 +56,10 @@ public class PasswordResetServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String token = request.getParameter("token");
+        request.setAttribute("token", token);
+        request.getRequestDispatcher("requestPassword.jsp").forward(request, response);
     }
 
     /** 
@@ -65,36 +70,48 @@ public class PasswordResetServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String token = request.getParameter("token");
-        String newPassword = request.getParameter("newPassword");
+   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // Lấy email từ request
+    String email = request.getParameter("email");
+
+    try {
+        UserDAO userDAO = new UserDAO();
+        // Lấy userId từ địa chỉ email
+        int userId = userDAO.getUserIdByEmail(email); 
+
+        // Generate token
+        String token = EmailSender.generateToken();
+
+        // Lưu token và thời gian hết hạn vào cơ sở dữ liệu
+        Timestamp expiryTime = new Timestamp(System.currentTimeMillis() + (10 * 60 * 1000));
+        PasswordResetUtil.saveTokenToDatabase(userId, token, expiryTime);
+
+        // Tạo đường dẫn reset
+        String resetLink = PasswordResetUtil.generateResetLink(token);
+
+        // Gửi email reset
+        EmailSender.sendResetEmail(email, resetLink);
+
+        // Chuyển hướng đến trang xác nhận
+        response.sendRedirect("resetConfirmation.jsp?userId=" + userId); 
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        // Xử lý exception hoặc thông báo lỗi cho người dùng
       
-
-      
-
-        // Proceed with password update
-        String userId = PasswordResetUtil.getUserIdByToken(token);
-        if (userId != null) {
-            // Token hợp lệ, tiếp tục xử lý đổi mật khẩu
-            boolean updated = PasswordResetUtil.updatePassword(userId, newPassword);
-
-            if (updated) {
-                // Xóa token sau khi cập nhật mật khẩu (nếu cần thiết)
-                PasswordResetUtil.deleteToken(token);
-                response.sendRedirect(request.getContextPath() + "/login.jsp"); // Đổi mật khẩu thành công
-            } else {
-                request.setAttribute("errorMessage", "Đổi mật khẩu thất bại, mật khẩu nhập không trùng");
-                // Forward to resetpassword.jsp with token parameter
-                request.getRequestDispatcher("/resetpassword.jsp?token=" + token).forward(request, response);
-            }
-        } else {
-            // Token không hợp lệ hoặc đã hết hạn
-            response.sendRedirect(request.getContextPath() + "/invalidToken.jsp");
-        }
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error processing request");
     }
+}
 
+
+
+
+    /** 
+     * Returns a short description of the servlet.
+     * @return a String containing servlet description
+     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }
+    }// </editor-fold>
+
 }

@@ -40,7 +40,8 @@ public class Users {
         this.dob = dob;
         this.resetToken = resetToken;
     }
-     public Users(int userID, String username, String fullname, String password, String email, int role, String avatarURL, int balance, String phone, String address, String dob) {
+     
+public Users(int userID, String username, String fullname, String password, String email, int role, String avatarURL, int balance, String phone, String address, String dob) {
         this.userID = userID;
         this.username = username;
         this.fullname = fullname;
@@ -54,7 +55,6 @@ public class Users {
         this.dob = dob;
         
     }
-
     public int getUserID() {
         return userID;
     }

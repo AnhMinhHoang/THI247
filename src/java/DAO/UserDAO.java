@@ -17,7 +17,7 @@ import java.sql.*;
 
 public class UserDAO extends DBConnection{
 
-    private static final String LOGIN_QUERY = "SELECT userID, roles FROM Users WHERE email=? AND password=?";
+    private static final String LOGIN_QUERY = "SELECT userID, roles FROM Users WHERE email=? AND password=? AND otp_verified > 0";
     private static final String USER_TYPE_QUERY = "SELECT roles FROM Users WHERE email=?";
     
     public String checkLogin(String email, String password) {
@@ -30,6 +30,7 @@ public class UserDAO extends DBConnection{
             stmt = conn.prepareStatement(LOGIN_QUERY);
             stmt.setString(1, email);
             stmt.setString(2, password);
+          
             rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -45,11 +46,7 @@ public class UserDAO extends DBConnection{
 
         return null;
     }
-
-   
-
-
-    
+  
     public Users findByEmail(String email) {
         String query = "SELECT * FROM Users WHERE email=?";
         try (Connection conn = getConnection();
@@ -69,6 +66,7 @@ public class UserDAO extends DBConnection{
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
+                   
             
                     Users us = new Users(iD, username, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
                     return us;
@@ -79,6 +77,32 @@ public class UserDAO extends DBConnection{
         }
         return null;
     }
+      public Users verifiedByEmail(String email) {
+        Users user = null;
+        String query = "SELECT * FROM users WHERE email = ? AND otp_verified = ?";
+        
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setString(1, email);
+            stmt.setBoolean(2, true); // Only select if otp_verified is true
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    user = new Users();
+                    user.setUserID(rs.getInt("user_id"));
+                    user.setEmail(rs.getString("email"));
+                    user.setOtp_verified(rs.getBoolean("otp_verified"));
+                    // Set other properties as needed
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return user;
+    }
+
     public static int getUserIdByEmail(String email) {
     int userId = -1; // Default value if user_id is not found
 
@@ -120,7 +144,7 @@ public class UserDAO extends DBConnection{
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
-                    
+                
                     Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
                     return us;
                 }
@@ -151,6 +175,7 @@ public class UserDAO extends DBConnection{
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
+                   
                     
                     Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
                     return us;
