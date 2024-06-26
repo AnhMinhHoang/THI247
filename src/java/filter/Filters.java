@@ -4,6 +4,7 @@
  */
 package filter;
 
+import DAO.StudentExamDAO;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -17,6 +18,7 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Tests;
 import model.Users;
 
 /**
@@ -128,57 +130,82 @@ public class Filters implements Filter {
         //auto Home
         if(url.contains("home.jsp")){
             httpResponse.sendRedirect("Home");
+            return;
         }
         
         //prevent login register when logged in
         if(url.contains("login.jsp") || url.contains("register.jsp")){
             if(session.getAttribute("currentUser") != null){
                 httpResponse.sendRedirect("Home");
+                return;
             }
         }
         
         //redirect to login when session is null
         if(url.contains("admin.jsp") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
         }
         else if(url.contains("profile.jsp") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
         }
         else if(url.contains("editprofile.jsp") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
         }
         else if(url.contains("view-all-post-user.jsp") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
         }
         else if(url.contains("changepassword.jsp") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
         }
         else if(url.contains("update") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
         }
         else if(url.contains("avatarUpdate") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
         }
         else if(url.contains("NewPost") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
         }
         else if(url.contains("ChangePassword") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
         }
         else if(url.contains("ViewAllPostUser") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
         }
         else if(url.contains("PostComments") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
         }
         else if(url.contains("PostDataPostUpdate") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
         }
         else if(url.contains("DeleteComment") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
         }
         else if(url.contains("DeletePost") && session.getAttribute("currentUser") == null){
             httpResponse.sendRedirect("login.jsp");
+            return;
+        }
+       
+        if(url.contains("student.jsp") && session.getAttribute("currentUser") != null){
+            user = (Users)session.getAttribute("currentUser");
+            Tests test = new StudentExamDAO().getLatestTest(user.getUserID());
+            if(test != null && test.getTimeLeft() != 0){
+                httpResponse.sendRedirect("ExamDetail?examID="+test.getExamID());
+                return;
+            }
         }
         
         
@@ -187,8 +214,11 @@ public class Filters implements Filter {
             user = (Users)session.getAttribute("currentUser");
             if(user.getRole() != 1){
                 httpResponse.sendRedirect("404.jsp");
+                return;
             }
         }
+        
+        //Check if user still have exam to do
 
         // If there was a problem, we want to rethrow it if it is
         // a known type, otherwise log it.

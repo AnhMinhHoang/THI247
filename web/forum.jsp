@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
 <jsp:include page="header.jsp"></jsp:include>
-<script>
+    <script>
         var container = document.getElementById("tagID");
         var tag = container.getElementsByClassName("tag");
         var current = container.getElementsByClassName("active");
         current[0].className = current[0].className.replace(" active", "");
         tag[1].className += " active";
-</script>
+    </script>
 
     <style type="text/css">
         body {
@@ -25,6 +25,16 @@
             .sticky-navbar .inner-wrapper {
                 height: calc(100vh - 3.5rem - 48px);
             }
+        }
+
+        a{
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        p{
+            overflow-wrap: break-word;
+            word-break: break-word;
         }
 
         .inner-main,
@@ -147,15 +157,15 @@
             margin-top: 15px;
         }
         #image-preview {
-            max-width: 400px; /* Adjust max width as needed */
-            max-height: 400px; /* Adjust max height as needed */
+            max-width: 400px; 
+            max-height: 400px; 
         }
-        
+
         #image-preview-wrapper {
             position: relative;
             display: inline-block; /* Ensure it wraps around the image */
         }
-        
+
         #delete-image {
             position: absolute;
             top: 5px; /* Adjust as needed */
@@ -222,17 +232,6 @@
                                             class="simplebar-content-wrapper"
                                             style="height: 100%; overflow-y: hidden;"
                                             >
-
-<!--                                            <div class="simplebar-content" style="padding: 16px">
-                                                <nav class="nav nav-pills nav-gap-y-1 flex-column">
-                                                    <a
-                                                        href="view-all-post.jsp"
-                                                        class="nav-link nav-link-faded has-icon active"
-                                                        style="text-align: center;"
-                                                        >Bài đăng của tôi</a
-                                                    >
-                                                </nav>
-                                            </div>-->
                                         </div>
                                     </div>
                                 </div>
@@ -291,16 +290,23 @@
                           Forum forum = forums.get(i);
                           Users user = new UserDAO().findByUserID(forum.getUserID());
                           String str;
-                          if(forum.getPostContext().length() > 200){ 
-                              str = forum.getPostContext().substring(1, 200) + "...";
+                          String title;
+                          if(forum.getPostContext().length() > 150){ 
+                              str = forum.getPostContext().substring(0, 150) + "...";
                           }
                           else {
                               str = forum.getPostContext();
                           }
+                          if(forum.getPostTitle().length() > 100){ 
+                              title = forum.getPostTitle().substring(0, 100) + "...";
+                          }
+                          else {
+                              title = forum.getPostTitle();
+                          }
                     %>
                     <div class="card mb-2 all">
                         <div class="card-body p-2 p-sm-3">
-                            <div class="media forum-item">
+                            <div class="media forum-item"> 
                                 <%
                                   boolean check = false;
                                   if(session.getAttribute("currentUser") != null){
@@ -363,11 +369,12 @@
                                                 href="ForumDetail?postID=<%=forum.getPostID()%>"
                                                 data-target=".forum-content"
                                                 class="text-body title"
-                                                ><%=forum.getPostTitle()%></a
+                                                style="overflow-wrap:break-word;"
+                                                ><%=title%></a
                                             >
                                         </h4>
                                         <a href="ForumDetail?postID=<%=forum.getPostID()%>" style="text-decoration: none">
-                                            <p class="text-secondary context">
+                                            <p class="text-secondary context" style="overflow-wrap:break-word;" >
                                                 <%=str%>
                                             </p>
                                         </a>
@@ -437,7 +444,7 @@
                                             required
                                             autofocus
                                             rows="5" 
-                                            style="resize: none; overflow: hidden;"
+                                            style="resize: none; overflow: hidden; box-sizing: border-box;"
                                             ></textarea>
                                     </div>
                                     <!--                    <label for="thread-image">Ảnh</label>
@@ -465,10 +472,10 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button onclick="removeURL(this)"
-                                        type="button"
-                                        class="btn btn-light"
-                                        data-dismiss="modal"
-                                        >
+                                            type="button"
+                                            class="btn btn-light"
+                                            data-dismiss="modal"
+                                            >
                                         Hủy
                                     </button>
                                     <input type="submit" class="btn btn-primary" value="Đăng"/>
@@ -481,72 +488,74 @@
             </div>
         </div>
         <jsp:include page="footer.jsp"></jsp:include>
+        
+        <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
         <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
         <script type="text/javascript"></script>
         <script>
-    // Function to handle file input change event
-    document.getElementById('image-upload').addEventListener('change', function (event) {
-        var file = event.target.files[0];
-        var reader = new FileReader();
+            // Function to handle file input change event
+            document.getElementById('image-upload').addEventListener('change', function (event) {
+                var file = event.target.files[0];
+                var reader = new FileReader();
 
-        reader.onload = function (e) {
-            var imgElement = document.getElementById('image-preview');
-            imgElement.src = e.target.result;
-            imgElement.style.display = 'block';
+                reader.onload = function (e) {
+                    var imgElement = document.getElementById('image-preview');
+                    imgElement.src = e.target.result;
+                    imgElement.style.display = 'block';
 
-            // Show delete button
-            document.getElementById('delete-image').style.display = 'inline-block';
-        }
+                    // Show delete button
+                    document.getElementById('delete-image').style.display = 'inline-block';
+                }
 
-        reader.readAsDataURL(file);
-    });
+                reader.readAsDataURL(file);
+            });
 
-    // Function to handle delete image button click
-    document.getElementById('delete-image').addEventListener('click', function (event) {
-        event.preventDefault(); // Prevent default behavior (page reload)
+            // Function to handle delete image button click
+            document.getElementById('delete-image').addEventListener('click', function (event) {
+                event.preventDefault(); // Prevent default behavior (page reload)
 
-        var imgElement = document.getElementById('image-preview');
-        imgElement.src = '#'; // Clear the preview
-        imgElement.style.display = 'none';
+                var imgElement = document.getElementById('image-preview');
+                imgElement.src = '#'; // Clear the preview
+                imgElement.style.display = 'none';
 
-        // Hide delete button
-        document.getElementById('delete-image').style.display = 'none';
+                // Hide delete button
+                document.getElementById('delete-image').style.display = 'none';
 
-        // Reset file input
-        document.getElementById('image-upload').value = '';
-    });
-    
-    function removeURL(){
-        var imgElement = document.getElementById('image-preview');
-        imgElement.src = '#'; // Clear the preview
-        imgElement.style.display = 'none';
-        document.getElementById('image-upload').value = '';
-    }
+                // Reset file input
+                document.getElementById('image-upload').value = '';
+            });
 
-</script>
+            function removeURL() {
+                var imgElement = document.getElementById('image-preview');
+                imgElement.src = '#'; // Clear the preview
+                imgElement.style.display = 'none';
+                document.getElementById('image-upload').value = '';
+            }
 
-<script>
-    var all = document.getElementsByClassName('all');
-    function searchFuntion() {
-        var input = document.getElementById('userInput');
-        var filter = input.value.toUpperCase();
-        var a, b, txtValue, txtValue2;
-        for (var i = 0; i < all.length; i++) {
-            a = all[i].getElementsByClassName("title")[0];
-            b = all[i].getElementsByClassName("context")[0];
-            txtValue = a.textContent || a.innerText;
-            txtValue2 = b.textContent || b.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1 || txtValue2.toUpperCase().indexOf(filter) > -1)
-                all[i].style.display = 'block';
-            else
-                all[i].style.display = 'none';
-        }
-    }
-</script>
-  
-          <script>
-            var textarea = document.getElementById("submit-comment");
+        </script>
+
+        <script>
+            var all = document.getElementsByClassName('all');
+            function searchFuntion() {
+                var input = document.getElementById('userInput');
+                var filter = input.value.toUpperCase();
+                var a, b, txtValue, txtValue2;
+                for (var i = 0; i < all.length; i++) {
+                    a = all[i].getElementsByClassName("title")[0];
+                    b = all[i].getElementsByClassName("context")[0];
+                    txtValue = a.textContent || a.innerText;
+                    txtValue2 = b.textContent || b.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1 || txtValue2.toUpperCase().indexOf(filter) > -1)
+                        all[i].style.display = 'block';
+                    else
+                        all[i].style.display = 'none';
+                }
+            }
+        </script>
+
+        <script>
+            var textarea = document.getElementById("threadTitle");
             textarea.addEventListener("input", function () {
                 this.style.height = "auto";
                 this.style.height = (this.scrollHeight) + "px";
