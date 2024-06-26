@@ -57,38 +57,85 @@ QuestionBank qb = new ExamDAO().getQuestionByID(questionID);
 String link = (String)session.getAttribute("backlink");
 %>
 <body>
-    <%
-    Us
-    %>
     <div class="container">
         <br><br>
         <button class="btn btn-light"><a href="<%=link%>" style="text-decoration: none; color: black">Back</a></button>
-            <fieldset>
+        <fieldset>
                 <legend>Câu hỏi</legend>
                 <p style="overflow-wrap:break-word;"><%=qb.getQuestionContext()%></p>
                 <p style="font-weight: bold">Câu trả lời</p>
                 <%
                 if(qb.getQuestionImg() != null){
                 %>
-                <img src="<%=qb.getQuestionImg()%>" width="400px" height="400px"/>
+                <img src="<%=qb.getQuestionImg()%>" width="50%" height="50%"/>
                 <%
                     }
                 %>
-
+                <%
+                if(qb.getChoice1().startsWith("uploads/docreader")){
+                %>
+                <br><span style="font-weight: bold">A. </span><img src="<%=qb.getChoice1()%>" height="30" alt="alt"/>
+                <%
+                    }
+                else{
+                %>
                 <p style="overflow-wrap:break-word;"><label style="font-weight: bold">A:</label> <%=qb.getChoice1()%></p>
-
+                <%
+                    }
+                %>
+                <%
+                if(qb.getChoice2().startsWith("uploads/docreader")){
+                %>
+                <br><span style="font-weight: bold">B. </span><img src="<%=qb.getChoice2()%>" height="30" alt="alt"/>
+                <%
+                    }
+                else{
+                %>
                 <p style="overflow-wrap:break-word;"><label style="font-weight: bold">B:</label> <%=qb.getChoice2()%></p>
-
+                <%
+                    }
+                %>
+                <%
+                if(qb.getChoice3().startsWith("uploads/docreader")){
+                %>
+                <br><span style="font-weight: bold">D. </span><img src="<%=qb.getChoice3()%>" height="30" alt="alt"/>
+                <%
+                    }
+                else{
+                %>
                 <p style="overflow-wrap:break-word;"><label style="font-weight: bold">C:</label> <%=qb.getChoice3()%></p>
-
+                <%
+                    }
+                %>
+                <%
+                if(qb.getChoiceCorrect().startsWith("uploads/docreader")){
+                %>
+                <br><span style="font-weight: bold">D. </span><img src="<%=qb.getChoiceCorrect()%>" height="30" alt="alt"/>
+                <%
+                    }
+                else{
+                %>
                 <p style="overflow-wrap:break-word;"><label style="font-weight: bold">D:</label> <%=qb.getChoiceCorrect()%></p>
-
+                <%
+                    }
+                %>
+                <%
+                if(qb.getChoiceCorrect().startsWith("uploads/docreader")){
+                %>
+                <br><span style="font-weight: bold">Đáp án: </span><img src="<%=qb.getChoiceCorrect()%>" height="30" alt="alt"/>
+                <%
+                    }
+                else{
+                %>
                 <p style="overflow-wrap:break-word;"><label style="font-weight: bold">Đáp án:</label> <%=qb.getChoiceCorrect()%></p>
+                <%
+                    }
+                %>
                 <p style="overflow-wrap:break-word;"><label style="font-weight: bold">Giải thích:</label> <%=qb.getExplain()%></p>
                 <%
                 if(qb.getExplainImg() != null){
                 %>
-                <img src="<%=qb.getExplainImg()%>" width="400px" height="400px"/>
+                <img src="<%=qb.getExplainImg()%>" width="50%" height="50%"/>
                 <%
                     }
                 %>
@@ -98,3 +145,5 @@ String link = (String)session.getAttribute("backlink");
         }
     %>
     <jsp:include page="footer.jsp"></jsp:include>
+    
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

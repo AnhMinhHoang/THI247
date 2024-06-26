@@ -29,7 +29,7 @@ List<Subjects> subjects = new ExamDAO().getAllSubject();
                         <div class="position-relative overflow-hidden">
                             <img class="img-fluid" src="img/course-1.jpg" alt="">
                             <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
-                                <a href="ChangeSubjectUser?subjectID=<%=subject.getSubjectID()%>" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 30px;">Xem câu hỏi</a>
+                                <a href="ChangeSubjectStudent?subjectID=<%=subject.getSubjectID()%>" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 30px;">Xem các bài kiểm tra</a>
                             </div>
                         </div>
                         <div class="text-center p-4 pb-0">

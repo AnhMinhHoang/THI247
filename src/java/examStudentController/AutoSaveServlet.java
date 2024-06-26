@@ -2,23 +2,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package examController;
+package examStudentController;
 
-import DAO.ExamDAO;
+import DAO.StudentExamDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.Users;
+import model.StudentChoice;
 
 /**
  *
  * @author GoldCandy
  */
-public class CreateExam extends HttpServlet {
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+                 maxFileSize = 1024 * 1024 * 10,       // 10MB
+                 maxRequestSize = 1024 * 1024 * 50)    // 50MB
+public class AutoSaveServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,22 +35,24 @@ public class CreateExam extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
-        Users user = (Users)session.getAttribute("currentUser");
-        int subjectID = Integer.parseInt(request.getParameter("subjectID"));
-        int examHours = Integer.parseInt(request.getParameter("examHours"));
-        int examMinutes = Integer.parseInt(request.getParameter("examMinutes"));
-        String examName = request.getParameter("examName");
-        String[] QuestionIDs = request.getParameterValues("selectedQuestions");
+        int num = Integer.parseInt(request.getParameter("numberOfQuestion"));
+        int testID = Integer.parseInt(request.getParameter("testID"));
+        int timeLeft = Integer.parseInt(request.getParameter("timeLeft"));
         
-        int examTime = (examHours * 3600) + (examMinutes * 60);
-        
-        new ExamDAO().addExam(examName, user.getUserID(), subjectID, examTime);
-        int examID = new ExamDAO().getLastestExam().getExamID();
-        for (String QuestionID : QuestionIDs) {
-            new ExamDAO().addQuestionToExam(Integer.parseInt(QuestionID), examID);
+        for (int i = 0; i < num; i++) {
+            String answer = request.getParameter("answer" + i);
+            if(answer != null && !answer.isBlank()){
+                int questionID = Integer.parseInt(request.getParameter("question" + i));
+                StudentChoice sc = new StudentExamDAO().getSelectedChoice(testID, questionID);
+                if(sc == null){
+                    new StudentExamDAO().addSelectedChoice(testID, questionID, answer);
+                }
+                else{
+                    new StudentExamDAO().updateSelectedChoice(sc.getAnswerID(), answer);
+                }
+            }
         }
-        response.sendRedirect("teacher.jsp");
+        new StudentExamDAO().updateTestTime(testID, timeLeft);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

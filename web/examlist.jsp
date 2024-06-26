@@ -9,31 +9,35 @@
         tag[2].className += " active";
 </script>
 <%
-List<Subjects> subjects = new ExamDAO().getAllSubject();
+if(session.getAttribute("subjectID") != null){
+int subjectID = (Integer)session.getAttribute("subjectID");
+Subjects subject = new ExamDAO().getSubjectByID(subjectID);
+List<Exam> exams = new StudentExamDAO().getAllExamBySubjectID(subjectID);
 %>
 
     <!-- Courses Start -->
     <div class="container-xxl py-5">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="section-title bg-white text-center text-primary px-3">Môn học</h6>
-                <h1 class="mb-5">Danh sách các môn học</h1>
+                <h6 class="section-title bg-white text-center text-primary px-3">Môn <%=subject.getSubjectName()%></h6>
+                <h1 class="mb-5">Danh sách các bài kiểm tra của môn <%=subject.getSubjectName()%></h1>
             </div>
             <div class="row g-4 justify-content-center">
 <!--                bai kiem tra-->
                 <%
-                for(Subjects subject: subjects){
+                for(int i = exams.size() - 1; i >= 0; i--){
+                Exam exam = exams.get(i);
                 %>
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="course-item bg-light">
                         <div class="position-relative overflow-hidden">
                             <img class="img-fluid" src="img/course-1.jpg" alt="">
                             <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
-                                <a href="ChangeSubjectUser?subjectID=<%=subject.getSubjectID()%>" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 30px;">Xem câu hỏi</a>
+                                <a href="ExamDetail?examID=<%=exam.getExamID()%>" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 30px;">Vào thi</a>
                             </div>
                         </div>
                         <div class="text-center p-4 pb-0">
-                            <h3 class="mb-0"><%=subject.getSubjectName()%></h3>
+                            <h3 class="mb-0"><%=exam.getExamName()%></h3>
                         </div>
                     </div>
                 </div>
@@ -44,6 +48,9 @@ List<Subjects> subjects = new ExamDAO().getAllSubject();
             </div>
         </div>
     </div>
+<%
+    }
+%>
     <!-- Courses End -->
     <jsp:include page="footer.jsp"></jsp:include>
     <!-- Back to Top -->

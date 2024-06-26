@@ -19,7 +19,7 @@ import model.Forum;
 public class ForumDAO extends DBConnection {
 
     public void createNewPost(int userID, String postTitle, String postContext, String postIMG) {
-        String query = "insert into forum_post(userID,post_title,post_context,post_date,post_img)"
+        String query = "DBCC CHECKIDENT (forum_post, RESEED, 0); DBCC CHECKIDENT (forum_post, RESEED); insert into forum_post(userID,post_title,post_context,post_date,post_img)"
                 + "values(?, ?, ?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, userID);
@@ -39,7 +39,7 @@ public class ForumDAO extends DBConnection {
     }
 
     public void createNewComment(int userID, int postID, String commentContent, String url) {
-        String query = "insert into forum_comment(userID,post_id,comment_context,comment_date,comment_react, commentImg)"
+        String query = "DBCC CHECKIDENT (forum_comment, RESEED, 0); DBCC CHECKIDENT (forum_comment, RESEED); insert into forum_comment(userID,post_id,comment_context,comment_date,comment_react, commentImg)"
                 + "values(?, ?, ?, ?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, userID);
@@ -60,7 +60,7 @@ public class ForumDAO extends DBConnection {
     }
 
     public void deleteCommentByID(int commentID) {
-        String query = "delete from forum_comment where comment_id = ?";
+        String query = "delete from forum_comment where comment_id = ? DBCC CHECKIDENT (forum_comment, RESEED, 0); DBCC CHECKIDENT (forum_comment, RESEED);";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, commentID);
             try {
@@ -107,7 +107,7 @@ public class ForumDAO extends DBConnection {
     }
 
     public void deletePostByID(int postID) {
-        String query = "delete from forum_comment where post_id=? delete from forum_post where post_id=?";
+        String query = "delete from forum_comment where post_id=? delete from forum_post where post_id=? DBCC CHECKIDENT (forum_post, RESEED, 0); DBCC CHECKIDENT (forum_post, RESEED);";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, postID);
             ps.setInt(2, postID);

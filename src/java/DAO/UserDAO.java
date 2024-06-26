@@ -226,7 +226,7 @@ public class UserDAO extends DBConnection{
 
         try {
             conn = DBConnection.getConnection();
-            String sql = "INSERT INTO users (username, password, email, roles, avatar) VALUES (?, ?, ?, ?, ?)";
+            String sql = "DBCC CHECKIDENT (Users, RESEED, 0); DBCC CHECKIDENT (Users, RESEED); INSERT INTO Users (username, password, email, roles, avatar) VALUES (?, ?, ?, ?, ?)";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);

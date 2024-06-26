@@ -63,17 +63,48 @@ session.setAttribute("backlink", "viewuserquestion.jsp");
                                 String answer;
                                 for(int i = qbs.size() - 1; i >= 0; i--){
                                     QuestionBank qb = qbs.get(i);
-                                    if(qb.getQuestionContext().length() > 40) 
+                                    if(qb.getQuestionContext().length() > 40){ 
                                         context = qb.getQuestionContext().substring(0, 40) + "...";
+                                    }
+                                    else if(qb.getQuestionContext().length() == 0){
+                                        context = qb.getQuestionImg();
+                                    }
                                     else context = qb.getQuestionContext();
-                                    if(qb.getChoiceCorrect().length() > 60) 
-                                        answer = qb.getChoiceCorrect().substring(0, 60) + "...";
-                                    else answer = qb.getChoiceCorrect(); 
+                                    if(qb.getChoiceCorrect().startsWith("uploads/docreader")){
+                                        answer = qb.getChoiceCorrect();
+                                    }
+                                    else{
+                                        if(qb.getChoiceCorrect().length() > 60) 
+                                            answer = qb.getChoiceCorrect().substring(0, 60) + "...";
+                                        else answer = qb.getChoiceCorrect();
+                                    }
                                     String modalId = "threadModal" + i;
                                 %>
                                 <tr>
+                                    <%
+                                    if(context.startsWith("uploads/docreader")){
+                                    %>
+                                    <td><img src="<%=context%>" width="30%" height="30%" alt="alt"/></td>
+                                    <%
+                                        }
+                                    else{
+                                    %>
                                     <td><p><%=context%></p></td>
+                                    <%
+                                        }
+                                    %>
+                                    <%
+                                    if(answer.startsWith("uploads/docreader")){
+                                    %>
+                                    <td><img src="<%=answer%>" width="50%" height="50%" alt="alt"/></td>
+                                    <%
+                                        }
+                                    else{
+                                    %>
                                     <td><%=answer%></td>
+                                    <%
+                                        }
+                                    %>
                                     <td style="display: flex; flex-direction: row; text-align: center">
                                         <form action="ViewQuestionDetail" method="POST">
                                             <input type="hidden" name="questionID" value="<%=qb.getQuestionId()%>">
@@ -137,8 +168,6 @@ session.setAttribute("backlink", "viewuserquestion.jsp");
 
 </main><!-- End #main -->
 
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
 <!-- Vendor JS Files -->
 <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -170,3 +199,5 @@ session.setAttribute("backlink", "viewuserquestion.jsp");
     }
 %>
 <jsp:include page="footer.jsp"></jsp:include>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

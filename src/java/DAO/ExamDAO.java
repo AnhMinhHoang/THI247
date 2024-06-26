@@ -26,7 +26,7 @@ public class ExamDAO extends DBConnection {
     //Update question
     //Delete question
     public void deleteQuestion(int questionID){
-        String query = "delete from QuestionBank where question_id = ?";
+        String query = "delete from QuestionBank where question_id = ? DBCC CHECKIDENT (QuestionBank, RESEED, 0); DBCC CHECKIDENT (QuestionBank, RESEED);";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, questionID);
             try {
@@ -40,14 +40,15 @@ public class ExamDAO extends DBConnection {
     }
     
     //Add exam
-    public void addExam(String examName, int userID, int subjectID) {
-        String query = "insert into Exam(exam_name, create_date, userID, subject_id) values(?, ?, ?, ?)";
+    public void addExam(String examName, int userID, int subjectID, int examTime) {
+        String query = "DBCC CHECKIDENT (Exam, RESEED, 0); DBCC CHECKIDENT (Exam, RESEED); insert into Exam(exam_name, create_date, userID, subject_id, timer) values(?, ?, ?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, examName);
             String timeStamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new java.util.Date());
             ps.setString(2, timeStamp);
             ps.setInt(3, userID);
             ps.setInt(4, subjectID);
+            ps.setInt(5, examTime);
             try {
                 ps.executeUpdate();
             } catch (SQLException e) {
@@ -73,6 +74,7 @@ public class ExamDAO extends DBConnection {
                 exam.setCreateDate(rs.getString(3));
                 exam.setUserID(rs.getInt(4));
                 exam.setSubjectID(rs.getInt(5));
+                exam.setTimer(rs.getInt(6));
                 list.add(exam);
             }
         } catch (Exception e) {
@@ -95,11 +97,13 @@ public class ExamDAO extends DBConnection {
                 exam.setCreateDate(rs.getString(3));
                 exam.setUserID(rs.getInt(4));
                 exam.setSubjectID(rs.getInt(5));
+                exam.setTimer(rs.getInt(6));
+                return exam;
             }
         } catch (Exception e) {
             System.out.println(e);
         }
-        return exam;
+        return null;
     }
 
     //Get all question from exam by exam id
@@ -135,7 +139,7 @@ public class ExamDAO extends DBConnection {
     //Delete exam
     public void deleteExamByExamID(int examID) {
         String query = "ALTER TABLE ExamQuestion DROP CONSTRAINT fk_question_id_examquestion; "
-                + "DELETE FROM ExamQuestion WHERE exam_id = ?; DELETE FROM Exam WHERE exam_id = ?; "
+                + "DELETE FROM ExamQuestion WHERE exam_id = ?; DELETE FROM Exam WHERE exam_id = ?; DBCC CHECKIDENT (Exam, RESEED, 0); DBCC CHECKIDENT (Exam, RESEED);"
                 + "ALTER TABLE ExamQuestion ADD CONSTRAINT fk_question_id_examquestion FOREIGN KEY (question_id) REFERENCES QuestionBank(question_id);";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, examID);
@@ -153,7 +157,7 @@ public class ExamDAO extends DBConnection {
     //Delete question in exam
     public void deleteQuestionInExam(int questionID, int examID) {
         String query = "ALTER TABLE ExamQuestion DROP CONSTRAINT fk_question_id_examquestion; "
-                + "DELETE FROM ExamQuestion WHERE exam_id = ? and question_id = ?; "
+                + "DELETE FROM ExamQuestion WHERE exam_id = ? and question_id = ?; DBCC CHECKIDENT (ExamQuestion, RESEED, 0); DBCC CHECKIDENT (ExamQuestion, RESEED);"
                 + "ALTER TABLE ExamQuestion ADD CONSTRAINT fk_question_id_examquestion FOREIGN KEY (question_id) REFERENCES QuestionBank(question_id);";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, examID);
@@ -170,7 +174,7 @@ public class ExamDAO extends DBConnection {
 
     //Add question to certain exam
     public void addQuestionToExam(int questionID, int examID) {
-        String query = "insert into ExamQuestion(question_id, exam_id) values(?, ?)";
+        String query = "DBCC CHECKIDENT (ExamQuestion, RESEED, 0); DBCC CHECKIDENT (ExamQuestion, RESEED); insert into ExamQuestion(question_id, exam_id) values(?, ?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, questionID);
             ps.setInt(2, examID);
@@ -186,7 +190,7 @@ public class ExamDAO extends DBConnection {
     
     //Add question to questionBank by userID and subjectID
     public void addQuestionToQuestionBank(QuestionBank qb) {
-        String query = "insert into QuestionBank(subject_id, question_context, question_choice_1, "
+        String query = "DBCC CHECKIDENT (QuestionBank, RESEED, 0); DBCC CHECKIDENT (QuestionBank, RESEED); insert into QuestionBank(subject_id, question_context, question_choice_1, "
                 + "question_choice_2, question_choice_3, question_choice_correct, question_explain, "
                 + "question_img, question_explain_img, userID) "
                 + "Values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -224,11 +228,13 @@ public class ExamDAO extends DBConnection {
                 exam.setCreateDate(rs.getString(3));
                 exam.setUserID(rs.getInt(4));
                 exam.setSubjectID(rs.getInt(5));
+                exam.setTimer(rs.getInt(6));
+                return exam;
             }
         } catch (Exception e) {
             System.out.println(e);
         }
-        return exam;
+        return null;
     }
     
     //change exam name UPDATE Exam SET exam_name = ? WHERE exam_id = ?
@@ -236,6 +242,22 @@ public class ExamDAO extends DBConnection {
         String query = "UPDATE Exam SET exam_name = ? WHERE exam_id = ?";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, examName);
+            ps.setInt(2, examID);
+            try {
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        } catch (Exception err) {
+            System.out.println(err);
+        }
+    }
+    
+    //change exam time
+    public void changeExamTime(int examID, int timer){
+        String query = "UPDATE Exam SET timer = ? WHERE exam_id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, timer);
             ps.setInt(2, examID);
             try {
                 ps.executeUpdate();

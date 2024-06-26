@@ -11,14 +11,12 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import model.Users;
 
 /**
  *
  * @author GoldCandy
  */
-public class CreateExam extends HttpServlet {
+public class ChangeExamTime extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,22 +30,14 @@ public class CreateExam extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
-        Users user = (Users)session.getAttribute("currentUser");
-        int subjectID = Integer.parseInt(request.getParameter("subjectID"));
         int examHours = Integer.parseInt(request.getParameter("examHours"));
         int examMinutes = Integer.parseInt(request.getParameter("examMinutes"));
-        String examName = request.getParameter("examName");
-        String[] QuestionIDs = request.getParameterValues("selectedQuestions");
+        int examID = Integer.parseInt(request.getParameter("examID"));
         
         int examTime = (examHours * 3600) + (examMinutes * 60);
         
-        new ExamDAO().addExam(examName, user.getUserID(), subjectID, examTime);
-        int examID = new ExamDAO().getLastestExam().getExamID();
-        for (String QuestionID : QuestionIDs) {
-            new ExamDAO().addQuestionToExam(Integer.parseInt(QuestionID), examID);
-        }
-        response.sendRedirect("teacher.jsp");
+        new ExamDAO().changeExamTime(examID, examTime);
+        response.sendRedirect("viewallquestion.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

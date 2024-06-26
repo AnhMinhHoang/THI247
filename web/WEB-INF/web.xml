@@ -144,6 +144,34 @@
         <servlet-name>DeleteQuestionInBank</servlet-name>
         <servlet-class>examController.DeleteQuestionInBank</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ChangeSubjectStudent</servlet-name>
+        <servlet-class>examStudentController.ChangeSubjectStudent</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ExamDetail</servlet-name>
+        <servlet-class>examStudentController.ExamDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AutoSaveServlet</servlet-name>
+        <servlet-class>examStudentController.AutoSaveServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SubmitTest</servlet-name>
+        <servlet-class>examStudentController.SubmitTest</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChangeExamTime</servlet-name>
+        <servlet-class>examController.ChangeExamTime</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PassDataResultDetail</servlet-name>
+        <servlet-class>examStudentController.PassDataResultDetail</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DocFileQuestionAdd</servlet-name>
+        <servlet-class>examController.DocFileQuestionAdd</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -277,5 +305,33 @@
     <servlet-mapping>
         <servlet-name>DeleteQuestionInBank</servlet-name>
         <url-pattern>/DeleteQuestionInBank</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangeSubjectStudent</servlet-name>
+        <url-pattern>/ChangeSubjectStudent</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ExamDetail</servlet-name>
+        <url-pattern>/ExamDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AutoSaveServlet</servlet-name>
+        <url-pattern>/AutoSaveServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubmitTest</servlet-name>
+        <url-pattern>/SubmitTest</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChangeExamTime</servlet-name>
+        <url-pattern>/ChangeExamTime</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PassDataResultDetail</servlet-name>
+        <url-pattern>/PassDataResultDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DocFileQuestionAdd</servlet-name>
+        <url-pattern>/DocFileQuestionAdd</url-pattern>
     </servlet-mapping>
 </web-app>

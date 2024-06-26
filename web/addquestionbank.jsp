@@ -217,19 +217,20 @@ String link = (String)session.getAttribute("backlink");
                     data-toggle="modal"
                     data-target="#threadModal"
                     >
-                    Thêm câu hỏi bằng file .doc
+                    Thêm câu hỏi bằng file .docx
                 </button>
                 <div class="modal fade" id="threadModal" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content" style="width: 500px; margin: auto">
-                            <form action="CreateRandomExam" method="POST">
+                            <form action="DocFileQuestionAdd" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="subjectID" value="<%=subjectID%>"/>
                                 <div class="modal-header d-flex align-items-center bg-primary text-white">
-                                    <h6 class="modal-title mb-0" id="threadModalLabel">Thêm câu hỏi bằng file .doc</h6>
+                                    <h6 class="modal-title mb-0" id="threadModalLabel">Thêm câu hỏi bằng file .docx</h6>
                                 </div>
                                 <div class="modal-body">
                                     <div class="form-group">
-                                        <label for="docFile">Upload .doc File</label>
-                                        <input type="file" class="form-control" id="docFile" name="docFile" accept=".doc, .docx" required>
+                                        <label for="docFile">Upload .docx File</label>
+                                        <input type="file" class="form-control" id="docFile" name="docFile" accept=".docx" required>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -336,3 +337,5 @@ String link = (String)session.getAttribute("backlink");
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
                 <script type="text/javascript"></script>
                 <jsp:include page="footer.jsp"></jsp:include>
+                
+                <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

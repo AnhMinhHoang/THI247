@@ -88,7 +88,22 @@ if(session.getAttribute("subjectID") != null){
         <h1>Tạo đề thi môn <%=subject.getSubjectName()%></h1>
         <form action="CreateExam" method="post">
             <label for="examName">Tên đề thi:</label>
-            <input type="text" id="examName" name="examName" value="" required><br><br>
+            <input type="text" id="examName" name="examName" value="" required>
+            <br>
+            <div style="display: flex; align-items: center;">
+                <label for="examName" style="margin-right: 10px; margin-top: 20px">Tổng thời gian làm bài:</label>
+                <div style="display: flex; align-items: center;">
+                    <div style="display: flex; flex-direction: column; align-items: center; margin-right: 10px;">
+                        <label for="examMinutes" style="text-align: center;">Giờ</label>
+                        <input type="number" name="examHours" min="0" required style="width: 50px; text-align: center;">
+                    </div>
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <label for="examSeconds" style="text-align: center;">Phút</label>
+                        <input type="number" name="examMinutes" min="1" required style="width: 50px; text-align: center;">
+                    </div>
+                </div>
+            </div>
+            <br>
 
             <!-- Display questions from database -->
             <h2>Select Questions:</h2>
@@ -144,6 +159,19 @@ if(session.getAttribute("subjectID") != null){
                             <label for="examName">Tên đề thi:</label>
                             <input type="text" id="examName" name="examName" required>
                             <input type="hidden" name="subjectID" value="<%=subjectID%>"/>
+                            <div style="display: flex; align-items: center;">
+                                <label for="examName" style="margin-right: 10px; margin-top: 20px">Tổng thời gian làm bài:</label>
+                                <div style="display: flex; align-items: center;">
+                                    <div style="display: flex; flex-direction: column; align-items: center; margin-right: 10px;">
+                                        <label for="examMinutes" style="text-align: center;">Giờ</label>
+                                        <input type="number" name="examHours" min="0" required style="width: 50px; text-align: center;">
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; align-items: center;">
+                                        <label for="examSeconds" style="text-align: center;">Phút</label>
+                                        <input type="number" name="examMinutes" min="1" required style="width: 50px; text-align: center;">
+                                    </div>
+                                </div>
+                            </div>
                             <label for="numQuestions">Số lượng câu hỏi(1-<%=max%>):</label>
                             <input type="number" id="numQuestions" name="numQuestions" min="1" max="<%=max%>" value="1">
                             <%
@@ -194,3 +222,6 @@ if(session.getAttribute("subjectID") != null){
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript"></script>
     <jsp:include page="footer.jsp"></jsp:include>
+
+    
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
