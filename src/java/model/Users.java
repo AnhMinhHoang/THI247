@@ -21,6 +21,8 @@ public class Users {
     private String address;
     private String dob;
     private String resetToken;
+    private String otp_code;
+    private boolean otp_verified;
     public Users() {
     }
 
@@ -149,9 +151,27 @@ public class Users {
         this.resetToken = resetToken;
     }
 
+    public String getOtp_code() {
+        return otp_code;
+    }
+
+    public void setOtp_code(String otp_code) {
+        this.otp_code = otp_code;
+    }
+
+    public boolean isOtp_verified() {
+        return otp_verified;
+    }
+
+    public void setOtp_verified(boolean otp_verified) {
+        this.otp_verified = otp_verified;
+    }
+
     @Override
     public String toString() {
-        return "Users{" + "userID=" + userID + ", username=" + username + ", fullname=" + fullname + ", password=" + password + ", email=" + email + ", role=" + role + ", avatarURL=" + avatarURL + ", balance=" + balance + ", phone=" + phone + ", address=" + address + ", dob=" + dob + ", resetToken=" + resetToken + '}';
+        return "Users{" + "userID=" + userID + ", username=" + username + ", fullname=" + fullname + ", password=" + password + ", email=" + email + ", role=" + role + ", avatarURL=" + avatarURL + ", balance=" + balance + ", phone=" + phone + ", address=" + address + ", dob=" + dob + ", resetToken=" + resetToken + ", otp_code=" + otp_code + ", otp_verified=" + otp_verified + '}';
     }
+
+    
 
 }

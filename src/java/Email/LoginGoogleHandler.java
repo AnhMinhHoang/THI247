@@ -27,12 +27,9 @@ public class LoginGoogleHandler extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//                processRequest(request, response);
-//                response.sendRedirect("404.jsp");
         String code = request.getParameter("code");
-        System.out.println("code" + code);
         String accessToken = getToken(code);
         UserGoogleDto user = getUserInfo(accessToken);
         UserDAO userDAO = new UserDAO();
@@ -40,21 +37,31 @@ public class LoginGoogleHandler extends HttpServlet {
         HttpSession session = request.getSession();
 
         if (userFound == null) {
-            // User not found, insert into database
+            // User not found, insert into database and send OTP for verification
             boolean inserted = userDAO.registerUser(user.getGiven_name(), "", user.getEmail(), false);
             if (inserted) {
                 userFound = userDAO.findByEmail(user.getEmail());
+
+                // Generate OTP and send to user's email
+                String otp = OTP.generateOTP();
+                OTP.saveOtpToDatabase(userFound.getUserID(), otp, false);
+                OTP.sendOtpToEmail(user.getEmail(), otp);
+
+                // Set session attribute
                 session.setAttribute("currentUser", userFound);
-                response.sendRedirect("Home");
+                session.setAttribute("otp", user.getEmail());
+
+                // Redirect to OTP verification page
+                response.sendRedirect("otp_verification.jsp");
             } else {
                 response.sendRedirect("404.jsp");
             }
         } else {
-            // User already exists
-            System.out.println("User already exists in the database");
+            // User already exists, set session attribute and redirect to home
             session.setAttribute("currentUser", userFound);
             response.sendRedirect("Home");
         }
+    
 
 // Redirect to home page
 // Replace "home.jsp" with the actual URL of your home page
