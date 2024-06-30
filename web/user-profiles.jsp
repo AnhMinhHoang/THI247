@@ -32,10 +32,16 @@
 <%
 int id = (Integer)session.getAttribute("userID");
 Users user = new UserDAO().findByUserID(id);
+Users currentUser = (Users)session.getAttribute("currentUser");
+TeacherRequest requests = new AdminDAO().getRequestByUserID(id);
+Subjects subject = new Subjects();
+if(requests != null){
+    subject = new ExamDAO().getSubjectByID(requests.getSubjectID());
+}
 String role;
 if(user.getRole() == 1) role = "Admin";
-else if(user.getRole() == 2) role = "Lecture";
-else role = "Student";
+else if(user.getRole() == 2) role = "Giáo viên";
+else role = "Học sinh";
 %>
 </div>
 </nav>
@@ -48,7 +54,7 @@ else role = "Student";
                     <div class="card-body profile-card pt-4 d-flex flex-column align-items-center" id="card-center">
                         <img src="<%=user.getAvatarURL()%>"class="rounded-circle" width="130px" height="130px">
                         <h2><%=user.getUsername()%></h2>
-                        <h3><%=role%></h3>    
+                        <h3><%=role%><%if(user.getRole() == 2){%> môn <%=subject.getSubjectName()%><% }%></h3>    
                     </div>
                 </div>
                 <div class="card mt-3">
@@ -136,6 +142,27 @@ else role = "Student";
                                     <div class="col-lg-3 col-md-4 label">Email</div>
                                     <div class="col-lg-9 col-md-8"><%=user.getEmail()%></div>
                                 </div>
+                                
+                                <%
+                                if(user.getRole() == 2 || user.getRole() == 3 && requests != null && currentUser.getRole() == 1){
+                                %>
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-4 label">Trình độ học vấn</div>
+                                    <div class="col-lg-9 col-md-8"><%=requests.getAcademicLevel()%></div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-4 label">Kinh nghiệm làm việc</div>
+                                    <div class="col-lg-9 col-md-8"><%=requests.getExperience()%> năm</div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-4 label">Đã từng/ Đang công tác tại trường</div>
+                                    <div class="col-lg-9 col-md-8"><%=requests.getSchool()%></div>
+                                </div>
+                                <%
+                                    }
+                                %>
                             </div>
                         </div><!-- End Bordered Tabs -->
                     </div>

@@ -232,6 +232,14 @@
         <servlet-name>AddTeacherRequest</servlet-name>
         <servlet-class>adminController.AddTeacherRequest</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>TeacherAccept</servlet-name>
+        <servlet-class>adminController.TeacherAccept</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TeacherReject</servlet-name>
+        <servlet-class>adminController.TeacherReject</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -397,5 +405,13 @@
     <servlet-mapping>
         <servlet-name>AddTeacherRequest</servlet-name>
         <url-pattern>/AddTeacherRequest</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TeacherAccept</servlet-name>
+        <url-pattern>/TeacherAccept</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TeacherReject</servlet-name>
+        <url-pattern>/TeacherReject</url-pattern>
     </servlet-mapping>
 </web-app>

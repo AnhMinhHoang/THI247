@@ -258,6 +258,21 @@ public class UserDAO extends DBConnection {
             System.out.println("SDASD");
         }
     }
+    
+    public void updateRole(int userID, int role){
+        String query = "UPDATE Users SET roles = ? WHERE userID=?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, role);
+            ps.setInt(2, userID);
+            try {
+                ps.executeUpdate();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (Exception e) {
+            System.out.println("SDASD");
+        }
+    }
 
     public void changePassWordByEmail(String email, String password) {
         String query = "UPDATE Users SET password=? WHERE email=?";

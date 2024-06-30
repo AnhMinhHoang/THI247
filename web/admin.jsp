@@ -188,7 +188,7 @@ List<Users> students = new UserDAO().getAllUsersType(3);
     <section class="section dashboard">
       <div class="row">
         <!-- Left side columns -->
-        <div class="col-lg-8">
+        <div class="col-lg-12">
           <div class="row">
             <!-- Sales Card -->
             <div class="col-xxl-4 col-md-6">
@@ -258,21 +258,34 @@ List<Users> students = new UserDAO().getAllUsersType(3);
                         <th scope="col">Họ và tên</th>
                         <th scope="col">Email</th>
                         <th scope="col">Xem chi tiết</th>
-                        <th scope="col"style="margin-left: auto">Trạng thái</th>
+                        <th scope="col" style="text-align: center">Trạng thái</th>
                       </tr>
                     </thead>
                     <tbody>
 <!--                        1 yeu cau giao vien-->
+                        <%
+                        List<TeacherRequest> allRequests = new AdminDAO().getAllRequest();
+                        if(allRequests.size() > 0){
+                        for(int i = allRequests.size() - 1; i >= 0; i--){
+                            TeacherRequest requests = allRequests.get(i);
+                            Users user = new UserDAO().findByUserID(requests.getUserID());
+                            if(user.getRole() == 3){
+                        %>
                       <tr>
-                        <th scope="row"><a href="#">getUsername</a></th>
-                        <td>getUserfullname</td>
-                        <td>getuserEmail</td>
-                        <td><span class="badge bg-success"></span></td>
-                        <td>
-                            <input type="submit" class="btn btn-primary" value="Chấp thuận"/>
-                            <input type="submit" class="btn btn-primary" value="Loại"/>
+                        <th scope="row"><%=user.getUsername()%></th>
+                        <td><%=user.getFullname()%></td>
+                        <td><%=user.getEmail()%></td>
+                        <td><span class="badge" style="font-size: 14px"><a href="UserProfile?userID=<%=user.getUserID()%>">Bấm ở đây</a></span></td>
+                        <td style="text-align: center">
+                            <a href="TeacherAccept?userID=<%=user.getUserID()%>"><button class="btn btn-primary">Chấp thuận</button></a>
+                            <a href="TeacherReject?requestID=<%=requests.getRequestID()%>"><button class="btn btn-danger">Từ chối</button></a>
                         </td>
-                      </tr> 
+                      </tr>
+                      <%
+                          }
+                          }
+                        }
+                      %>
 <!--                      ket thuc 1 yeu cau giao vien-->
                     </tbody>
                   </table>
