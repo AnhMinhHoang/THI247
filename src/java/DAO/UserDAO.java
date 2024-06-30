@@ -78,7 +78,6 @@ public class UserDAO extends DBConnection{
         return null;
     }
       public Users verifiedByEmail(String email) {
-        Users user = null;
         String query = "SELECT * FROM users WHERE email = ? AND otp_verified = ?";
         
         try (Connection conn = DBConnection.getConnection();
@@ -89,18 +88,18 @@ public class UserDAO extends DBConnection{
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    user = new Users();
-                    user.setUserID(rs.getInt("user_id"));
-                    user.setEmail(rs.getString("email"));
-                    user.setOtp_verified(rs.getBoolean("otp_verified"));
-                    // Set other properties as needed
+                    Users users = new Users();
+                    users.setUserID(rs.getInt("userID"));
+                    users.setEmail(rs.getString("email"));
+                    users.setOtp_verified(true);
+                    return users;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         
-        return user;
+        return null;
     }
 
     public static int getUserIdByEmail(String email) {
@@ -352,6 +351,8 @@ public class UserDAO extends DBConnection{
     }*/
        public static void main(String[] args) {
         // Địa chỉ email cần tìm userId
-        new UserDAO().checkLogin("student1@gmail.com", "student123");
+        Users user = new UserDAO().verifiedByEmail("anhminhnamly1@gmail.com");
+        
+           System.out.println(user.toString());
     }
 }
