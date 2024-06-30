@@ -97,16 +97,27 @@
             <li>
               <a class="dropdown-item d-flex align-items-center" href="profile.jsp">
                 <i class="bi bi-person"></i>
-                <span>My Profile</span>
+                <span>Thông tin</span>
               </a>
             </li>
+            <%
+            if(user.getRole() == 1){
+            %>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="admin.jsp">
+                <i class="bi bi-wrench"></i>
+                <span>Quản lý</span>
+              </a>
+            </li>
+            <%
+                }
+            %>
             <li>
               <a class="dropdown-item d-flex align-items-center" href="logout">
                 <i class="bi bi-box-arrow-right"></i>
-                <span>Sign Out</span>
+                <span>Đăng xuất</span>
               </a>
             </li>
-
           </ul><!-- End Profile Dropdown Items -->
         </li>
                 <%
