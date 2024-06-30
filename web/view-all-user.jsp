@@ -157,7 +157,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th class="text-primary" scope="col">#</th>
+                    <th class="text-primary" scope="col">ID</th>
                     <th class="text-primary" scope="col">Avatar</th>
                     <th class="text-primary" scope="col">Tên người dùng</th>
                     <th class="text-primary" scope="col">Họ và tên</th>
@@ -170,20 +170,43 @@
                
                 
 <!--            list all user    -->
+<%
+List<Users> users = new UserDAO().getAllUsers();
+String role;
+if(users.size() > 0){
+    for(Users user: users){
+        if(user.getRole() == 1) role = "Admin";
+        else if(user.getRole() == 2) role = "Giáo viên";
+        else role = "Học sinh";
+%>
             <tr>
-                <td>abc</td>
-                <td>getUserImg</td>
-                <td>getUsername</td>
-                <td>getFullname</td>
-                <td>getRole</td>
-                <td>redirect to profile</td>
-                <td><input type="submit" class="btn btn-ban" style="background-color: red" value="Ban"/></td>
-
+                <td><%=user.getUserID()%></td>
+                <td><img src="<%=user.getAvatarURL()%>" width="50" height="50" alt="alt" class="rounded-circle"/></td>
+                <td><%=user.getUsername()%></td>
+                <td><%=user.getFullname()%></td>
+                <td><%=role%></td>
+                <td><span class="badge" style="font-size: 14px"><a href="UserProfile?userID=<%=user.getUserID()%>">Xem chi tiết</a></span></td>
+                <%
+                if(user.isBan()){
+                %>
+                <td><a href="BanUnbanUser?userID=<%=user.getUserID()%>&isBan=false"><button class="btn btn-primary" style="border-radius: 25px">Unban</button></a></td>
+                <%
+                    }else{
+                %>
+                <td><a href="BanUnbanUser?userID=<%=user.getUserID()%>&isBan=true"><button class="btn btn-ban" style="background-color: red; border-radius: 25px">Ban</button></a></td>
+                <%
+                    }
+                %>
             </tr>
+            
+            <%
+                }
+                }
+            %>
 <!--                ket thuc list all user-->
 
 
-<tr>
+<!--<tr>
                 <td>abc</td>
                 <td>getUserImg</td>
                 <td>getUsername</td>
@@ -192,7 +215,7 @@
                 <td>redirect to profile</td>
                 <td><input type="submit" class="btn btn-primary" value="Unban"/></td>
 
-            </tr>
+            </tr>-->
             </tbody>
             
         </table>

@@ -69,8 +69,9 @@ public class UserDAO extends DBConnection {
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
+                    Boolean Ban = rs.getBoolean("is_banned");
 
-                    Users us = new Users(iD, username, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
+                    Users us = new Users(iD, username, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob, Ban);
                     return us;
                 }
             }
@@ -141,8 +142,9 @@ public class UserDAO extends DBConnection {
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
+                    Boolean Ban = rs.getBoolean("is_banned");
 
-                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
+                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob, Ban);
                     users.add(us);
             }
         } catch (Exception e) {
@@ -171,8 +173,9 @@ public class UserDAO extends DBConnection {
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
+                    Boolean Ban = rs.getBoolean("is_banned");
 
-                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
+                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob, Ban);
                     users.add(us);
             }
         } catch (Exception e) {
@@ -199,8 +202,9 @@ public class UserDAO extends DBConnection {
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
+                    Boolean Ban = rs.getBoolean("is_banned");
 
-                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
+                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob, Ban);
                     return us;
                 }
             }
@@ -229,8 +233,9 @@ public class UserDAO extends DBConnection {
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
+                    Boolean Ban = rs.getBoolean("is_banned");
 
-                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
+                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob, Ban);
                     return us;
                 }
             }

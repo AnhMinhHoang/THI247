@@ -10,11 +10,11 @@
                     <form class="row g-3">     
                         <div class="col-md-6">
                             <label class="form-label">Tỉ lệ thu nhập của giáo viên</label>
-                            <input id="teacher_rate" type="number   " class="form-control" id="validationDefault03" required>
+                            <input id="teacher_rate" type="number" onkeydown="return event.keyCode !== 69" class="form-control" id="validationDefault03" required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Tỉ lệ thu nhập của hệ thống</label>
-                            <input id="admin_rate" type="number   " class="form-control" id="validationDefault03" required>
+                            <input id="admin_rate" type="number" onkeydown="return event.keyCode !== 69" class="form-control" id="validationDefault03" required>
                         </div>
                         <div class="col-12">
                             <button id="submit_button" style="margin: auto" class="btn btn-primary" type="submit">Xác nhận</button>
@@ -43,7 +43,7 @@
             let formData = new FormData();
             formData.append('teacher_rate', teacher_rate);
             formData.append('admin_rate', admin_rate);
-            fetch('/your-servlet-url', {
+            fetch('Home', {
                 method: 'POST',
                 body: formData
             })

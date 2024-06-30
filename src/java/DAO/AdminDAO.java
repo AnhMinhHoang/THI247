@@ -99,6 +99,21 @@ public class AdminDAO extends DBConnection{
         }
     }
     
+    public void banUnbanUser(int userID, boolean isBan){
+        String query = "Update Users set is_banned = ? where userID = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setBoolean(1, isBan);
+            ps.setInt(2, userID);
+            try {
+                ps.executeUpdate();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+    
     public static void main(String[] args) {
         TeacherRequest requests = new AdminDAO().getRequestByUserID(2);
         if (requests == null){

@@ -240,6 +240,10 @@
         <servlet-name>TeacherReject</servlet-name>
         <servlet-class>adminController.TeacherReject</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BanUnbanUser</servlet-name>
+        <servlet-class>adminController.BanUnbanUser</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -413,5 +417,9 @@
     <servlet-mapping>
         <servlet-name>TeacherReject</servlet-name>
         <url-pattern>/TeacherReject</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BanUnbanUser</servlet-name>
+        <url-pattern>/BanUnbanUser</url-pattern>
     </servlet-mapping>
 </web-app>
