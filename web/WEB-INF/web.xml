@@ -228,6 +228,10 @@
         <servlet-name>PassDataQuestionAdd</servlet-name>
         <servlet-class>examController.PassDataQuestionAdd</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddTeacherRequest</servlet-name>
+        <servlet-class>adminController.AddTeacherRequest</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
@@ -389,5 +393,9 @@
     <servlet-mapping>
         <servlet-name>DocFileQuestionAdd</servlet-name>
         <url-pattern>/DocFileQuestionAdd</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddTeacherRequest</servlet-name>
+        <url-pattern>/AddTeacherRequest</url-pattern>
     </servlet-mapping>
 </web-app>

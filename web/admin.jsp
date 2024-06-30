@@ -220,7 +220,11 @@
     <div class="pagetitle">
       <h1>Dashboard</h1>
     </div><!-- End Page Title -->
-
+<%
+List<Users> users = new UserDAO().getAllUsers();
+List<Users> teachers = new UserDAO().getAllUsersType(2);
+List<Users> students = new UserDAO().getAllUsersType(3);
+%>
     <section class="section dashboard">
       <div class="row">
         <!-- Left side columns -->
@@ -230,13 +234,13 @@
             <div class="col-xxl-4 col-md-6">
               <div class="card info-card sales-card">
                 <div class="card-body">
-                  <h5 class="card-title">Users</h5>
+                  <h5 class="card-title">Tổng số người dùng</h5>
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-people-fill"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>###</h6>
+                      <h6><%=users.size()%></h6>
                     </div>
                   </div>
                 </div>
@@ -246,13 +250,13 @@
             <div class="col-xxl-4 col-md-6">
               <div class="card info-card revenue-card">
                 <div class="card-body">
-                  <h5 class="card-title">Student</h5>
+                  <h5 class="card-title">Học sinh</h5>
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-people-fill"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>###</h6>
+                      <h6><%=students.size()%></h6>
                     </div>
                   </div>
                 </div>
@@ -263,13 +267,13 @@
 
               <div class="card info-card customers-card">
                 <div class="card-body">
-                  <h5 class="card-title">Lecturer <span></span></h5>
+                  <h5 class="card-title">Giáo viên <span></span></h5>
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-people-fill"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>###</h6>
+                      <h6><%=teachers.size()%></h6>
                     </div>
                   </div>
 

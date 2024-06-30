@@ -11,10 +11,10 @@
               <p>Tuy nhiên bạn cần phải chấp hành một số quy định mới nghiêm ngặt hơn dành cho giáo viên, nhằm mục đích </p>
 
               <!-- Browser Default Validation -->
-              <form class="row g-3">
+              <form class="row g-3" method="POST" action="AddTeacherRequest">
                 <div class="col-md-4">
                   <label class="form-label">Kinh nghiệm dạy học(năm)</label>
-                  <input type="number" class="form-control" id="validationDefault01"required>
+                  <input type="number" class="form-control" id="validationDefault01" name="exp" required>
                 </div>
               
                 <div class="col-md-4">
@@ -25,25 +25,25 @@
                     <option value="2">Lý</option>
                     <option value="3">Hóa</option>
                     <option value="4">Sinh</option>
-                    <option value="5">Sử</option>
+                    <option value="5">Anh</option>
                     <option value="6">Địa</option>
-                    <option value="7">GDCD</option>
-                    <option value="8">Sinh</option>                    
+                    <option value="7">Sử</option>
+                    <option value="8">GDCD</option>                    
                   </select>
                 </div>
                   <div class="col-md-4">
                   <label class="form-label">Trình độ học vấn</label>
-                  <select class="form-select" id="validationDefault04" required>
+                  <select class="form-select" id="validationDefault04" name="level" required>
                     <option selected disabled value="">Choose...</option>
-                    <option>Đại học & Cao đẳng</option>
-                    <option>Thạc sĩ</option>
-                    <option>Tiến sĩ</option>
+                    <option value="Đại học & Cao đẳng">Đại học & Cao đẳng</option>
+                    <option value="Thạc sĩ">Thạc sĩ</option>
+                    <option value="Tiến sĩ">Tiến sĩ</option>
 
                   </select>
                 </div>
                 <div class="col-md-12">
                   <label class="form-label">Đã từng/Đang công tác ở trường</label>
-                  <input type="text" class="form-control" id="validationDefault03" required>
+                  <input type="text" class="form-control" id="validationDefault03" name="school" required>
                 </div>
                 
                 <div class="col-12">
