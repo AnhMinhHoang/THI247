@@ -162,11 +162,11 @@ else role = "Student";
                     class="btn btn-primary has-icon btn-block"
                     type="button"
                     data-toggle="modal"
-                    data-target="#Report" <!-- Trùng với id ở modal -->
+                    data-target="#Report"
                     >Report</button>
                 <div
                     class="modal fade"
-                    id="Report" <!-- trùng với data-target -->
+                    id="Report"
                     tabindex="-1"
                     role="dialog"
                     aria-labelledby="threadModalLabel"
@@ -228,28 +228,23 @@ else role = "Student";
                                                 Ghi chú 6 
                                             </label>
                                             <label class="checkbox-container" style="width: 30%;">
-                                                <input type="checkbox" name="reasons" value="7"/>
+                                                <input type="checkbox" name="reasons" value="7" class="reason-checkbox"/>
                                                 <span class="checkmark"></span>
                                                 lý do báo cáo khác
                                             </label>
                                         </div>
                                         <br>
-                                        <div class="form-group">
+                                        <div class="form-group" id="details-container" style="display: none;">
                                             <label for="thread-detail">Chi tiết</label>
                                             <textarea
                                                 type="text"
                                                 class="form-control"
                                                 name="context"
-                                                id="threadTitle"
+                                                id="thread-detail"
                                                 placeholder="Chi tiết"
-                                                required
-                                                autofocus
-                                                rows="5" 
-                                                style="resize: none; overflow: hidden;"
-                                                ></textarea>
+                                                rows="5"
+                                                style="resize: none; overflow: hidden;"></textarea>
                                         </div>
-                                        <!--                    <label for="thread-image">Ảnh</label>
-                                                        <input type="file" name="file" id="imgupload" accept="image/png, image/jpeg" style="display:none" onchange="submitForm()"/>-->
                                         <div id="image-preview-container">
                                             <label for="myfile">Chọn ảnh:</label>
                                             <input id="image-upload" type="file" name="image" accept="image/*">
@@ -261,15 +256,8 @@ else role = "Student";
                                         </div>
                                         <br>
                                         <br><br>
-                                        <textarea
-                                            class="form-control summernote"
-                                            style="display: none"
-                                            ></textarea>
-                                        <div
-                                            class="custom-file form-control-sm mt-3"
-                                            style="max-width: 300px"
-                                            >
-                                        </div>
+                                        <textarea class="form-control summernote" style="display: none"></textarea>
+                                        <div class="custom-file form-control-sm mt-3" style="max-width: 300px"></div>
                                     </div>
                                     <div class="modal-footer">
                                         <button onclick="removeURL(this)"
@@ -281,15 +269,15 @@ else role = "Student";
                                         </button>
                                         <input type="submit" class="btn btn-primary" value="Đăng"/>
                                     </div>
-
                                 </div> 
                             </form>
                         </div>
                     </div>
-                    <-<!-- End of modal -->
                 </div>
+                <!-- End of modal -->
             </div>
         </div>
+    </div>
 </section>
 
 </main><!-- End #main -->
@@ -298,46 +286,55 @@ else role = "Student";
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript"></script>
 <script>
-            // Function to handle file input change event
-            document.getElementById('image-upload').addEventListener('change', function (event) {
-                var file = event.target.files[0];
-                var reader = new FileReader();
+                            document.getElementById('image-upload').addEventListener('change', function (event) {
+                                var file = event.target.files[0];
+                                var reader = new FileReader();
 
-                reader.onload = function (e) {
-                    var imgElement = document.getElementById('image-preview');
-                    imgElement.src = e.target.result;
-                    imgElement.style.display = 'block';
+                                reader.onload = function (e) {
+                                    var imgElement = document.getElementById('image-preview');
+                                    imgElement.src = e.target.result;
+                                    imgElement.style.display = 'block';
 
-                    // Show delete button
-                    document.getElementById('delete-image').style.display = 'inline-block';
-                }
+                                    // Show delete button
+                                    document.getElementById('delete-image').style.display = 'inline-block';
+                                }
 
-                reader.readAsDataURL(file);
-            });
+                                reader.readAsDataURL(file);
+                            });
 
-            // Function to handle delete image button click
-            document.getElementById('delete-image').addEventListener('click', function (event) {
-                event.preventDefault(); // Prevent default behavior (page reload)
+                            document.getElementById('delete-image').addEventListener('click', function (event) {
+                                event.preventDefault(); // Prevent default behavior (page reload)
 
-                var imgElement = document.getElementById('image-preview');
-                imgElement.src = '#'; // Clear the preview
-                imgElement.style.display = 'none';
+                                var imgElement = document.getElementById('image-preview');
+                                imgElement.src = '#'; // Clear the preview
+                                imgElement.style.display = 'none';
 
-                // Hide delete button
-                document.getElementById('delete-image').style.display = 'none';
+                                // Hide delete button
+                                document.getElementById('delete-image').style.display = 'none';
 
-                // Reset file input
-                document.getElementById('image-upload').value = '';
-            });
+                                // Reset file input
+                                document.getElementById('image-upload').value = '';
+                            });
 
-            function removeURL() {
-                var imgElement = document.getElementById('image-preview');
-                imgElement.src = '#'; // Clear the preview
-                imgElement.style.display = 'none';
-                document.getElementById('image-upload').value = '';
-            }
+                            function removeURL() {
+                                var imgElement = document.getElementById('image-preview');
+                                imgElement.src = '#'; // Clear the preview
+                                imgElement.style.display = 'none';
+                                document.getElementById('image-upload').value = '';
+                            }
 
-        </script>
+                            // Function to show/hide the "Chi tiết" textarea
+                            document.querySelectorAll('.reason-checkbox').forEach(checkbox => {
+                                checkbox.addEventListener('change', () => {
+                                    const detailsContainer = document.getElementById('details-container');
+                                    const anyChecked = Array.from(document.querySelectorAll('.reason-checkbox')).some(cb => cb.checked);
+                                    detailsContainer.style.display = anyChecked ? 'block' : 'none';
+
+                                    // Toggle required attribute
+                                    document.getElementById('thread-detail').required = anyChecked;
+                                });
+                            });
+</script>
 <jsp:include page="footer.jsp"></jsp:include>
 
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

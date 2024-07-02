@@ -1,48 +1,42 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Report List</title>
+    <meta charset="UTF-8">
+    <title>Danh sách báo cáo</title>
 </head>
 <body>
-    <h1>Report List</h1>
-
+    <h1>Danh sách báo cáo</h1>
     <table border="1">
-        <thead>
+        <tr>
+            <th>ID</th>
+            <th>User Being Reported ID</th>
+            <th>User Reported ID</th>
+            <th>Reasons</th>
+            <th>Context</th>
+            <th>Date</th>
+            <th>Image</th>
+        </tr>
+        <c:forEach var="report" items="${reports}">
             <tr>
-                <th>Report ID</th>
-                <th>User ID</th>
-                <th>User Reported ID</th>
-                <th>Report Context</th>
-                <th>Report Date</th>
-                <th>Report Img</th>
-                <th>Reasons</th>
+                <td>${report.reportId}</td>
+                <td>${report.userId}</td>
+                <td>${report.userReportedId}</td>
+                <td>
+                    <c:forEach var="reason" items="${report.reasons}">
+                        ${reason.reasonName}<br>
+                    </c:forEach>
+                </td>
+                <td>${report.reportContext}</td>
+                <td>${report.reportDate}</td>
+                <td>
+                    <c:if test="${not empty report.reportImg}">
+                        <img src="${pageContext.request.contextPath}/${report.reportImg}" alt="Report Image" width="100">
+                    </c:if>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            <c:forEach items="${reports}" var="report">
-                <tr>
-                    <td>${report.reportId}</td>
-                    <td>${report.userId}</td>
-                    <td>${report.userReportedId}</td>
-                    <td>${report.reportContext}</td>
-                    <td>${report.reportDate}</td>
-                    <td>${report.reportImg}</td>
-                    <td>
-                        <ul>
-                            <c:forEach items="${report.reasons}" var="reason">
-                                <li>${reason.reasonName}</li>
-                            </c:forEach>
-                        </ul>
-                    </td>
-                </tr>
-            </c:forEach>
-        </tbody>
+        </c:forEach>
     </table>
-
-    <hr/>
-
-    
-
 </body>
 </html>

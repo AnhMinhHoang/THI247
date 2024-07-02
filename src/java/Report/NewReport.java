@@ -56,7 +56,7 @@ public class NewReport extends HttpServlet {
         int userReportedId = currentUser.getUserID();
         List<Integer> reasons = extractReasonIds(request.getParameterValues("reasons"));
         boolean check = true;
-        String postContext = request.getParameter("context");
+        String Context = request.getParameter("context");
         
 
         if (!uploadDir.exists()) {
@@ -70,12 +70,12 @@ public class NewReport extends HttpServlet {
                 part.write(filePath);
                 String url = UPLOAD_DIRECTORY + "/" + fileName;
                 check = false;
-                new ReportDAO().createReport(userBeingReported.getUserID(), userReportedId, reasons, postContext, url);
+                new ReportDAO().createReport(userBeingReported.getUserID(), userReportedId, reasons, Context, url);
                 response.sendRedirect("user-profiles.jsp"); // Redirect to success page
             }
         }
         if (check) {
-            new ReportDAO().createReport(userBeingReported.getUserID(), userReportedId, reasons, postContext, null);
+            new ReportDAO().createReport(userBeingReported.getUserID(), userReportedId, reasons,Context, null);
             response.sendRedirect("user-profiles.jsp"); // Redirect to success page
         }
     }
