@@ -19,12 +19,12 @@
             text-align: left;
             background-color: #e2e8f0;
         }
-        
+
         h3{
             overflow-wrap: break-word;
             word-break: break-word;
         }
-        
+
         a{
             overflow-wrap: break-word;
             word-break: break-word;
@@ -34,7 +34,7 @@
             overflow-wrap: break-word;
             word-break: break-word;
         }
-        
+
         .inner-wrapper {
             position: relative;
             height: calc(100vh - 3.5rem);
@@ -592,6 +592,137 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                             }
                                         else{
                                         %>
+                                        <div class="media forum-item" style="float: right">
+                                            <div class="dropdown">
+                                                <button
+                                                    onclick="toggleReport(this)"
+                                                    class="dropbtn"
+                                                    >
+                                                    ...
+                                                </button>
+                                                <div class="dropdown-content report-dropdown">
+                                                    <button
+                                                        class="btn btn-xoa"
+                                                        href="#home"
+                                                        type="button"
+                                                        data-toggle="modal"
+                                                        data-target="#report"
+                                                        >
+                                                        Báo cáo
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="modal fade"
+                                                id="report"
+                                                tabindex="-1"
+                                                role="dialog"
+                                                aria-labelledby="threadModalLabel"
+                                                aria-hidden="true"
+                                                >
+                                                <div class="modal-dialog modal-lg" role="document">
+                                                    <div class="modal-content">
+                                                        <form action="NewReport" method="POST" enctype="multipart/form-data">
+                                                            <input type="hidden" name="otherUserID"value="<%=user.getUserID()%>" />
+                                                            <div class="modal-header d-flex align-items-center bg-primary text-white">
+                                                                <h6 class="modal-title mb-0" id="threadModalLabel">
+                                                                    Report
+                                                                </h6>
+                                                                <button
+                                                                    type="button"
+                                                                    class="close"
+                                                                    data-dismiss="modal"
+                                                                    aria-label="Close"
+                                                                    >
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <label for="threadTitle">Lý do báo cáo</label>
+                                                                    <div class="checkbox-group" style="
+                                                                         display: flex;
+                                                                         flex-wrap: wrap;
+                                                                         gap: 10px; /* Khoảng cách giữa các checkbox */
+                                                                         margin-top: 20px;">
+                                                                        <label class="checkbox-container" style="width: 30%;">
+                                                                            <input type="checkbox" name="reasons" value="1"/>
+                                                                            <span class="checkmark"></span>
+                                                                            Lạm dụng ngôn từ
+                                                                        </label>
+                                                                        <label class="checkbox-container" style="width: 30%;">
+                                                                            <input type="checkbox" name="reasons" value="2"/>
+                                                                            <span class="checkmark"></span>
+                                                                            Hành vi gây rối diễn đàn
+                                                                        </label>
+                                                                        <label class="checkbox-container" style="width: 30%;">
+                                                                            <input type="checkbox" name="reasons" value="3"/>
+                                                                            <span class="checkmark"></span>
+                                                                            Tạo bài đăng sai mục đích 
+                                                                        </label>
+                                                                        <label class="checkbox-container" style="width: 30%;">
+                                                                            <input type="checkbox" name="reasons" value="4"/>
+                                                                            <span class="checkmark"></span>
+                                                                            Bài đăng Không liên quan 
+                                                                        </label>
+                                                                        <label class="checkbox-container" style="width: 30%;">
+                                                                            <input type="checkbox" name="reasons" value="5"/>
+                                                                            <span class="checkmark"></span>
+                                                                            Spam Bình luận quảng cáo trong diễn đàn 
+                                                                        </label>
+                                                                        <label class="checkbox-container" style="width: 30%;">
+                                                                            <input type="checkbox" name="reasons" value="6"/>
+                                                                            <span class="checkmark"></span>
+                                                                            Bình luận mang tính phản cảm
+                                                                        </label>
+                                                                        <label class="checkbox-container" style="width: 30%;">
+                                                                            <input type="checkbox" name="reasons" value="7" class="reason-checkbox"/>
+                                                                            <span class="checkmark"></span>
+                                                                            lý do báo cáo khác
+                                                                        </label>
+                                                                    </div>
+                                                                    <br>
+                                                                    <div class="form-group" id="details-container" style="display: none;">
+                                                                        <label for="thread-detail">Chi tiết</label>
+                                                                        <textarea
+                                                                            type="text"
+                                                                            class="form-control"
+                                                                            name="context"
+                                                                            id="thread-detail"
+                                                                            placeholder="Chi tiết"
+                                                                            rows="5"
+                                                                            style="resize: none; overflow: hidden;"></textarea>
+                                                                    </div>
+                                                                    <div id="image-preview-container">
+                                                                        <label for="myfile">Chọn ảnh:</label>
+                                                                        <input id="image-upload" type="file" name="image" accept="image/*">
+                                                                        <br>
+                                                                        <div id="image-preview-wrapper" style="position: relative;">
+                                                                            <img id="image-preview" src="#" width="400" height="400" alt="Preview Image" style="display:none;">
+                                                                            <button id="delete-image"><i class="fa fa-times"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <br>
+                                                                    <br><br>
+                                                                    <textarea class="form-control summernote" style="display: none"></textarea>
+                                                                    <div class="custom-file form-control-sm mt-3" style="max-width: 300px"></div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button onclick="removeURL(this)"
+                                                                            type="button"
+                                                                            class="btn btn-light"
+                                                                            data-dismiss="modal"
+                                                                            >
+                                                                        Hủy
+                                                                    </button>
+                                                                    <input type="submit" class="btn btn-primary" value="Đăng"/>
+                                                                </div>
+                                                            </div> 
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="media forum-item">
                                             <a
                                                 href="UserProfile?userID=<%=cmt.getUserID()%>"
@@ -629,6 +760,7 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                 %>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                                 <%
@@ -716,7 +848,38 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
 </script>
 
 
+<script>
 
+    // Function to toggle report dropdown visibility
+    function toggleReport(button) {
+        var dropdownContent = button.nextElementSibling;
+        dropdownContent.classList.toggle("show");
+    }
+
+    // Close dropdown when clicking outside of it
+    window.onclick = function (event) {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdowns = document.getElementsByClassName("report-dropdown");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+    // Function to show/hide the "Chi tiết" textarea
+    document.querySelectorAll('.reason-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const detailsContainer = document.getElementById('details-container');
+            const anyChecked = Array.from(document.querySelectorAll('.reason-checkbox')).some(cb => cb.checked);
+            detailsContainer.style.display = anyChecked ? 'block' : 'none';
+
+            // Toggle required attribute
+            document.getElementById('thread-detail').required = anyChecked;
+        });
+    });
+</script>
 <script>
     /* When the user clicks on the button, 
      toggle between hiding and showing the dropdown content */
