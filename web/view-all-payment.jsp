@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
+<%@page import="java.time.LocalDateTime"%>
+<%@page import="java.text.NumberFormat"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
 <html lang="en">
 
     <head>
@@ -144,15 +147,16 @@
                 </li><!-- End Dashboard Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link" href="view-all-user.jsp">
+                    <a class="nav-link collapsed" href="view-all-user.jsp">
                         <i class="bi bi-person"></i>
                         <span>Tất cả người dùng</span>
                     </a>
                 </li>
-                <!-- End Forms Nav -->
+
+                </li><!-- End Forms Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="view-all-payment.jsp">
+                    <a class="nav-link" href="view-all-payment.jsp">
                         <i class="bi bi-gem"></i><span>Giao dịch trong hệ thống</span>
                     </a>
                 </li><!-- End Tables Nav -->
@@ -171,58 +175,17 @@
             </ul>
         </aside><!-- End Sidebar-->
 
-        <style>
-            .dropdown:hover .dropdown-menu {
-                display: none;
-            }
-
-            .dropdown {
-                position: relative;
-                display: inline-block;
-            }
-
-            .dropdown-content {
-                display: none;
-                position: absolute;
-                background-color: #f1f1f1;
-                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-                z-index: 1;
-            }
-
-            .dropdown-content a {
-                color: black;
-                padding: 12px 16px;
-                text-decoration: none;
-                display: block;
-            }
-            .show {
-                display: block;
-            }
-
-        </style>
-
         <main id="main" class="main">
-            <h2 class="text-primary">Tất cả người dùng trong hệ thống</h2>
-            <div class="dropdown">
-                <button onclick="dropdown()" class="dropbtn btn btn-primary dropdown-toggle" style="color: white">Sắp xếp</button>
-                <div id="myDropdown" class="dropdown-content">
-                    <a class="dropdown-item" href="?filter=all">Tất cả người dùng</a>
-                    <a class="dropdown-item" href="?filter=ban">Người dùng đã bị ban</a>
-                    <a class="dropdown-item" href="?filter=unban">Người dùng không bị ban</a>
-                </div>
-            </div>
-                <br><br>
+            <h2 class="text-primary">Tất cả giao dịch trong hệ thống</h2>
             <div class="container">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th class="text-primary" scope="col">ID</th>
                             <th class="text-primary" scope="col">Avatar</th>
                             <th class="text-primary" scope="col">Tên người dùng</th>
-                            <th class="text-primary" scope="col">Họ và tên</th>
-                            <th class="text-primary" scope="col">Chức vụ</th>
                             <th class="text-primary" scope="col">Thông tin cá nhân</th>
-                            <th class="text-primary" scope="col">Tác vụ</th>
+                            <th class="text-primary" scope="col">Số tiền</th>
+                            <th class="text-primary" scope="col">Ngày thanh toán</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -230,43 +193,20 @@
 
                         <!--            list all user    -->
                         <%
-                        List<Users> users = new UserDAO().getAllUsers();
-                        String filter = request.getParameter("filter");
-                        if (filter != null) {
-                            if (filter.equals("all")) {
-                                users = new UserDAO().getAllUsers();
-                            } else if(filter.equals("ban")){
-                                users = new AdminDAO().getAllStatusUser(true);
-                            }
-                            else{
-                                users = new AdminDAO().getAllStatusUser(false);
-                            }
-                        }
-                        String role;
-                        if(users.size() > 0){
-                            for(Users user: users){
-                                if(user.getRole() == 1) role = "Admin";
-                                else if(user.getRole() == 2) role = "Giáo viên";
-                                else role = "Học sinh";
+                        List<Payment> paymentList = new UserDAO().getAllPayment();
+                        if(paymentList.size() > 0){
+                            for(int i = paymentList.size() - 1; i >= 0; i--){
+                                Payment payment = paymentList.get(i);
+                                Users otherUser = new UserDAO().findByUserID(payment.getUserID());
+                                NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+                                String money = currencyFormatter.format(payment.getAmount());
                         %>
                         <tr>
-                            <td><%=user.getUserID()%></td>
-                            <td><img src="<%=user.getAvatarURL()%>" width="50" height="50" alt="alt" class="rounded-circle"/></td>
-                            <td><%=user.getUsername()%></td>
-                            <td><%=user.getFullname()%></td>
-                            <td><%=role%></td>
-                            <td><span class="badge" style="font-size: 14px"><a href="UserProfile?userID=<%=user.getUserID()%>">Xem chi tiết</a></span></td>
-                            <%
-                            if(user.isBan()){
-                            %>
-                            <td><a href="BanUnbanUser?userID=<%=user.getUserID()%>&isBan=false"><button class="btn btn-primary" style="border-radius: 25px">Unban</button></a></td>
-                            <%
-                                }else{
-                            %>
-                            <td><a href="BanUnbanUser?userID=<%=user.getUserID()%>&isBan=true"><button class="btn btn-ban" style="background-color: red; border-radius: 25px">Ban</button></a></td>
-                            <%
-                                }
-                            %>
+                            <td><img src="<%=otherUser.getAvatarURL()%>" width="50" height="50" alt="alt" class="rounded-circle"/></td>
+                            <td><%=otherUser.getUsername()%></td>
+                            <td><span class="badge" style="font-size: 14px"><a href="UserProfile?userID=<%=otherUser.getUserID()%>">Xem chi tiết</a></span></td>
+                            <td><%=money%></td>
+                            <td><%=payment.getPaymentDate()%></td>
                         </tr>
 
                         <%
@@ -291,27 +231,6 @@
                 </table>
             </div>
         </main><!-- End #main -->
-        <script>
-            /* When the user clicks on the button, 
-             toggle between hiding and showing the dropdown content */
-            function dropdown() {
-                document.getElementById("myDropdown").classList.toggle("show");
-            }
-
-// Close the dropdown if the user clicks outside of it
-            window.onclick = function (event) {
-                if (!event.target.matches('.dropbtn')) {
-                    var dropdowns = document.getElementsByClassName("dropdown-content");
-                    var i;
-                    for (i = 0; i < dropdowns.length; i++) {
-                        var openDropdown = dropdowns[i];
-                        if (openDropdown.classList.contains('show')) {
-                            openDropdown.classList.remove('show');
-                        }
-                    }
-                }
-            };
-        </script>
 
 
         <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

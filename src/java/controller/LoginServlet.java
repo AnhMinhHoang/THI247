@@ -67,7 +67,7 @@ public class LoginServlet extends HttpServlet {
                 session.setMaxInactiveInterval(600); // Thời gian hết hiệu lực của session
 
                 // Chuyển hướng đến trang tương ứng với vai trò người dùng
-                if (role == 3) {
+                if (role == 3 || role == 2) {
                     // Người dùng thường (user)
                     response.sendRedirect("Home");
                 } else if (role == 1) {

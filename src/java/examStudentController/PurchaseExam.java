@@ -2,9 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package examController;
+package examStudentController;
 
-import DAO.ExamDAO;
+import DAO.StudentExamDAO;
+import DAO.UserDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,15 +13,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import model.QuestionBank;
 import model.Users;
 
 /**
  *
  * @author GoldCandy
  */
-public class AddRandomQuestionToExam extends HttpServlet {
+public class PurchaseExam extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,18 +33,16 @@ public class AddRandomQuestionToExam extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        int number = Integer.parseInt(request.getParameter("numQuestions"));
-        int subjectID = Integer.parseInt(request.getParameter("subjectID"));
-        int examID = Integer.parseInt(request.getParameter("examID"));
         HttpSession session = request.getSession();
         Users user = (Users)session.getAttribute("currentUser");
-        List<QuestionBank> lists = new ExamDAO().getRandomQuestByAmountND(number, subjectID, examID, user.getUserID());
-
-        for (QuestionBank list : lists) {
-            new ExamDAO().addQuestionToExam(list.getQuestionId(), examID);
-        }
-
-        response.sendRedirect("viewallquestion.jsp");
+        int examID = Integer.parseInt(request.getParameter("examID"));
+        int price = Integer.parseInt(request.getParameter("price"));
+        
+        new UserDAO().subtractMoneyToBalance(price, user.getUserID());
+        new StudentExamDAO().addExamPayment(user.getUserID(), examID);
+        user = new UserDAO().findByUserID(user.getUserID());
+        session.setAttribute("currentUser", user);
+        response.sendRedirect("ExamDetail?examID="+examID);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

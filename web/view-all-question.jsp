@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
+<%@page import="java.time.LocalDateTime"%>
+<%@page import="java.text.NumberFormat"%>
+<%@page import="java.time.format.DateTimeFormatter"%>
 <html lang="en">
 
     <head>
@@ -144,12 +147,13 @@
                 </li><!-- End Dashboard Nav -->
 
                 <li class="nav-item">
-                    <a class="nav-link" href="view-all-user.jsp">
+                    <a class="nav-link collapsed" href="view-all-user.jsp">
                         <i class="bi bi-person"></i>
                         <span>Tất cả người dùng</span>
                     </a>
                 </li>
-                <!-- End Forms Nav -->
+
+                </li><!-- End Forms Nav -->
 
                 <li class="nav-item">
                     <a class="nav-link collapsed" href="view-all-payment.jsp">
@@ -160,10 +164,9 @@
                     <a class="nav-link collapsed" href="view-all-exam.jsp">
                         <i class="bi bi-journal-check"></i><span>Quản lí kiểm tra</span>
                     </a>
-
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="view-all-question.jsp">
+                    <a class="nav-link" href="view-all-question.jsp">
                         <i class="bi bi-journal-check"></i><span>Quản lí câu hỏi</span>
                     </a>
                 </li>
@@ -202,26 +205,31 @@
         </style>
 
         <main id="main" class="main">
-            <h2 class="text-primary">Tất cả người dùng trong hệ thống</h2>
+            <h2 class="text-primary">Tất cả câu hỏi của hệ thống</h2>
+            <a href="choosesubjectuser.jsp"><button class="btn btn-primary" style="color: white">Thêm câu hỏi vào hệ thống</button></a>
+            <br><br>
             <div class="dropdown">
                 <button onclick="dropdown()" class="dropbtn btn btn-primary dropdown-toggle" style="color: white">Sắp xếp</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a class="dropdown-item" href="?filter=all">Tất cả người dùng</a>
-                    <a class="dropdown-item" href="?filter=ban">Người dùng đã bị ban</a>
-                    <a class="dropdown-item" href="?filter=unban">Người dùng không bị ban</a>
+                    <a class="dropdown-item" href="?filter=all"">Tất cả môn học</a>
+                    <%
+                    List<Subjects> subjects = new ExamDAO().getAllSubject();
+                    for(Subjects subject: subjects){
+                    %>
+                    <a class="dropdown-item" href="?filter=<%=subject.getSubjectID()%>"><%=subject.getSubjectName()%></a>
+                    <%
+                        }
+                    %>
                 </div>
             </div>
-                <br><br>
+            <br><br>
             <div class="container">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th class="text-primary" scope="col">ID</th>
-                            <th class="text-primary" scope="col">Avatar</th>
-                            <th class="text-primary" scope="col">Tên người dùng</th>
-                            <th class="text-primary" scope="col">Họ và tên</th>
-                            <th class="text-primary" scope="col">Chức vụ</th>
-                            <th class="text-primary" scope="col">Thông tin cá nhân</th>
+                            <th class="text-primary" scope="col">Câu hỏi</th>
+                            <th class="text-primary" scope="col">Môn học</th>
+                            <th class="text-primary" scope="col">Đáp án</th>
                             <th class="text-primary" scope="col">Tác vụ</th>
                         </tr>
                     </thead>
@@ -230,47 +238,107 @@
 
                         <!--            list all user    -->
                         <%
-                        List<Users> users = new UserDAO().getAllUsers();
+                        List<QuestionBank> qbs = new ExamDAO().getAllSystemQuestion();
                         String filter = request.getParameter("filter");
                         if (filter != null) {
                             if (filter.equals("all")) {
-                                users = new UserDAO().getAllUsers();
-                            } else if(filter.equals("ban")){
-                                users = new AdminDAO().getAllStatusUser(true);
-                            }
-                            else{
-                                users = new AdminDAO().getAllStatusUser(false);
+                                qbs = new ExamDAO().getAllSystemQuestion();
+                            } else {
+                                int subjectID = Integer.parseInt(filter);
+                                qbs = new ExamDAO().getAllSystemQuestionByID(subjectID);
                             }
                         }
-                        String role;
-                        if(users.size() > 0){
-                            for(Users user: users){
-                                if(user.getRole() == 1) role = "Admin";
-                                else if(user.getRole() == 2) role = "Giáo viên";
-                                else role = "Học sinh";
+                        String context;
+                        String answer;
+                        for(int i = qbs.size() - 1; i >= 0; i--){
+                            QuestionBank qb = qbs.get(i);
+                            Subjects subject = new ExamDAO().getSubjectByID(qb.getSubjectId());
+                            if(qb.getQuestionContext().length() > 40){ 
+                                context = qb.getQuestionContext().substring(0, 40) + "...";
+                            }
+                            else if(qb.getQuestionContext().length() == 0){
+                                context = qb.getQuestionImg();
+                            }
+                            else context = qb.getQuestionContext();
+                            if(qb.getChoiceCorrect().startsWith("uploads/docreader")){
+                                answer = qb.getChoiceCorrect();
+                            }
+                            else{
+                                if(qb.getChoiceCorrect().length() > 40) 
+                                    answer = qb.getChoiceCorrect().substring(0, 40) + "...";
+                                else answer = qb.getChoiceCorrect();
+                            }
+                            String modalId = "threadModal" + i;
                         %>
                         <tr>
-                            <td><%=user.getUserID()%></td>
-                            <td><img src="<%=user.getAvatarURL()%>" width="50" height="50" alt="alt" class="rounded-circle"/></td>
-                            <td><%=user.getUsername()%></td>
-                            <td><%=user.getFullname()%></td>
-                            <td><%=role%></td>
-                            <td><span class="badge" style="font-size: 14px"><a href="UserProfile?userID=<%=user.getUserID()%>">Xem chi tiết</a></span></td>
                             <%
-                            if(user.isBan()){
+                            if(context.startsWith("uploads/docreader")){
                             %>
-                            <td><a href="BanUnbanUser?userID=<%=user.getUserID()%>&isBan=false"><button class="btn btn-primary" style="border-radius: 25px">Unban</button></a></td>
-                            <%
-                                }else{
-                            %>
-                            <td><a href="BanUnbanUser?userID=<%=user.getUserID()%>&isBan=true"><button class="btn btn-ban" style="background-color: red; border-radius: 25px">Ban</button></a></td>
+                            <td><img src="<%=context%>" width="30%" height="30%" alt="alt"/></td>
+                                <%
+                                    }
+                                else{
+                                %>
+                            <td><p><%=context%></p></td>
                             <%
                                 }
                             %>
+                            <td><%=subject.getSubjectName()%></td>
+                            <%
+                            if(answer.startsWith("uploads/docreader")){
+                            %>
+                            <td><img src="<%=answer%>" width="50%" height="50%" alt="alt"/></td>
+                                <%
+                                    }
+                                else{
+                                %>
+                            <td><%=answer%></td>
+                            <%
+                                }
+                            %>
+                            <td style="display: flex; flex-direction: row; text-align: center">
+                                <form action="ViewQuestionDetail" method="POST">
+                                    <input type="hidden" name="questionID" value="<%=qb.getQuestionId()%>">
+                                    <div class="inner-sidebar-header justify-content-center">
+                                        <input type="submit" style="color: white" class="btn btn-primary" value="Xem chi tiết"/>
+                                    </div>
+                                </form>
+                                <div class="inner-sidebar-header justify-content-center">
+                                    <button
+                                        class="btn btn-danger"
+                                        type="button"
+                                        data-toggle="modal"
+                                        data-target="#<%= modalId %>"  
+                                        >
+                                        Xoá
+                                    </button>
+                                </div>
+
+                                <div class="modal fade" id="<%= modalId %>" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content" style="width: 500px; margin: auto">
+                                            <form action="DeleteQuestionInBank" method="POST">
+                                                <input type="hidden" name="questionID" value="<%=qb.getQuestionId()%>">
+                                                <input type="hidden" name="subjectID" value="<%=subject.getSubjectID()%>">
+                                                <div class="modal-header d-flex align-items-center bg-primary text-white">
+                                                    <h6 class="modal-title mb-0" id="threadModalLabel">Xác nhận xóa câu hỏi?</h6>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">                       
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-light" data-dismiss="modal" >Hủy</button>
+                                                            <input type="submit" class="btn btn-primary" style="background-color: red" value="Xóa câu hỏi"/>
+                                                        </div>
+                                                    </div> 
+                                                </div>
+                                            </form>
+                                        </div> 
+                                    </div>                        
+                                </div>      
+                            </td>
                         </tr>
 
                         <%
-                            }
                             }
                         %>
                         <!--                ket thuc list all user-->
@@ -326,12 +394,8 @@
         <script src="assets/vendor/tinymce/tinymce.min.js"></script>
         <script src="assets/vendor/php-email-form/validate.js"></script>
 
+
         <!-- Template Main JS File -->
-        <script src="assets/js/main.js"></script>
-
-
-
-
-
-
-
+        <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript"></script>

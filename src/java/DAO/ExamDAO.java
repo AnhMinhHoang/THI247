@@ -40,8 +40,8 @@ public class ExamDAO extends DBConnection {
     }
     
     //Add exam
-    public void addExam(String examName, int userID, int subjectID, int examTime) {
-        String query = "DBCC CHECKIDENT (Exam, RESEED, 0); DBCC CHECKIDENT (Exam, RESEED); insert into Exam(exam_name, create_date, userID, subject_id, timer) values(?, ?, ?, ?, ?)";
+    public void addExam(String examName, int userID, int subjectID, int examTime, int price) {
+        String query = "DBCC CHECKIDENT (Exam, RESEED, 0); DBCC CHECKIDENT (Exam, RESEED); insert into Exam(exam_name, create_date, userID, subject_id, timer, price) values(?, ?, ?, ?, ?, ?)";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, examName);
             String timeStamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new java.util.Date());
@@ -49,6 +49,7 @@ public class ExamDAO extends DBConnection {
             ps.setInt(3, userID);
             ps.setInt(4, subjectID);
             ps.setInt(5, examTime);
+            ps.setInt(6, price);
             try {
                 ps.executeUpdate();
             } catch (SQLException e) {
@@ -75,6 +76,7 @@ public class ExamDAO extends DBConnection {
                 exam.setUserID(rs.getInt(4));
                 exam.setSubjectID(rs.getInt(5));
                 exam.setTimer(rs.getInt(6));
+                exam.setPrice(rs.getInt(7));
                 list.add(exam);
             }
         } catch (Exception e) {
@@ -98,6 +100,7 @@ public class ExamDAO extends DBConnection {
                 exam.setUserID(rs.getInt(4));
                 exam.setSubjectID(rs.getInt(5));
                 exam.setTimer(rs.getInt(6));
+                exam.setPrice(rs.getInt(7));
                 return exam;
             }
         } catch (Exception e) {
@@ -229,6 +232,7 @@ public class ExamDAO extends DBConnection {
                 exam.setUserID(rs.getInt(4));
                 exam.setSubjectID(rs.getInt(5));
                 exam.setTimer(rs.getInt(6));
+                exam.setPrice(rs.getInt(7));
                 return exam;
             }
         } catch (Exception e) {
@@ -301,33 +305,66 @@ public class ExamDAO extends DBConnection {
     }
     
     //get random quest by amount and not duplicate by subject id, amount and exam id
-    public List<QuestionBank> getRandomQuestByAmountND(int amount, int subjectID, int exam_id) {
-        String query = "select top "+ amount + " * from QuestionBank "
-                + "left join ExamQuestion on QuestionBank.question_id = ExamQuestion.question_id and exam_id = ? "
-                + "WHERE ExamQuestion.question_id IS NULL and subject_id = ? and userID IS NULL ORDER BY NEWID()";
+    public List<QuestionBank> getRandomQuestByAmountND(int amount, int subjectID, int exam_id, int userID) {
+        String query;
         List<QuestionBank> list = new ArrayList<>();
-        try (Connection con = getConnection()) {
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1, exam_id);
-            ps.setInt(2, subjectID);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                QuestionBank qb = new QuestionBank();
-                qb.setQuestionId(rs.getInt(1));
-                qb.setSubjectId(rs.getInt(2));
-                qb.setQuestionContext(rs.getString(3));
-                qb.setChoice1(rs.getString(4));
-                qb.setChoice2(rs.getString(5));
-                qb.setChoice3(rs.getString(6));
-                qb.setChoiceCorrect(rs.getString(7));
-                qb.setExplain(rs.getString(8));
-                qb.setQuestionImg(rs.getString(9));
-                qb.setExplainImg(rs.getString(10));
-                qb.setUserID(rs.getInt(11));
-                list.add(qb);
+        if(userID != 1){
+            query = "select top "+ amount + " * from QuestionBank "
+                    + "left join ExamQuestion on QuestionBank.question_id = ExamQuestion.question_id and exam_id = ? "
+                    + "WHERE ExamQuestion.question_id IS NULL and subject_id = ? and (userID = 1 or userID = ?) ORDER BY NEWID()";
+            try (Connection con = getConnection()) {
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setInt(1, exam_id);
+                ps.setInt(2, subjectID);
+                ps.setInt(3, userID);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    QuestionBank qb = new QuestionBank();
+                    qb.setQuestionId(rs.getInt(1));
+                    qb.setSubjectId(rs.getInt(2));
+                    qb.setQuestionContext(rs.getString(3));
+                    qb.setChoice1(rs.getString(4));
+                    qb.setChoice2(rs.getString(5));
+                    qb.setChoice3(rs.getString(6));
+                    qb.setChoiceCorrect(rs.getString(7));
+                    qb.setExplain(rs.getString(8));
+                    qb.setQuestionImg(rs.getString(9));
+                    qb.setExplainImg(rs.getString(10));
+                    qb.setUserID(rs.getInt(11));
+                    list.add(qb);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
             }
-        } catch (Exception e) {
-            System.out.println(e);
+        }
+        else{
+            query = "select top "+ amount + " * from QuestionBank "
+                    + "left join ExamQuestion on QuestionBank.question_id = ExamQuestion.question_id and exam_id = ? "
+                    + "WHERE ExamQuestion.question_id IS NULL and subject_id = ? and userID = 1 ORDER BY NEWID()";
+            try (Connection con = getConnection()) {
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setInt(1, exam_id);
+                ps.setInt(2, subjectID);
+                ps.setInt(3, userID);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    QuestionBank qb = new QuestionBank();
+                    qb.setQuestionId(rs.getInt(1));
+                    qb.setSubjectId(rs.getInt(2));
+                    qb.setQuestionContext(rs.getString(3));
+                    qb.setChoice1(rs.getString(4));
+                    qb.setChoice2(rs.getString(5));
+                    qb.setChoice3(rs.getString(6));
+                    qb.setChoiceCorrect(rs.getString(7));
+                    qb.setExplain(rs.getString(8));
+                    qb.setQuestionImg(rs.getString(9));
+                    qb.setExplainImg(rs.getString(10));
+                    qb.setUserID(rs.getInt(11));
+                    list.add(qb);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
         return list;
     }
@@ -390,17 +427,21 @@ public class ExamDAO extends DBConnection {
 
     //Get max number of question from subject with userID
     public int getMaxQuestion(int userID, int subjectID) {
-        String query = "select Count(subject_id) from QuestionBank where subject_id = ? and userID is null";
+        String query;
         int sum = 0;
-        try (Connection con = getConnection()) {
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1, subjectID);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                sum += rs.getInt(1);
+        if(userID != 1){
+            query = "select Count(subject_id) from QuestionBank where subject_id = ? and userID = 1";
+            sum = 0;
+            try (Connection con = getConnection()) {
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setInt(1, subjectID);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    sum += rs.getInt(1);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
             }
-        } catch (Exception e) {
-            System.out.println(e);
         }
 
         query = "select Count(subject_id) from QuestionBank where subject_id = ? and userID = ?";
@@ -420,7 +461,7 @@ public class ExamDAO extends DBConnection {
     
     //Get all system question from subject using subject ID
     public List<QuestionBank> getAllSystemQuestionByID(int subjectID) {
-        String query = "select * from QuestionBank where userID is null and subject_id = ?";
+        String query = "select * from QuestionBank where userID = 1 and subject_id = ?";
         List<QuestionBank> list = new ArrayList<>();
         try (Connection con = getConnection()) {
             PreparedStatement ps = con.prepareStatement(query);
@@ -447,7 +488,34 @@ public class ExamDAO extends DBConnection {
         return list;
     }
     
-    //Get all question from user using subject ID, userID
+    public List<QuestionBank> getAllSystemQuestion() {
+        String query = "select * from QuestionBank where userID = 1";
+        List<QuestionBank> list = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                QuestionBank qb = new QuestionBank();
+                qb.setQuestionId(rs.getInt(1));
+                qb.setSubjectId(rs.getInt(2));
+                qb.setQuestionContext(rs.getString(3));
+                qb.setChoice1(rs.getString(4));
+                qb.setChoice2(rs.getString(5));
+                qb.setChoice3(rs.getString(6));
+                qb.setChoiceCorrect(rs.getString(7));
+                qb.setExplain(rs.getString(8));
+                qb.setQuestionImg(rs.getString(9));
+                qb.setExplainImg(rs.getString(10));
+                qb.setUserID(rs.getInt(11));
+                list.add(qb);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+    
+    //Get all question from user using userID
     public List<QuestionBank> getAllUserQuestionByID(int subjectID, int userID) {
         String query = "select * from QuestionBank where userID = ? and subject_id = ?";
         List<QuestionBank> list = new ArrayList<>();
@@ -479,29 +547,32 @@ public class ExamDAO extends DBConnection {
 
     //Get all question from subject using subject ID
     public List<QuestionBank> getAllQuestionByID(int subjectID, int userID) {
-        String query = "select * from QuestionBank where userID is null and subject_id = ?";
+        String query;
         List<QuestionBank> list = new ArrayList<>();
-        try (Connection con = getConnection()) {
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1, subjectID);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                QuestionBank qb = new QuestionBank();
-                qb.setQuestionId(rs.getInt(1));
-                qb.setSubjectId(rs.getInt(2));
-                qb.setQuestionContext(rs.getString(3));
-                qb.setChoice1(rs.getString(4));
-                qb.setChoice2(rs.getString(5));
-                qb.setChoice3(rs.getString(6));
-                qb.setChoiceCorrect(rs.getString(7));
-                qb.setExplain(rs.getString(8));
-                qb.setQuestionImg(rs.getString(9));
-                qb.setExplainImg(rs.getString(10));
-                qb.setUserID(rs.getInt(11));
-                list.add(qb);
+        if(userID != 1){
+            query = "select * from QuestionBank where userID = 1 and subject_id = ?";
+            try (Connection con = getConnection()) {
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setInt(1, subjectID);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    QuestionBank qb = new QuestionBank();
+                    qb.setQuestionId(rs.getInt(1));
+                    qb.setSubjectId(rs.getInt(2));
+                    qb.setQuestionContext(rs.getString(3));
+                    qb.setChoice1(rs.getString(4));
+                    qb.setChoice2(rs.getString(5));
+                    qb.setChoice3(rs.getString(6));
+                    qb.setChoiceCorrect(rs.getString(7));
+                    qb.setExplain(rs.getString(8));
+                    qb.setQuestionImg(rs.getString(9));
+                    qb.setExplainImg(rs.getString(10));
+                    qb.setUserID(rs.getInt(11));
+                    list.add(qb);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
             }
-        } catch (Exception e) {
-            System.out.println(e);
         }
 
         query = "select * from QuestionBank where userID = ? and subject_id = ?";
@@ -533,32 +604,35 @@ public class ExamDAO extends DBConnection {
 
     //Get question that not selected to exam
     public List<QuestionBank> getAllQuestionNotInExam(int subjectID, int userID, int examID) {
-        String query = " select * from QuestionBank "
-                + "left join ExamQuestion on QuestionBank.question_id = ExamQuestion.question_id and exam_id = ? "
-                + "WHERE ExamQuestion.question_id IS NULL and subject_id = ? and userID IS NULL";
+        String query;
         List<QuestionBank> list = new ArrayList<>();
-        try (Connection con = getConnection()) {
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setInt(1, examID);
-            ps.setInt(2, subjectID);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                QuestionBank qb = new QuestionBank();
-                qb.setQuestionId(rs.getInt(1));
-                qb.setSubjectId(rs.getInt(2));
-                qb.setQuestionContext(rs.getString(3));
-                qb.setChoice1(rs.getString(4));
-                qb.setChoice2(rs.getString(5));
-                qb.setChoice3(rs.getString(6));
-                qb.setChoiceCorrect(rs.getString(7));
-                qb.setExplain(rs.getString(8));
-                qb.setQuestionImg(rs.getString(9));
-                qb.setExplainImg(rs.getString(10));
-                qb.setUserID(rs.getInt(11));
-                list.add(qb);
+        if(userID != 1){
+            query = " select * from QuestionBank "
+                    + "left join ExamQuestion on QuestionBank.question_id = ExamQuestion.question_id and exam_id = ? "
+                    + "WHERE ExamQuestion.question_id IS NULL and subject_id = ? and userID = 1";
+            try (Connection con = getConnection()) {
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setInt(1, examID);
+                ps.setInt(2, subjectID);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    QuestionBank qb = new QuestionBank();
+                    qb.setQuestionId(rs.getInt(1));
+                    qb.setSubjectId(rs.getInt(2));
+                    qb.setQuestionContext(rs.getString(3));
+                    qb.setChoice1(rs.getString(4));
+                    qb.setChoice2(rs.getString(5));
+                    qb.setChoice3(rs.getString(6));
+                    qb.setChoiceCorrect(rs.getString(7));
+                    qb.setExplain(rs.getString(8));
+                    qb.setQuestionImg(rs.getString(9));
+                    qb.setExplainImg(rs.getString(10));
+                    qb.setUserID(rs.getInt(11));
+                    list.add(qb);
+                }
+            } catch (Exception e) {
+                System.out.println(e);
             }
-        } catch (Exception e) {
-            System.out.println(e);
         }
 
         query = " select * from QuestionBank "

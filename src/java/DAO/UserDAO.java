@@ -15,9 +15,11 @@ import java.sql.ResultSet;
  * @author ADMIN
  */
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import model.Exam;
+import model.Payment;
 
 public class UserDAO extends DBConnection {
 
@@ -175,7 +177,9 @@ public class UserDAO extends DBConnection {
                     String dob = rs.getString("dob");
                     Boolean Ban = rs.getBoolean("is_banned");
 
-                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob, Ban);
+                    Users us = new Users(iD, usernames, fullname, 
+                            passwords, emails, role, avatarURL, 
+                            balance, phone, address, dob, Ban);
                     users.add(us);
             }
         } catch (Exception e) {
@@ -316,7 +320,7 @@ public class UserDAO extends DBConnection {
 
         try {
             conn = DBConnection.getConnection();
-            String sql = "DBCC CHECKIDENT (Users, RESEED, 0); DBCC CHECKIDENT (Users, RESEED); INSERT INTO Users (username, password, email, roles, avatar) VALUES (?, ?, ?, ?, ?)";
+            String sql = "DBCC CHECKIDENT (Users, RESEED, 0); DBCC CHECKIDENT (Users, RESEED); INSERT INTO Users (username, password, email, roles, avatar, balance) VALUES (?, ?, ?, ?, ?, 0)";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
@@ -375,6 +379,100 @@ public class UserDAO extends DBConnection {
         }
 
         return role;
+    }
+    
+    public void createPayment(int userID, String paymentCode, String bank, int amount, String paymentDate){
+        String query = "DBCC CHECKIDENT (Payment, RESEED, 0); DBCC CHECKIDENT (Payment, RESEED); insert into Payment(userID, payment_code, bank, amount, payment_date)"
+                + "values(?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userID);
+            ps.setString(2, paymentCode);
+            ps.setString(3, bank);
+            ps.setInt(4, amount);
+            ps.setString(5, paymentDate);
+            try {
+                ps.executeUpdate();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (Exception err) {
+            System.out.println(err);
+        }
+    }
+    
+    public void addMoneyToBalance(int amount, int userID){
+        String query = "Update Users set balance = balance + ? where userID = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, amount);
+            ps.setInt(2, userID);
+            try {
+                ps.executeUpdate();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (Exception err) {
+            System.out.println(err);
+        }
+    }
+    
+    public void subtractMoneyToBalance(int amount, int userID){
+        String query = "Update Users set balance = balance - ? where userID = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, amount);
+            ps.setInt(2, userID);
+            try {
+                ps.executeUpdate();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (Exception err) {
+            System.out.println(err);
+        }
+    }
+    
+    public List<Payment> getAllPaymentByID(int userID) {
+        String query = "select * from Payment where userID = ?";
+        List<Payment> paymentList = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Payment payment = new Payment();
+                payment.setPaymentID(rs.getInt(1));
+                payment.setUserID(rs.getInt(2));
+                payment.setAmount(rs.getInt(3));
+                payment.setPaymentDate(rs.getString(4));
+                payment.setPaymentCode(rs.getString(5));
+                payment.setBank(rs.getString(6));
+                paymentList.add(payment);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return paymentList;
+    }
+    
+    public List<Payment> getAllPayment() {
+        String query = "select * from Payment";
+        List<Payment> paymentList = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Payment payment = new Payment();
+                payment.setPaymentID(rs.getInt(1));
+                payment.setUserID(rs.getInt(2));
+                payment.setAmount(rs.getInt(3));
+                payment.setPaymentDate(rs.getString(4));
+                payment.setPaymentCode(rs.getString(5));
+                payment.setBank(rs.getString(6));
+                paymentList.add(payment);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return paymentList;
     }
 
     private void closeResources(Connection conn, PreparedStatement stmt, ResultSet rs) {

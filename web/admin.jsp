@@ -56,20 +56,30 @@
                     <a href="Home" class="nav-item nav-link tag active">Trang Chủ</a>
                     <a href="forum.jsp" class="nav-item nav-link tag">Diễn Đàn</a>
                     <a href="teacher.jsp" class="nav-item nav-link tag">Kiểm Tra</a>
-                </div>
+                    <a href="schedule.jsp" class="nav-item nav-link tag">Thời gian biểu</a>
                 <%
                     if(session.getAttribute("currentUser") == null){
                 %>
-                <a href="login.jsp" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block" style="color:white;">Tham gia ngay<i class="fa fa-arrow-right ms-3"></i></a> 
-                <%
-                    }
-                    else{
-                    Users user = (Users)session.getAttribute("currentUser");
-                    String role;
-                    if(user.getRole() == 1) role = "Admin";
-                    else if(user.getRole() == 2) role = "Lecture";
-                    else role = "Student";
-                %>
+                <a href="login.jsp" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Tham gia ngay<i class="fa fa-arrow-right ms-3"></i></a> 
+                    <%
+                        }
+                        else{
+                        Users user = (Users)session.getAttribute("currentUser");
+                        TeacherRequest requests = new AdminDAO().getRequestByUserID(user.getUserID());
+                        Subjects subject = new Subjects();
+                        if(requests != null)
+                            subject = new ExamDAO().getSubjectByID(requests.getSubjectID());
+                        String role;
+                        if(user.getRole() == 1) role = "Admin";
+                        else if(user.getRole() == 2) role = "Giáo viên";
+                        else role = "Học sinh";
+                    %>
+                <a href="recharge.jsp" class="nav-item nav-link tag">
+                    <i class="fas fa-coins"></i>
+                    <span id="user-balance"><%=user.getBalance()%></span> 
+                    <i class="fas fa-plus-circle"></i> 
+                </a>
+                </div>
             <li class="nav-item dropdown pe-3 no">
                 <style>
                     .no{
@@ -82,28 +92,40 @@
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-            <li class="dropdown-header">
-              <h6><%=user.getUsername()%></h6>
-              <span><%=role%></span>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
+                        <li class="dropdown-header">
+                            <h6><%=user.getUsername()%></h6>
+                            <span><%=role%> <%if(user.getRole() == 2){%>môn <%=subject.getSubjectName()%><% }%></span>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <%
+                        if(user.getRole() == 1){
+                        %>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="admin.jsp">
+                                <i class="bi bi-person"></i>
+                                <span>Quản lý</span>
+                            </a>
+                        </li>
+                        <%
+                            }
+                        %>
 
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="profile.jsp">
-                <i class="bi bi-person"></i>
-                <span>My Profile</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item d-flex align-items-center" href="logout">
-                <i class="bi bi-box-arrow-right"></i>
-                <span>Sign Out</span>
-              </a>
-            </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="profile.jsp">
+                                <i class="bi bi-person"></i>
+                                <span>Thông tin</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="logout">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Đăng xuất</span>
+                            </a>
+                        </li>
 
-          </ul><!-- End Profile Dropdown Items -->
+                    </ul><!-- End Profile Dropdown Items -->
         </li>
                 <%
                     }
@@ -127,25 +149,25 @@
           <span>Tất cả người dùng</span>
         </a>
       </li>
-
-      <li class="nav-item">
-          <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="notification.jsps">
-          <i class="bi bi-megaphone"></i><span>Thông báo</span></i>
-        </a>
         
       </li><!-- End Forms Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+        <a class="nav-link collapsed" href="view-all-payment.jsp">
           <i class="bi bi-gem"></i><span>Giao dịch trong hệ thống</span>
         </a>
       </li><!-- End Tables Nav -->
       <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-journal-check"></i><span>Quản lí kiểm tra</span><i class="bi bi-chevron-down ms-auto"></i>
+        <a class="nav-link collapsed" href="view-all-exam.jsp">
+          <i class="bi bi-journal-check"></i><span>Quản lí kiểm tra</span>
         </a>
-        
-      </li><!-- End Icons Nav -->
+      </li>
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="view-all-question.jsp">
+          <i class="bi bi-journal-check"></i><span>Quản lí câu hỏi</span>
+        </a>
+      </li>
+      <!-- End Icons Nav -->
     </ul>
   </aside><!-- End Sidebar-->
   <main id="main" class="main">

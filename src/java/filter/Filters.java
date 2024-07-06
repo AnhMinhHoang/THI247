@@ -190,6 +190,21 @@ public class Filters implements Filter {
         }else if (url.contains("teacher.jsp") && session.getAttribute("currentUser") == null) {
             httpResponse.sendRedirect("login.jsp");
             return;
+        }else if (url.contains("view-all-user.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        }else if (url.contains("view-all-question.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        }else if (url.contains("view-all-exam.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        }else if (url.contains("view-all-payment.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        }else if (url.contains("recharge.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
         }
         
         

@@ -104,6 +104,8 @@ if(session.getAttribute("subjectID") != null){
                 </div>
             </div>
             <br>
+            <label for="price">Giá bài kiểm tra(0-20):</label>
+            <input type="number" max="20" min="0" id="price" name="price" value="0" required>
 
             <!-- Display questions from database -->
             <h2>Select Questions:</h2>
@@ -172,6 +174,8 @@ if(session.getAttribute("subjectID") != null){
                                     </div>
                                 </div>
                             </div>
+                            <label for="price">Giá bài kiểm tra(0-20):</label>
+                            <input type="number" max="20" min="0" id="price" name="price" value="0" required>
                             <label for="numQuestions">Số lượng câu hỏi(1-<%=max%>):</label>
                             <input type="number" id="numQuestions" name="numQuestions" min="1" max="<%=max%>" value="1">
                             <%

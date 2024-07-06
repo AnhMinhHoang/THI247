@@ -5,6 +5,7 @@
 if(session.getAttribute("currentUser") != null){
 Users user = (Users)session.getAttribute("currentUser");
 if(user.getRole() == 2){
+TeacherRequest requests = new AdminDAO().getRequestByUserID(user.getUserID());
 %>
 <br><!-- comment -->
 
@@ -19,7 +20,7 @@ if(user.getRole() == 2){
                 <div class="course-item bg-light">
                     <div class="position-relative overflow-hidden"></div>
                     <div class="text-center p-4 pb-0">
-                        <a href="choosesubject.jsp" style="text-decoration: none">
+                        <a href="ChangeSubject?subjectID=<%=requests.getSubjectID()%>" style="text-decoration: none">
                             <h3 class="mb-0">Tạo bài kiểm tra</h3>
                         </a>                           
                     </div>

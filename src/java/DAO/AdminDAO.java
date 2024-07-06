@@ -9,12 +9,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import model.Exam;
 import model.TeacherRequest;
-import model.Tests;
+import model.Users;
 
 /**
  *
@@ -112,6 +110,39 @@ public class AdminDAO extends DBConnection{
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+    
+    public List<Users> getAllStatusUser(boolean isBanned){
+        String query = "SELECT * FROM Users where is_banned = ?";
+        List<Users> users = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setBoolean(1, isBanned);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int iD = rs.getInt("userID");
+                    String usernames = rs.getString("username");
+                    String fullname = rs.getString("fullname");
+                    String emails = rs.getString("email");
+                    int role = rs.getInt("roles");
+                    String avatarURL = rs.getString("avatar");
+                    int balance = rs.getInt("balance");
+                    String passwords = rs.getString("password");
+
+                    String phone = rs.getString("phone");
+                    String address = rs.getString("localaddress");
+                    String dob = rs.getString("dob");
+                    Boolean Ban = rs.getBoolean("is_banned");
+
+                    Users us = new Users(iD, usernames, fullname, 
+                            passwords, emails, role, avatarURL, 
+                            balance, phone, address, dob, Ban);
+                    users.add(us);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return users;
     }
     
     public static void main(String[] args) {

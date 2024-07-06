@@ -63,7 +63,7 @@ public class SubmitTest extends HttpServlet {
         new StudentExamDAO().createResult(user.getUserID(), examID, finalScore, rightAnswer, totalQuestion, testID);
         Tests test = new StudentExamDAO().getTestByTestID(testID);
         
-        int resultID = new StudentExamDAO().getLastestExam().getResultID();
+        int resultID = new StudentExamDAO().getLastestResult().getResultID();
         session.setAttribute("resultID", resultID);
         session.setAttribute("examID", examID);
         session.setAttribute("test", test);

@@ -11,6 +11,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.Users;
 
 /**
  *
@@ -30,9 +32,12 @@ public class DeleteExam extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
         int examID = Integer.parseInt(request.getParameter("examID"));
         new ExamDAO().deleteExamByExamID(examID);
-        response.sendRedirect("ViewAllExamTeacher.jsp");
+        Users user = (Users)session.getAttribute("currentUser");
+        if(user.getRole() == 1) response.sendRedirect("view-all-exam.jsp");
+        else response.sendRedirect("ViewAllExamTeacher.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

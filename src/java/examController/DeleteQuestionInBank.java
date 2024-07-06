@@ -42,7 +42,8 @@ public class DeleteQuestionInBank extends HttpServlet {
         new ExamDAO().deleteQuestion(questionID);
         List<QuestionBank> list = new ExamDAO().getAllUserQuestionByID(subjectID, user.getUserID());
         session.setAttribute("questionList", list);
-        response.sendRedirect("viewuserquestion.jsp");
+        if(user.getRole() == 1) response.sendRedirect("view-all-question.jsp");
+        else response.sendRedirect("viewuserquestion.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
