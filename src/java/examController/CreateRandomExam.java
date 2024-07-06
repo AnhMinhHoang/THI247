@@ -36,6 +36,8 @@ public class CreateRandomExam extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         int number = Integer.parseInt(request.getParameter("numQuestions"));
         int subjectID = Integer.parseInt(request.getParameter("subjectID"));
+        int examHours = Integer.parseInt(request.getParameter("examHours"));
+        int examMinutes = Integer.parseInt(request.getParameter("examMinutes"));
         String examName = request.getParameter("examName");
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("currentUser");
@@ -46,8 +48,8 @@ public class CreateRandomExam extends HttpServlet {
             request.setAttribute("message", "Vượt quá số câu hỏi có trong ngân hàng câu hỏi, số câu hỏi của môn "+new ExamDAO().getSubjectByID(subjectID).getSubjectName()+" tối đa là: "+num);
             request.getRequestDispatcher("create-exam.jsp").forward(request, response);
         } else {
-
-            new ExamDAO().addExam(examName, user.getUserID(), subjectID);
+            int examTime = (examHours * 3600) + (examMinutes * 60);
+            new ExamDAO().addExam(examName, user.getUserID(), subjectID, examTime);
             int examID = new ExamDAO().getLastestExam().getExamID();
             for (QuestionBank list : lists) {
                 new ExamDAO().addQuestionToExam(list.getQuestionId(), examID);

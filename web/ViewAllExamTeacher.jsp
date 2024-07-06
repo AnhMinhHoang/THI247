@@ -46,6 +46,7 @@ List<Exam> exams = new ExamDAO().getAllExamByUserID(user.getUserID());
                     <th style="text-align: center">Bài kiểm tra</th>
                     <th style="text-align: center">Môn học</th>
                     <th style="text-align: center">Số câu hỏi</th>
+                    <th style="text-align: center">Thời gian làm bài</th>
                     <th style="text-align: center" data-type="date" data-format="YYYY/DD/MM">Ngày đăng</th>
                     <th style="padding-left: 33px">Tác vụ</th>
                   </tr>
@@ -58,12 +59,14 @@ List<Exam> exams = new ExamDAO().getAllExamByUserID(user.getUserID());
                     String subjectName = new ExamDAO().getSubjectByID(exam.getSubjectID()).getSubjectName();
                     int examAmount = new ExamDAO().getQuestionAmount(exam.getExamID());
                     String modalId = "threadModal" + i;
-                    
+                    int hour = exam.getTimer() / 3600;
+                    int minute = (exam.getTimer() % 3600) / 60;
                 %>
                   <tr>
                     <td style="text-align: center"><p><%=exam.getExamName()%></p></td>
                     <td style="text-align: center"><%=subjectName%></td>
                     <td style="text-align: center"><%=examAmount%></td>
+                    <td style="text-align: center"><%if(hour != 0){%><%=hour%>h<% } %><%if(minute != 0){%> <%=minute%>p<% } %></td>
                     <td style="text-align: center"><%=exam.getCreateDate()%></td>
                     <td style="display: flex; flex-direction: row; text-align: center">
                         <form action="PassDataExamUpdate" method="POST">
@@ -131,8 +134,6 @@ List<Exam> exams = new ExamDAO().getAllExamByUserID(user.getUserID());
 
   </main><!-- End #main -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
   <!-- Vendor JS Files -->
   <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -152,3 +153,5 @@ List<Exam> exams = new ExamDAO().getAllExamByUserID(user.getUserID());
         }
     %>
   <jsp:include page="footer.jsp"></jsp:include>
+  
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

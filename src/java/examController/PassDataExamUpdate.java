@@ -31,7 +31,8 @@ public class PassDataExamUpdate extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
-        session.setAttribute("examID", Integer.parseInt(request.getParameter("examID")));
+        int examID = Integer.parseInt(request.getParameter("examID"));
+        session.setAttribute("examID", examID);
         response.sendRedirect("viewallquestion.jsp");
     }
 

@@ -2,6 +2,7 @@ package OTP;
 
 import DAO.DBConnection;
 import DAO.UserDAO;
+import Email.EmailSender;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -130,25 +131,25 @@ public class OTP extends DBConnection {
             e.printStackTrace();
         }
     }
-//     public static void requestOtpReset(String email) {
-//        String otp = generateOTP();
-//        UserDAO userDAO = new UserDAO();
-//        int userId = userDAO.getUserIdByEmail(email); // Assuming UserDAO is correctly implemented
-//
-//        if (userId != -1) {
-//            Timestamp expiryTime = new Timestamp(System.currentTimeMillis() + (5 * 60 * 1000));
-//            saveOtpToDatabase(userId, otp, expiryTime, false);
-//
-//            
-//            EmailSender.sendOtpToEmail(email, otp);
-//            System.out.println("Password reset link sent to " + otp);
-//        } else {
-//            System.out.println("User with email " + otp + " not found.");
-//        }
-//    }
-//
-//     public static void main(String[] args) {
-//        String to = "sonhuynh22002@gmail.com";
-//        requestOtpReset(to);
-//    }
+     public static void requestOtpReset(String email) {
+        String otp = generateOTP();
+        UserDAO userDAO = new UserDAO();
+        int userId = userDAO.getUserIdByEmail(email); // Assuming UserDAO is correctly implemented
+
+        if (userId != -1) {
+            Timestamp expiryTime = new Timestamp(System.currentTimeMillis() + (5 * 60 * 1000));
+            saveOtpToDatabase(userId, otp, expiryTime, false);
+
+            
+            EmailSender.sendOtpToEmail(email, otp);
+            System.out.println("Password reset link sent to " + otp);
+        } else {
+            System.out.println("User with email " + otp + " not found.");
+        }
+    }
+
+     public static void main(String[] args) {
+        String to = "sonhuynh22002@gmail.com";
+        requestOtpReset(to);
+    }
 }

@@ -2318,6 +2318,19 @@ textarea.form-control-lg{
     border-color:#06BBCC
 }
 
+.btn-ban{
+    color: white;
+    background-color:red;
+    border-color:red
+}
+
+
+.button-trang{
+    color: white;
+    background-color:#06BBCC;
+    border-color:#06BBCC;
+}
+
 .btn-xoa{
     background-color: red;
     color: red;

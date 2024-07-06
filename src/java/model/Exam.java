@@ -14,24 +14,18 @@ public class Exam {
     private String createDate;
     private int userID;
     private int subjectID;
+    private int timer;
 
     public Exam() {
     }
 
-    public Exam(int examID, String examName, String createDate, int userID, int subjectID) {
+    public Exam(int examID, String examName, String createDate, int userID, int subjectID, int timer) {
         this.examID = examID;
         this.examName = examName;
         this.createDate = createDate;
         this.userID = userID;
         this.subjectID = subjectID;
-    }
-
-    public int getSubjectID() {
-        return subjectID;
-    }
-
-    public void setSubjectID(int subjectID) {
-        this.subjectID = subjectID;
+        this.timer = timer;
     }
 
     public int getExamID() {
@@ -66,8 +60,24 @@ public class Exam {
         this.userID = userID;
     }
 
+    public int getSubjectID() {
+        return subjectID;
+    }
+
+    public void setSubjectID(int subjectID) {
+        this.subjectID = subjectID;
+    }
+
+    public int getTimer() {
+        return timer;
+    }
+
+    public void setTimer(int timer) {
+        this.timer = timer;
+    }
+
     @Override
     public String toString() {
-        return "Exam{" + "examID=" + examID + ", examName=" + examName + ", createDate=" + createDate + ", userID=" + userID + ", subjectID=" + subjectID + '}';
+        return "Exam{" + "examID=" + examID + ", examName=" + examName + ", createDate=" + createDate + ", userID=" + userID + ", subjectID=" + subjectID + ", timer=" + timer + '}';
     }
 }

@@ -62,6 +62,7 @@ public class NewPost extends HttpServlet {
                 response.sendRedirect("forum.jsp");
             }
         }
+        
         if(check){
             new ForumDAO().createNewPost(user.getUserID(), postTitle, postContext, null);
             response.sendRedirect("forum.jsp");

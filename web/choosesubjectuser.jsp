@@ -29,7 +29,7 @@ List<Subjects> subjects = new ExamDAO().getAllSubject();
                         <div class="position-relative overflow-hidden">
                             <img class="img-fluid" src="img/course-1.jpg" alt="">
                             <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
-                                <a href="ChangeSubjectUser?subjectID=<%=subject.getSubjectID()%>" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 30px;">Tạo bài kiểm tra</a>
+                                <a href="ChangeSubjectUser?subjectID=<%=subject.getSubjectID()%>" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 30px;">Xem câu hỏi</a>
                             </div>
                         </div>
                         <div class="text-center p-4 pb-0">
@@ -47,4 +47,4 @@ List<Subjects> subjects = new ExamDAO().getAllSubject();
     <!-- Courses End -->
     <jsp:include page="footer.jsp"></jsp:include>
     <!-- Back to Top -->
-    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

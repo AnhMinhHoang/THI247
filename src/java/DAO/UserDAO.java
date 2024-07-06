@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DAO;
 
 import model.Users;
@@ -14,6 +10,8 @@ import java.sql.ResultSet;
  * @author ADMIN        
  */
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO extends DBConnection{
 
@@ -103,7 +101,7 @@ public class UserDAO extends DBConnection{
         return user;
     }
 
-    public static int getUserIdByEmail(String email) {
+    public int getUserIdByEmail(String email) {
     int userId = -1; // Default value if user_id is not found
 
     String query = "SELECT userID FROM Users WHERE email = ?";
@@ -249,7 +247,7 @@ public class UserDAO extends DBConnection{
 
         try {
             conn = DBConnection.getConnection();
-            String sql = "INSERT INTO users (username, password, email, roles, avatar) VALUES (?, ?, ?, ?, ?)";
+            String sql = "DBCC CHECKIDENT (Users, RESEED, 0); DBCC CHECKIDENT (Users, RESEED); INSERT INTO Users (username, password, email, roles, avatar) VALUES (?, ?, ?, ?, ?)";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
@@ -325,7 +323,37 @@ public class UserDAO extends DBConnection{
             System.err.println("Error closing resources: " + e.getMessage());
         }
     }
+public String getEmailByUserId(int userId) {
+        String email = null;
+        String query = "SELECT email FROM Users WHERE userID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                email = rs.getString("email");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return email;
+    }
 
+    
+    public List<Integer> getAllUserIds() {
+        List<Integer> userIds = new ArrayList<>();
+        String query = "SELECT userID FROM Users";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                userIds.add(rs.getInt("userID"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userIds;
+    }
     /* public static void main(String[] args) {
         UserDAO userDAO = new UserDAO();
 
@@ -350,8 +378,44 @@ public class UserDAO extends DBConnection{
             System.out.println("Only admin can register new admins");
         }
     }*/
-       public static void main(String[] args) {
-        // Địa chỉ email cần tìm userId
-        new UserDAO().checkLogin("student1@gmail.com", "student123");
-    }
+//       public static void main(String[] args) {
+//        // Địa chỉ email cần tìm userId
+//        new UserDAO().checkLogin("student1@gmail.com", "student123");
+//    }
+    public static void main(String[] args) {
+//        UserDAO userDAO = new UserDAO();
+//
+//        // Kiểm tra phương thức checkLogin
+//        String loginResult = userDAO.checkLogin("student1@gmail.com", "student123");
+//        System.out.println("Login result: " + loginResult);
+//
+//        // Kiểm tra phương thức findByEmail
+//        Users userByEmail = userDAO.findByEmail("student1@gmail.com");
+//        if (userByEmail != null) {
+//            System.out.println("User found by email: " + userByEmail.getUsername());
+//        } else {
+//            System.out.println("User not found by email.");
+//        }
+//
+//        // Kiểm tra phương thức getUserIdByEmail
+//        int userId = userDAO.getUserIdByEmail("student1@gmail.com");
+//        System.out.println("User ID: " + userId);
+//
+//        // Kiểm tra phương thức findByUserID
+//        Users userById = userDAO.findByUserID(userId);
+//        if (userById != null) {
+//            System.out.println("User found by ID: " + userById.getUsername());
+//        } else {
+//            System.out.println("User not found by ID.");
+//        }
+//
+//        // Kiểm tra phương thức registerUser
+//        boolean registrationResult = userDAO.registerUser("newuser", "password123", "newuser@example.com", false);
+//        System.out.println("User registration: " + (registrationResult ? "successful" : "failed"));
+//
+//        // Kiểm tra phương thức getUserType
+//        int userType = userDAO.getUserType("newuser@example.com");
+//        System.out.println("User type: " + userType);
+//    }
+}
 }

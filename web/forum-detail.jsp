@@ -203,8 +203,8 @@
             height: 50px;
         }
         #image-preview {
-            max-width: 400px; /* Adjust max width as needed */
-            max-height: 400px; /* Adjust max height as needed */
+            max-width: 50%; /* Adjust max width as needed */
+            max-height: 50%; /* Adjust max height as needed */
         }
 
         #image-preview-wrapper {
@@ -375,7 +375,7 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                         <%
                                         if(forum.getPostImg() != null){
                                         %>
-                                        <img src="<%=forum.getPostImg()%>" height="300px" width="700px"/>
+                                        <img src="<%=forum.getPostImg()%>" height="50%" width="50%"/>
                                         <%
                                             }
                                         %>
@@ -580,7 +580,7 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                         <%
                                                 if(cmt.getCommentURL() != null){
                                         %>
-                                        <img src="<%=cmt.getCommentURL()%>" width="700" height="400"/>
+                                        <img src="<%=cmt.getCommentURL()%>" width="50%" height="50%"/>
                                         <%
                                             }
                                         %>
@@ -620,7 +620,7 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                 <%
                                                 if(cmt.getCommentURL() != null){
                                                 %>
-                                                <img src="<%=cmt.getCommentURL()%>" width="700" height="400"/>
+                                                <img src="<%=cmt.getCommentURL()%>" width="50%" height="50%"/>
                                                 <%
                                                     }
                                                 %>
@@ -702,6 +702,8 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
     </div>
 </div>
 <jsp:include page="footer.jsp"></jsp:include>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 <script>
     var textarea = document.getElementById("submit-comment");
     textarea.addEventListener("input", function () {
