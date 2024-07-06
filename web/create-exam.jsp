@@ -104,8 +104,14 @@ if(session.getAttribute("subjectID") != null){
                 </div>
             </div>
             <br>
-            <label for="price">Giá bài kiểm tra(0-20):</label>
-            <input type="number" max="20" min="0" id="price" name="price" value="0" required>
+            <label class="form-label">Giá tiền bài kiểm tra</label>
+                        <select class="form-select" id="validationDefault04" name="subject" required>
+                            <option selected disabled>Choose...</option>
+                            <option value="0">Miễn phí</option>
+                            <option value="10">10 coin</option>
+                            <option value="20">20 coin</option>
+                            <option value="30">30 coin</option>                   
+                        </select>
 
             <!-- Display questions from database -->
             <h2>Select Questions:</h2>
@@ -141,9 +147,6 @@ if(session.getAttribute("subjectID") != null){
             </button>
             <input type="hidden" name="subjectID" value="<%=subjectID%>">
             <button type="submit">Create Exam</button>
-        </form>
-        <form action="choosesubject.jsp">
-            <button type="submit">Trở về</button>
         </form>
 
         <div class="modal fade" id="threadModal" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">

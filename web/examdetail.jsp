@@ -47,6 +47,24 @@
         input[type="submit"]:hover {
             background-color: #45a049;
         }
+        
+        #navigation ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #navigation li {
+            margin-bottom: 5px;
+        }
+
+        #navigation a {
+            text-decoration: none;
+            color: #4CAF50;
+        }
+
+        #navigation a:hover {
+            text-decoration: underline;
+        }
 
 
     </style>
@@ -66,6 +84,13 @@ for (StudentChoice studentChoice : studentChoices) {
 }
 %>
 <body>
+    <div id="navigation">
+        <ul>
+            <% for(int i = 0; i < qbs.size(); i++) { %>
+                <li><a href="#question<%=i%>">Question <%=i + 1%></a></li>
+            <% } %>
+        </ul>
+    </div>
     <div style="position: sticky; top: 100px; text-align: center; font-size: 30px">
         <span id="timer">00:00</span>
     </div>
@@ -89,7 +114,7 @@ for (StudentChoice studentChoice : studentChoices) {
                 Collections.shuffle(choices, new Random(seed + i));
                 number++;
             %>
-            <fieldset>
+            <fieldset id="question<%=number%>">
                 <p style="overflow-wrap:break-word; font-weight: bold">Câu <%=number + 1%>: <%=qb.getQuestionContext()%></p>
                 <input type="hidden" name="question<%=number%>" id="question<%=number%>" value="<%=qb.getQuestionId()%>"/>
                 <%
