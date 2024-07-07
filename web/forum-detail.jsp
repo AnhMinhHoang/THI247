@@ -622,7 +622,7 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
                                                 >
                                                 <div class="modal-dialog modal-lg" role="document">
                                                     <div class="modal-content">
-                                                        <form action="NewReport" method="POST" enctype="multipart/form-data">
+                                                        <form action="NewReport" id="reportForm" method="POST" enctype="multipart/form-data">
                                                             <input type="hidden" name="otherUserID"value="<%=user.getUserID()%>" />
                                                             <div class="modal-header d-flex align-items-center bg-primary text-white">
                                                                 <h6 class="modal-title mb-0" id="threadModalLabel">
@@ -878,6 +878,22 @@ Users user = new UserDAO().findByUserID(forum.getUserID());
             // Toggle required attribute
             document.getElementById('thread-detail').required = anyChecked;
         });
+    });
+    document.getElementById('reportForm').addEventListener('submit', function (event) {
+        var checkboxes = document.querySelectorAll('input[name="reasons"]');
+        var isChecked = false;
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                isChecked = true;
+                break;
+            }
+        }
+
+        if (!isChecked) {
+            alert('Vui lòng chọn ít nhất một lý do báo cáo.');
+            event.preventDefault(); // Ngăn chặn việc nộp biểu mẫu
+        }
     });
 </script>
 <script>

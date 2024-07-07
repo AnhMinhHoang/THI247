@@ -77,7 +77,6 @@ public class ReportDAO extends DBConnection {
                 String reportImg = rs.getString("report_img");
                 int reasonId = rs.getInt("reason_id");
                 String reasonName = rs.getString("reason_name");
-
                 Report report = findReportById(reports, reportId);
                 if (report == null) {
                     report = new Report(userId, userReportedId, reportContext, reportDate, reportImg);
@@ -148,55 +147,34 @@ public class ReportDAO extends DBConnection {
         return null;
     }
 
-    // Cập nhật báo cáo
-    public void updateReport(int reportId, int userID, int userReportedID, List<Integer> reasonIds, String reportContext, String reportIMG) {
-        String updateReportQuery = "UPDATE Report SET userID=?, user_reported_id=?, report_context=?, report_img=? WHERE report_id=?";
+   // Lấy tất cả các lý do của báo cáo dựa trên reportId
+public List<ReportReason> getAllReasonsById(int reportId) {
+    List<ReportReason> reasons = new ArrayList<>();
 
-        String deleteReasonsQuery = "DELETE FROM ReportReasonMap WHERE report_id=?";
-        String insertReasonsQuery = "INSERT INTO ReportReasonMap (report_id, reason_id) VALUES (?, ?)";
+    String query = "SELECT rr.reason_id, rr.reason_name " +
+                   "FROM ReportReason rr " +
+                   "JOIN ReportReasonMap rrm ON rr.reason_id = rrm.reason_id " +
+                   "WHERE rrm.report_id = ?";
 
-        try (Connection conn = getConnection(); PreparedStatement psUpdateReport = conn.prepareStatement(updateReportQuery); PreparedStatement psDeleteReasons = conn.prepareStatement(deleteReasonsQuery); PreparedStatement psInsertReasons = conn.prepareStatement(insertReasonsQuery)) {
+    try (Connection conn = getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            psUpdateReport.setInt(1, userID);
-            psUpdateReport.setInt(2, userReportedID);
-            psUpdateReport.setString(3, reportContext);
-            psUpdateReport.setString(4, reportIMG);
-            psUpdateReport.setInt(5, reportId);
+        stmt.setInt(1, reportId);
 
-            psUpdateReport.executeUpdate();
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                int reasonId = rs.getInt("reason_id");
+                String reasonName = rs.getString("reason_name");
 
-            psDeleteReasons.setInt(1, reportId);
-            psDeleteReasons.executeUpdate();
-
-            for (int reasonId : reasonIds) {
-                psInsertReasons.setInt(1, reportId);
-                psInsertReasons.setInt(2, reasonId);
-                psInsertReasons.addBatch();
+                ReportReason reason = new ReportReason(reasonId, reasonName);
+                reasons.add(reason);
             }
-            psInsertReasons.executeBatch();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
 
-    // Xóa báo cáo
-    public void deleteReport(int reportId) {
-        String deleteReportQuery = "DELETE FROM Report WHERE report_id=?";
-        String deleteReasonsQuery = "DELETE FROM ReportReasonMap WHERE report_id=?";
+    return reasons;
+}
 
-        try (Connection conn = getConnection(); PreparedStatement psDeleteReport = conn.prepareStatement(deleteReportQuery); PreparedStatement psDeleteReasons = conn.prepareStatement(deleteReasonsQuery)) {
-
-            psDeleteReport.setInt(1, reportId);
-            psDeleteReport.executeUpdate();
-
-            psDeleteReasons.setInt(1, reportId);
-            psDeleteReasons.executeUpdate();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Main method để kiểm tra
 }

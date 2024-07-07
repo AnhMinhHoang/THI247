@@ -12,8 +12,11 @@ public class Report {
     private String reportDate;
     private String reportImg;
     private List<ReportReason> reasons;
+     
+    public Report(){
+     }
 
-    public Report(int userId, int userReportedId, String reportContext, String reportDate, String postImg) {
+    public Report(int userId, int userReportedId, String reportContext, String reportDate, String reportImg) {
         this.userId = userId;
         this.userReportedId = userReportedId;
         this.reportContext = reportContext;

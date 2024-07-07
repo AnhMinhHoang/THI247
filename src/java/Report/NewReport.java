@@ -71,12 +71,12 @@ public class NewReport extends HttpServlet {
                 String url = UPLOAD_DIRECTORY + "/" + fileName;
                 check = false;
                 new ReportDAO().createReport(userBeingReported.getUserID(), userReportedId, reasons, Context, url);
-                response.sendRedirect("user-profiles.jsp"); // Redirect to success page
+                response.sendRedirect("forum.jsp"); // Redirect to success page
             }
         }
         if (check) {
             new ReportDAO().createReport(userBeingReported.getUserID(), userReportedId, reasons,Context, null);
-            response.sendRedirect("user-profiles.jsp"); // Redirect to success page
+            response.sendRedirect("forum.jsp"); // Redirect to success page
         }
     }
 

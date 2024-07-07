@@ -174,7 +174,7 @@ else role = "Student";
                     >
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
-                            <form action="NewReport" method="POST" enctype="multipart/form-data">
+                            <form action="NewReport" id="reportForm" method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="otherUserID" value="<%=id%>"/>
                                 <div class="modal-header d-flex align-items-center bg-primary text-white">
                                     <h6 class="modal-title mb-0" id="threadModalLabel">
@@ -205,17 +205,17 @@ else role = "Student";
                                             <label class="checkbox-container" style="width: 30%;">
                                                 <input type="checkbox" name="reasons" value="2"/>
                                                 <span class="checkmark"></span>
-                                                Tạo bài đăng sai mục đích
+                                                Hành vi gây rối diễn đàn
                                             </label>
                                             <label class="checkbox-container" style="width: 30%;">
                                                 <input type="checkbox" name="reasons" value="3"/>
                                                 <span class="checkmark"></span>
-                                                Hành vi gây rối diễn đàn
+                                                Tạo bài đăng sai mục đích 
                                             </label>
                                             <label class="checkbox-container" style="width: 30%;">
                                                 <input type="checkbox" name="reasons" value="4"/>
                                                 <span class="checkmark"></span>
-                                                Bình luận 
+                                                Bài đăng Không liên quan 
                                             </label>
                                             <label class="checkbox-container" style="width: 30%;">
                                                 <input type="checkbox" name="reasons" value="5"/>
@@ -225,7 +225,7 @@ else role = "Student";
                                             <label class="checkbox-container" style="width: 30%;">
                                                 <input type="checkbox" name="reasons" value="6"/>
                                                 <span class="checkmark"></span>
-                                                Ghi chú 6 
+                                                Bình luận mang tính phản cảm
                                             </label>
                                             <label class="checkbox-container" style="width: 30%;">
                                                 <input type="checkbox" name="reasons" value="7" class="reason-checkbox"/>
@@ -281,59 +281,75 @@ else role = "Student";
 </section>
 
 </main><!-- End #main -->
-<-<!-- required!!!! modal -->
+<!-- required!!!! modal -->
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript"></script>
 <script>
-                            document.getElementById('image-upload').addEventListener('change', function (event) {
-                                var file = event.target.files[0];
-                                var reader = new FileReader();
+                                            document.getElementById('image-upload').addEventListener('change', function (event) {
+                                                var file = event.target.files[0];
+                                                var reader = new FileReader();
 
-                                reader.onload = function (e) {
-                                    var imgElement = document.getElementById('image-preview');
-                                    imgElement.src = e.target.result;
-                                    imgElement.style.display = 'block';
+                                                reader.onload = function (e) {
+                                                    var imgElement = document.getElementById('image-preview');
+                                                    imgElement.src = e.target.result;
+                                                    imgElement.style.display = 'block';
 
-                                    // Show delete button
-                                    document.getElementById('delete-image').style.display = 'inline-block';
-                                }
+                                                    // Show delete button
+                                                    document.getElementById('delete-image').style.display = 'inline-block';
+                                                }
 
-                                reader.readAsDataURL(file);
-                            });
+                                                reader.readAsDataURL(file);
+                                            });
 
-                            document.getElementById('delete-image').addEventListener('click', function (event) {
-                                event.preventDefault(); // Prevent default behavior (page reload)
+                                            document.getElementById('delete-image').addEventListener('click', function (event) {
+                                                event.preventDefault(); // Prevent default behavior (page reload)
 
-                                var imgElement = document.getElementById('image-preview');
-                                imgElement.src = '#'; // Clear the preview
-                                imgElement.style.display = 'none';
+                                                var imgElement = document.getElementById('image-preview');
+                                                imgElement.src = '#'; // Clear the preview
+                                                imgElement.style.display = 'none';
 
-                                // Hide delete button
-                                document.getElementById('delete-image').style.display = 'none';
+                                                // Hide delete button
+                                                document.getElementById('delete-image').style.display = 'none';
 
-                                // Reset file input
-                                document.getElementById('image-upload').value = '';
-                            });
+                                                // Reset file input
+                                                document.getElementById('image-upload').value = '';
+                                            });
 
-                            function removeURL() {
-                                var imgElement = document.getElementById('image-preview');
-                                imgElement.src = '#'; // Clear the preview
-                                imgElement.style.display = 'none';
-                                document.getElementById('image-upload').value = '';
-                            }
+                                            function removeURL() {
+                                                var imgElement = document.getElementById('image-preview');
+                                                imgElement.src = '#'; // Clear the preview
+                                                imgElement.style.display = 'none';
+                                                document.getElementById('image-upload').value = '';
+                                            }
 
-                            // Function to show/hide the "Chi tiết" textarea
-                            document.querySelectorAll('.reason-checkbox').forEach(checkbox => {
-                                checkbox.addEventListener('change', () => {
-                                    const detailsContainer = document.getElementById('details-container');
-                                    const anyChecked = Array.from(document.querySelectorAll('.reason-checkbox')).some(cb => cb.checked);
-                                    detailsContainer.style.display = anyChecked ? 'block' : 'none';
+                                            // Function to show/hide the "Chi tiết" textarea
+                                            document.querySelectorAll('.reason-checkbox').forEach(checkbox => {
+                                                checkbox.addEventListener('change', () => {
+                                                    const detailsContainer = document.getElementById('details-container');
+                                                    const anyChecked = Array.from(document.querySelectorAll('.reason-checkbox')).some(cb => cb.checked);
+                                                    detailsContainer.style.display = anyChecked ? 'block' : 'none';
 
-                                    // Toggle required attribute
-                                    document.getElementById('thread-detail').required = anyChecked;
-                                });
-                            });
+                                                    // Toggle required attribute
+                                                    document.getElementById('thread-detail').required = anyChecked;
+                                                });
+                                            });
+                                            document.getElementById('reportForm').addEventListener('submit', function (event) {
+                                                var checkboxes = document.querySelectorAll('input[name="reasons"]');
+                                                var isChecked = false;
+
+                                                for (var i = 0; i < checkboxes.length; i++) {
+                                                    if (checkboxes[i].checked) {
+                                                        isChecked = true;
+                                                        break;
+                                                    }
+                                                }
+
+                                                if (!isChecked) {
+                                                    alert('Vui lòng chọn ít nhất một lý do báo cáo.');
+                                                    event.preventDefault(); // Ngăn chặn việc nộp biểu mẫu
+                                                }
+                                            });
 </script>
 <jsp:include page="footer.jsp"></jsp:include>
 
