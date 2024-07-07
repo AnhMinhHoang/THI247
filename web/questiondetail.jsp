@@ -63,7 +63,6 @@ String link = (String)session.getAttribute("backlink");
         <fieldset>
                 <legend>Câu hỏi</legend>
                 <p style="overflow-wrap:break-word;"><%=qb.getQuestionContext()%></p>
-                <p style="font-weight: bold">Câu trả lời</p>
                 <%
                 if(qb.getQuestionImg() != null){
                 %>
@@ -71,6 +70,7 @@ String link = (String)session.getAttribute("backlink");
                 <%
                     }
                 %>
+                <p style="font-weight: bold">Câu trả lời</p>
                 <%
                 if(qb.getChoice1().startsWith("uploads/docreader")){
                 %>

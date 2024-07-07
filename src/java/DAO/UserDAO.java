@@ -518,8 +518,8 @@ public class UserDAO extends DBConnection {
     }*/
     public static void main(String[] args) {
         // Địa chỉ email cần tìm userId
-        Users user = new UserDAO().verifiedByEmail("anhminhnamly1@gmail.com");
-
-        System.out.println(user.toString());
+        int a = 10;
+        double b = a * 0.7;
+        System.out.println(b);
     }
 }

@@ -4,6 +4,7 @@
  */
 package examStudentController;
 
+import DAO.ExamDAO;
 import DAO.StudentExamDAO;
 import DAO.UserDAO;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Exam;
 import model.Users;
 
 /**
@@ -39,6 +41,10 @@ public class PurchaseExam extends HttpServlet {
         int price = Integer.parseInt(request.getParameter("price"));
         
         new UserDAO().subtractMoneyToBalance(price, user.getUserID());
+        Exam exam = new ExamDAO().getExamByID(examID);
+        double teacherPrice = price * 0.7;
+        new UserDAO().addMoneyToBalance((int)teacherPrice, exam.getUserID());
+        new UserDAO().addMoneyToBalance(price - (int)teacherPrice, 1);
         new StudentExamDAO().addExamPayment(user.getUserID(), examID);
         user = new UserDAO().findByUserID(user.getUserID());
         session.setAttribute("currentUser", user);

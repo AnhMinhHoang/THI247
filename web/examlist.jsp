@@ -10,10 +10,6 @@
     </script>
 
     <style>
-        .dropdown:hover .dropdown-menu {
-            display: none;
-        }
-
         .dropdown {
             position: relative;
             display: inline-block;

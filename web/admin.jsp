@@ -309,6 +309,8 @@ List<Users> students = new UserDAO().getAllUsersType(3);
                         <td><span class="badge bg-danger">Từ chối</span></td>
                         <td><span class="badge bg-warning">Đang xử lí...</span></td>
                       </tr>
+                      
+                      
 <!--                    ket thuc 1 report-->
 
                     </tbody>

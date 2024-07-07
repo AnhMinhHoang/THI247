@@ -46,7 +46,7 @@ public class CreateRandomExam extends HttpServlet {
         int num = new ExamDAO().getMaxQuestion(user.getUserID(), subjectID);
 
         if (number > num) {
-            request.setAttribute("message", "Vượt quá số câu hỏi có trong ngân hàng câu hỏi, số câu hỏi của môn " + new ExamDAO().getSubjectByID(subjectID).getSubjectName() + " tối đa là: " + num);
+            request.setAttribute("error", "Vượt quá số câu hỏi có trong ngân hàng câu hỏi, số câu hỏi của môn " + new ExamDAO().getSubjectByID(subjectID).getSubjectName() + " tối đa là: " + num);
             request.getRequestDispatcher("create-exam.jsp").forward(request, response);
         } else {
             int examTime = (examHours * 3600) + (examMinutes * 60);
