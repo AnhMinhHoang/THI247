@@ -1,43 +1,38 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package model;
-
 import java.sql.Timestamp;
-
+/**
+ *
+ * @author sonhu
+ */
 public class Task {
-    private  int userID;
+    private int userID;
     private int taskId;
-    private int plannerId;
-    private String taskName;
-    private Timestamp taskDate;
+    private String taskContext;
+    private Timestamp taskDeadline;
 
-    public Task(int userID, int taskId, int plannerId, String taskName, Timestamp taskDate) {
+    public Task(int userID, int taskId, String taskContext, Timestamp taskDeadline) {
         this.userID = userID;
         this.taskId = taskId;
-        this.plannerId = plannerId;
-        this.taskName = taskName;
-        this.taskDate = taskDate;
+        this.taskContext = taskContext;
+        this.taskDeadline = taskDeadline;
     }
-      public Task(int userID, int plannerId, String taskName, Timestamp taskDate) {    
+       public Task(int userID,  String taskContext, Timestamp taskDeadline) {
         this.userID = userID;
-          this.plannerId = plannerId;
-        this.taskName = taskName;
-        this.taskDate = taskDate;
+        this.taskContext = taskContext;
+        this.taskDeadline = taskDeadline;
     }
-       public Task(int taskId, String taskName,int plannerId, Timestamp taskDate) {    
-       this.taskId = taskId;
-       this.plannerId = plannerId;
-        this.taskName = taskName;
-        this.taskDate = taskDate;
+
+
+    public int getUserID() {
+        return userID;
     }
-     
-       public Task(int taskId, String taskName, Timestamp taskDate) {    
-       this.taskId = taskId;
-        this.taskName = taskName;
-        this.taskDate = taskDate;
-    }
-       public Task(String taskName, Timestamp taskDate) {    
-      
-        this.taskName = taskName;
-        this.taskDate = taskDate;
+
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
     public int getTaskId() {
@@ -48,36 +43,25 @@ public class Task {
         this.taskId = taskId;
     }
 
-    public int getPlannerId() {
-        return plannerId;
+    public String getTaskContext() {
+        return taskContext;
     }
 
-    public void setPlannerId(int plannerId) {
-        this.plannerId = plannerId;
+    public void setTaskContext(String taskContext) {
+        this.taskContext = taskContext;
     }
 
-    public String getTaskName() {
-        return taskName;
+    public Timestamp getTaskDeadline() {
+        return taskDeadline;
     }
 
-    public void setTaskName(String taskName) {
-        this.taskName = taskName;
+    public void setTaskDeadline(Timestamp taskDeadline) {
+        this.taskDeadline = taskDeadline;
     }
 
-    public Timestamp getTaskDate() {
-        return taskDate;
-    }
-
-    public void setTaskDate(Timestamp taskDate) {
-        this.taskDate = taskDate;
-    }
-
-    public int getUserID() {
-        return userID;
-    }
-
-    public void setUserID(int userID) {
-        this.userID = userID;
+    @Override
+    public String toString() {
+        return "Task{" + "userID=" + userID + ", taskId=" + taskId + ", taskContext=" + taskContext + ", taskDeadline=" + taskDeadline + '}';
     }
     
 }

@@ -23,14 +23,12 @@ import model.Users;
 @WebServlet(name = "TaskListServlet", urlPatterns = {"/TaskListServlet"})
 public class TaskListServlet extends HttpServlet {
 
-     private PlannerDAO plannerDAO;
-
-   @Override
+    private TaskDAO taskDAO;
+ @Override
     public void init() throws ServletException {
         super.init();
-        plannerDAO = new PlannerDAO();
+        taskDAO = new TaskDAO();
     }
-
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -39,7 +37,9 @@ public class TaskListServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+  
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
@@ -51,10 +51,9 @@ public class TaskListServlet extends HttpServlet {
             return;
         }
 
-        int plannerId = Integer.parseInt(request.getParameter("plannerId"));
-        List<Task> tasks = plannerDAO.getTasksByPlanner(plannerId);
+        List<Task> tasks = taskDAO.getTasksByUser(currentUser.getUserID());
         request.setAttribute("tasks", tasks);
-        request.getRequestDispatcher("listTasks.jsp").forward(request, response);
+        request.getRequestDispatcher("listTask.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -354,6 +354,22 @@ public String getEmailByUserId(int userId) {
         }
         return userIds;
     }
+    public String getUserNameByUserId(int userId) {
+    String username = null;
+    String query = "SELECT username FROM Users WHERE userID = ?";
+    try (Connection conn = getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        pstmt.setInt(1, userId);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            username = rs.getString("username");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return username;
+}
+
     /* public static void main(String[] args) {
         UserDAO userDAO = new UserDAO();
 

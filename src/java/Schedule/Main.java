@@ -4,21 +4,21 @@ import DAO.UserDAO;
 import java.sql.Date;
 import java.util.List;
 import java.util.Set;
-import model.Planner;
+import model.Task;
 
 public class Main {
     public static void main(String[] args) {
-        PlannerDAO plannerDAO = new PlannerDAO();
+        TaskDAO taskDAO = new TaskDAO();
         UserDAO userDAO = new UserDAO();
         Date now = new Date(System.currentTimeMillis());
         Date currentDate = new Date(now.getTime());
-        PlannerEmailScheduler emailScheduler = new PlannerEmailScheduler(plannerDAO, userDAO);
+        PlannerEmailScheduler emailScheduler = new PlannerEmailScheduler(taskDAO, userDAO);
 
         // Hiển thị thông tin ngày hiện tại
         System.out.println("Current Date: " + currentDate);
 
-        // Lấy và hiển thị thông tin về người dùng, planner và tasks
-        List<String> userInfoList = emailScheduler.listUserPlannersAndTasks();
+        // Lấy và hiển thị thông tin về người dùng và tasks
+        List<String> userInfoList = emailScheduler.listUserTasks();
         for (String userInfo : userInfoList) {
             System.out.println(userInfo);
         }
@@ -27,8 +27,6 @@ public class Main {
         System.out.println("Scheduler started.");
 
         emailScheduler.startScheduler();
-
-        // Chờ 12 giây để kiểm tra
         try {
             System.out.println("Waiting for scheduler to send emails...");
             Thread.sleep(12000);

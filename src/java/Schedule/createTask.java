@@ -5,27 +5,22 @@
 package Schedule;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.Users;
+import java.sql.Timestamp;
+import model.Task;
 
 /**
  *
  * @author sonhu
  */
-@WebServlet(name = "TaskDeleteServlet", urlPatterns = {"/TaskDeleteServlet"})
-public class TaskDeleteServlet extends HttpServlet {
-
-    private PlannerDAO plannerDAO;
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        plannerDAO = new PlannerDAO();
-    }
+@WebServlet("/createTask")
+public class createTask extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,17 +33,7 @@ public class TaskDeleteServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
 
-        int taskId = Integer.parseInt(request.getParameter("taskId"));
-         int plannerId = Integer.parseInt(request.getParameter("plannerId"));
-        boolean success = plannerDAO.deleteTask(taskId);
-        if (success) {
-            response.sendRedirect("TaskListServlet?plannerId="+plannerId);
-        } else {
-            request.setAttribute("errorMessage", "Failed to delete tasks");
-            request.getRequestDispatcher("TaskListServlet").forward(request, response);
-        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -60,10 +45,11 @@ public class TaskDeleteServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
+     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        // Chuyển tiếp đến trang createTask.jsp
+        request.getRequestDispatcher("createTask.jsp").forward(request, response);
     }
 
     /**
@@ -74,11 +60,49 @@ public class TaskDeleteServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
+      @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("currentUser");
+
+        if (user == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        String taskContext = request.getParameter("taskContext");
+        String taskDateStr = request.getParameter("taskDate");
+        String taskTimeStr = request.getParameter("taskTime");
+
+        if (taskContext == null || taskContext.isEmpty() || taskDateStr == null || taskDateStr.isEmpty() || taskTimeStr == null || taskTimeStr.isEmpty()) {
+            request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin nhiệm vụ.");
+            request.getRequestDispatcher("createTask.jsp").forward(request, response);
+            return;
+        }
+
+        try {
+            Timestamp taskDeadline = Timestamp.valueOf(taskDateStr + " " + taskTimeStr + ":00");
+            Task newTask = new Task(user.getUserID(), taskContext, taskDeadline);
+
+            TaskDAO taskDAO = new TaskDAO();
+            boolean success = taskDAO.createTask(newTask);
+
+            if (success) {
+                request.setAttribute("successMessage", "Tạo nhiệm vụ thành công.");
+            } else {
+                request.setAttribute("errorMessage", "Tạo nhiệm vụ thất bại.");
+            }
+            request.getRequestDispatcher("createTask.jsp").forward(request, response);
+        } catch (IllegalArgumentException e) {
+            request.setAttribute("errorMessage", "Định dạng ngày giờ không hợp lệ.");
+            request.getRequestDispatcher("createTask.jsp").forward(request, response);
+        }
     }
+
+
 
     /**
      * Returns a short description of the servlet.

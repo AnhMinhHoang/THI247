@@ -11,19 +11,19 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import model.Planner;
-import java.text.ParseException;
+import jakarta.servlet.http.HttpSession;
+import java.sql.Timestamp;
+import model.Task;
+import model.Users;
 
 /**
  *
  * @author sonhu
  */
-@WebServlet(name = "editPlannes", urlPatterns = {"/editPlannes"})
-public class editPlannes extends HttpServlet {
+@WebServlet(name = "editTask", urlPatterns = {"/editTask"})
+public class editTask extends HttpServlet {
 
-      private final PlannerDAO plannerDAO = new PlannerDAO();
+    private final TaskDAO taskDAO = new TaskDAO();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -60,17 +60,16 @@ public class editPlannes extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-     @Override
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int plannerId = Integer.parseInt(request.getParameter("plannerId"));
-        Planner planner = plannerDAO.getPlannerById(plannerId);
-System.out.println("Received plannerId: " + plannerId);
-        if (planner != null) {
-            request.setAttribute("planner", planner);
-            request.getRequestDispatcher("editPlanner.jsp").forward(request, response);
+        int taskId = Integer.parseInt(request.getParameter("taskId"));
+        Task task = taskDAO.getTaskById(taskId);
+        if (task != null) {
+            request.setAttribute("task", task);
+            request.getRequestDispatcher("editTask.jsp").forward(request, response);
         } else {
-            response.sendRedirect("ListPlannersServlet");
+            response.sendRedirect("TaskListServlet");
         }
     }
 
@@ -82,43 +81,48 @@ System.out.println("Received plannerId: " + plannerId);
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-   @Override
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        HttpSession session = request.getSession();
+        Users user = (Users) session.getAttribute("currentUser");
 
-        // Retrieve parameters from request
-        int plannerId = Integer.parseInt(request.getParameter("plannerId"));
-        String plannerName = request.getParameter("plannerName");
-        String startTimeStr = request.getParameter("startTime");
-        String endTimeStr = request.getParameter("endTime");
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date endTime;
-        Date startTime;
-        try {
-            startTime = new java.sql.Date(dateFormat.parse(startTimeStr).getTime());
-            endTime = new java.sql.Date(dateFormat.parse(endTimeStr).getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Invalid date format");
-            request.getRequestDispatcher("editPlanner.jsp").forward(request, response);
+        if (user == null) {
+            response.sendRedirect("login.jsp");
             return;
         }
 
-        // Create Planner object with updated information
-        Planner updatedPlanner = new Planner(plannerId, plannerName,startTime, endTime);
+        // Lấy thông tin từ request để chỉnh sửa Task
+        int taskId = Integer.parseInt(request.getParameter("taskId"));
+        String taskContext = request.getParameter("taskContext");
+        String taskDateStr = request.getParameter("taskDate");
+        String taskTimeStr = request.getParameter("taskTime");
 
-        // Update Planner in the database
-        boolean success = plannerDAO.updatePlanner(updatedPlanner);
+        // Kiểm tra nếu các tham số là null hoặc trống
+        if (taskContext == null || taskContext.isEmpty() || taskDateStr == null || taskDateStr.isEmpty() || taskTimeStr == null || taskTimeStr.isEmpty()) {
+            request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin nhiệm vụ.");
+            request.getRequestDispatcher("editTask.jsp").forward(request, response);
+            return;
+        }
+
+        // Gán giây mặc định là 00
+        Timestamp taskDeadline = Timestamp.valueOf(taskDateStr + " " + taskTimeStr + ":00");
+
+        // Tạo đối tượng Task mới từ thông tin thu thập được
+        Task updateTask = new Task(user.getUserID(), taskId, taskContext, taskDeadline);
+
+        // Cập nhật Task trong cơ sở dữ liệu
+        boolean success = taskDAO.updateTask(updateTask);
 
         if (success) {
-            response.sendRedirect("PlannerListServlet");
+            response.sendRedirect("TaskListServlet");
         } else {
-            request.setAttribute("errorMessage", "Failed to update planner");
-            request.getRequestDispatcher("editPlanner.jsp").forward(request, response);
+            request.setAttribute("errorMessage", "Cập nhật nhiệm vụ thất bại");
+            request.getRequestDispatcher("editTask.jsp").forward(request, response);
         }
     }
+
     /**
      * Returns a short description of the servlet.
      *

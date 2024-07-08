@@ -13,17 +13,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import model.Planner;
 import model.Task;
 import javax.mail.MessagingException;
 
 public class PlannerEmailScheduler {
-    private final PlannerDAO plannerDAO;
+    private final TaskDAO taskDAO;
     private final UserDAO userDAO;
     private final Map<String, LocalDate> sentEmailsToday; // Map để lưu các email đã gửi và thời điểm gửi
 
-    public PlannerEmailScheduler(PlannerDAO plannerDAO, UserDAO userDAO) {
-        this.plannerDAO = plannerDAO;
+    public PlannerEmailScheduler(TaskDAO taskDAO, UserDAO userDAO) {
+        this.taskDAO = taskDAO;
         this.userDAO = userDAO;
         this.sentEmailsToday = new HashMap<>();
     }
@@ -47,44 +46,31 @@ public class PlannerEmailScheduler {
 
         // Duyệt qua từng user
         for (int userId : userIds) {
-            List<Planner> planners = plannerDAO.getPlannersByUser(userId);
+            List<Task> tasks = taskDAO.getTasksByUser(userId);
 
-            // Nếu user có các planner
-            if (!planners.isEmpty()) {
+            // Nếu user có các task
+            if (!tasks.isEmpty()) {
                 String userEmail = userDAO.getEmailByUserId(userId);
+                String userName = userDAO.getUserNameByUserId(userId);
 
                 // Kiểm tra xem đã gửi email cho địa chỉ này trong ngày chưa
                 if (isGmailAddress(userEmail) && !hasSentEmailToday(userEmail, currentDate.toLocalDate())) {
                     // Tạo nội dung email bằng StringBuilder
                     StringBuilder emailContent = new StringBuilder();
-                    emailContent.append("Dear User,\n\n");
-                    emailContent.append("Here are your scheduled planners and tasks for today:\n\n");
+                     emailContent.append("Gửi ").append(userName).append(",\n\n");
+                    emailContent.append("Đây là kế hoạch của bạn hôm nay:\n\n");
 
-                    // Duyệt qua từng planner của user
-                    for (Planner planner : planners) {
-                        // Lấy ngày tháng năm của startTime và currentDate
-                        LocalDate startTime = planner.getStartTime().toLocalDate();
+                    // Duyệt qua từng task của user
+                    for (Task task : tasks) {
+                        // Lấy ngày tháng năm của deadline và currentDate
+                        LocalDate deadline = task.getTaskDeadline().toLocalDateTime().toLocalDate();
                         LocalDate currentDay = currentDate.toLocalDate();
 
                         // So sánh ngày tháng năm bằng nhau
-                        if (startTime.equals(currentDay)) {
-                            emailContent.append("Planner Name: ").append(planner.getPlannerName()).append("\n");
-                            emailContent.append("Start Time: ").append(planner.getStartTime()).append("\n");
-                            emailContent.append("End Time: ").append(planner.getEndTime()).append("\n");
-
-                            // Lấy danh sách tasks của planner
-                            List<Task> tasks = plannerDAO.getTasksByPlanner(planner.getPlannerId());
-
-                            // Nếu có tasks, thêm chúng vào emailContent
-                            if (!tasks.isEmpty()) {
-                                emailContent.append("Tasks:\n");
-                                for (Task task : tasks) {
-                                    emailContent.append("- Task Name: ").append(task.getTaskName()).append("\n");
-                                    emailContent.append("  Task Date: ").append(task.getTaskDate()).append("\n");
-                                }
-                            }
-
-                            emailContent.append("\n");
+                        if (deadline.equals(currentDay)) {
+                            emailContent.append("Nhiệm vụ: ").append(task.getTaskContext()).append("\n");
+                            emailContent.append("Thời gian thực hiện: ").append(task.getTaskDeadline()).append("\n");
+                            emailContent.append("---------------------------\n");
                         }
                     }
 
@@ -94,16 +80,18 @@ public class PlannerEmailScheduler {
 
                         if (emailSent) {
                             sentEmailsToday.put(userEmail, currentDate.toLocalDate()); // Lưu email đã gửi và thời gian
-                            System.out.println("Email successfully sent to: " + userEmail);
+                            System.out.println("Gui email thanh cong toi: " + userEmail);
                         } else {
-                            System.out.println("Failed to send email to: " + userEmail);
+                            System.out.println("Gui email that bai toi: " + userEmail);
                         }
                     } else {
-                        System.out.println("No planners scheduled for today for user: " + userEmail);
+                        System.out.println("Khong co ke hoach nao hom nay cua: " + userEmail);
                     }
                 } else {
-                    System.out.println("Email already sent to user: " + userEmail + " for today.");
+                    System.out.println("Email da duoc gui cho: " + userEmail + " hom nay.");
                 }
+            } else {
+                System.out.println("No tasks scheduled for today for user: " + userDAO.getEmailByUserId(userId));
             }
         }
     }
@@ -119,29 +107,21 @@ public class PlannerEmailScheduler {
         return lastSentDate != null && lastSentDate.equals(today);
     }
 
-    // Hàm để liệt kê tất cả thông tin userId, email, planner và các task
-    public List<String> listUserPlannersAndTasks() {
+    // Hàm để liệt kê tất cả thông tin userId, email và các task
+    public List<String> listUserTasks() {
         List<String> userInfoList = new ArrayList<>();
         List<Integer> userIds = userDAO.getAllUserIds();
 
         for (int userId : userIds) {
             String userEmail = userDAO.getEmailByUserId(userId);
-            List<Planner> planners = plannerDAO.getPlannersByUser(userId);
+            List<Task> tasks = taskDAO.getTasksByUser(userId);
 
-            for (Planner planner : planners) {
+            for (Task task : tasks) {
                 StringBuilder info = new StringBuilder();
                 info.append("UserId: ").append(userId)
                     .append(", Email: ").append(userEmail)
-                    .append(", Planner: ").append(planner.getPlannerName())
-                    .append(", Start Time: ").append(planner.getStartTime())
-                    .append(", End Time: ").append(planner.getEndTime())
-                    .append(", Tasks: ");
-
-                List<Task> tasks = plannerDAO.getTasksByPlanner(planner.getPlannerId());
-                for (Task task : tasks) {
-                    info.append("[Task Name: ").append(task.getTaskName())
-                        .append(", Task Date: ").append(task.getTaskDate()).append("] ");
-                }
+                    .append(", Task: ").append(task.getTaskContext())
+                    .append(", Task Deadline: ").append(task.getTaskDeadline()).append("\n");
 
                 userInfoList.add(info.toString());
             }
@@ -155,4 +135,21 @@ public class PlannerEmailScheduler {
         return new HashSet<>(sentEmailsToday.keySet());
     }
 
+    public static void main(String[] args) {
+        TaskDAO taskDAO = new TaskDAO();
+        UserDAO userDAO = new UserDAO();
+        PlannerEmailScheduler scheduler = new PlannerEmailScheduler(taskDAO, userDAO);
+
+        scheduler.startScheduler();
+
+        // Optional: In ra danh sách user và tasks
+        List<String> userTasks = scheduler.listUserTasks();
+        for (String info : userTasks) {
+            System.out.println(info);
+        }
+
+        // Optional: In ra danh sách các email đã gửi trong ngày
+        Set<String> sentEmails = scheduler.getSentEmailsToday();
+        System.out.println("Emails sent today: " + sentEmails);
+    }
 }

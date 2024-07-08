@@ -11,25 +11,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import model.Planner;
-import model.Users;
 
 /**
  *
  * @author sonhu
  */
-@WebServlet(name = "PlannerListServlet", urlPatterns = {"/PlannerListServlet"})
-public class PlannerListServlet extends HttpServlet {
-
-    private PlannerDAO plannerDAO;
- @Override
-    public void init() throws ServletException {
-        super.init();
-        plannerDAO = new PlannerDAO();
-    }
-   
+@WebServlet(name="deleteTask", urlPatterns={"/deleteTask"})
+public class deleteTask extends HttpServlet {
+    private final TaskDAO taskDAO = new TaskDAO();
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -37,23 +26,17 @@ public class PlannerListServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-  
-
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        int taskId = Integer.parseInt(request.getParameter("taskId"));
+        boolean success = taskDAO.deleteTask(taskId);
 
-        HttpSession session = request.getSession();
-        Users currentUser = (Users) session.getAttribute("currentUser");
-
-        if (currentUser == null) {
-            response.sendRedirect("login.jsp");
-            return;
+        if (success) {
+            response.sendRedirect("TaskListServlet");
+        } else {
+            request.setAttribute("errorMessage", "Xóa nhiệm vụ thất bại");
+            request.getRequestDispatcher("TaskListServlet").forward(request, response);
         }
-
-        List<Planner> planners = plannerDAO.getPlannersByUser(currentUser.getUserID());
-        request.setAttribute("planners", planners);
-        request.getRequestDispatcher("listPlanners.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
