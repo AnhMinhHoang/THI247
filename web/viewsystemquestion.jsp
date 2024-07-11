@@ -19,7 +19,7 @@ if(session.getAttribute("subjectID") != null){
 int subjectID = (Integer)session.getAttribute("subjectID");
 Subjects subject = new ExamDAO().getSubjectByID(subjectID);
 List<QuestionBank> qbs = (List<QuestionBank>)session.getAttribute("questionList");
-session.setAttribute("backlink", "viewsystemquestion.jsp");
+session.setAttribute("backlink", "teacher.jsp");
 %>
 <div class="container-fluid bg-primary py-5 mb-5 page-header">
     <div class="container py-5">
@@ -38,7 +38,7 @@ session.setAttribute("backlink", "viewsystemquestion.jsp");
         <div class="row">
             <div class="col-lg-12">
                 <div class="inner-main-header">
-                    <button class="btn btn-light"><a href="choosesubjectsystem.jsp" style="text-decoration: none; color: Black">Trở về</a></button>
+                    <button class="btn btn-light"><a href="questionbank.jsp" style="text-decoration: none; color: Black">Trở về</a></button>
                 </div>
                 <div class="card">
                     <div class="card-body all">

@@ -95,7 +95,8 @@ public class AddQuestionBank extends HttpServlet {
         new ExamDAO().addQuestionToQuestionBank(qb);
         List<QuestionBank> list = new ExamDAO().getAllUserQuestionByID(subjectID, user.getUserID());
         session.setAttribute("questionList", list);
-        response.sendRedirect("viewuserquestion.jsp");
+        if(user.getRole() == 1) response.sendRedirect("view-all-question.jsp");
+        else response.sendRedirect("viewuserquestion.jsp");
     }
     
     private QuestionBank getQuestion(int UserID, int questionId, int subjectId, String questionContext, String choice1, String choice2, String choice3, String choiceCorrect, String explain, String QuestionImg, String explainImg){

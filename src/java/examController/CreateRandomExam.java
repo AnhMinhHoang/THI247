@@ -38,6 +38,7 @@ public class CreateRandomExam extends HttpServlet {
         int subjectID = Integer.parseInt(request.getParameter("subjectID"));
         int examHours = Integer.parseInt(request.getParameter("examHours"));
         int examMinutes = Integer.parseInt(request.getParameter("examMinutes"));
+        int price = Integer.parseInt(request.getParameter("price"));
         String examName = request.getParameter("examName");
         HttpSession session = request.getSession();
         Users user = (Users) session.getAttribute("currentUser");
@@ -45,17 +46,27 @@ public class CreateRandomExam extends HttpServlet {
         int num = new ExamDAO().getMaxQuestion(user.getUserID(), subjectID);
 
         if (number > num) {
-            request.setAttribute("message", "Vượt quá số câu hỏi có trong ngân hàng câu hỏi, số câu hỏi của môn "+new ExamDAO().getSubjectByID(subjectID).getSubjectName()+" tối đa là: "+num);
+            request.setAttribute("error", "Vượt quá số câu hỏi có trong ngân hàng câu hỏi, số câu hỏi của môn " + new ExamDAO().getSubjectByID(subjectID).getSubjectName() + " tối đa là: " + num);
             request.getRequestDispatcher("create-exam.jsp").forward(request, response);
         } else {
             int examTime = (examHours * 3600) + (examMinutes * 60);
-            new ExamDAO().addExam(examName, user.getUserID(), subjectID, examTime);
-            int examID = new ExamDAO().getLastestExam().getExamID();
-            for (QuestionBank list : lists) {
-                new ExamDAO().addQuestionToExam(list.getQuestionId(), examID);
-            }
+            if (user.getRole() == 1) {
+                new ExamDAO().addExam(examName, 1, subjectID, examTime, price);
+                int examID = new ExamDAO().getLastestExam().getExamID();
+                for (QuestionBank list : lists) {
+                    new ExamDAO().addQuestionToExam(list.getQuestionId(), examID);
+                }
 
-            response.sendRedirect("teacher.jsp");
+                response.sendRedirect("view-all-exam.jsp");
+            } else {
+                new ExamDAO().addExam(examName, user.getUserID(), subjectID, examTime, price);
+                int examID = new ExamDAO().getLastestExam().getExamID();
+                for (QuestionBank list : lists) {
+                    new ExamDAO().addQuestionToExam(list.getQuestionId(), examID);
+                }
+
+                response.sendRedirect("teacher.jsp");
+            }
         }
     }
 

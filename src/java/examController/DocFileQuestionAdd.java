@@ -229,7 +229,8 @@ public class DocFileQuestionAdd extends HttpServlet {
         }
         session.setAttribute("subjectID", subjectID);
         session.setAttribute("listtest", qbs);
-        response.sendRedirect("viewuserquestion.jsp");
+        if(user.getRole() == 1) response.sendRedirect("view-all-question.jsp");
+        else response.sendRedirect("viewuserquestion.jsp");
     }
 
     private String superTrim(String string) {

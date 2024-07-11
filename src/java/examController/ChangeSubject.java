@@ -37,7 +37,9 @@ public class ChangeSubject extends HttpServlet {
         int subjectID = Integer.parseInt(request.getParameter("subjectID"));
         HttpSession session = request.getSession();
         Users user = (Users)session.getAttribute("currentUser");
-        List<QuestionBank> list = new ExamDAO().getAllQuestionByID(subjectID, user.getUserID());
+        List<QuestionBank> list;
+        if(user.getRole() == 1) list = new ExamDAO().getAllQuestionByID(subjectID, 0);
+        else list = new ExamDAO().getAllQuestionByID(subjectID, user.getUserID());
         session.setAttribute("questionList", list);
         session.setAttribute("subjectID", subjectID);
         response.sendRedirect("create-exam.jsp");

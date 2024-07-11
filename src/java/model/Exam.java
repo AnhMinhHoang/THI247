@@ -15,17 +15,19 @@ public class Exam {
     private int userID;
     private int subjectID;
     private int timer;
+    private int price;
 
     public Exam() {
     }
 
-    public Exam(int examID, String examName, String createDate, int userID, int subjectID, int timer) {
+    public Exam(int examID, String examName, String createDate, int userID, int subjectID, int timer, int price) {
         this.examID = examID;
         this.examName = examName;
         this.createDate = createDate;
         this.userID = userID;
         this.subjectID = subjectID;
         this.timer = timer;
+        this.price = price;
     }
 
     public int getExamID() {
@@ -76,8 +78,16 @@ public class Exam {
         this.timer = timer;
     }
 
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
-        return "Exam{" + "examID=" + examID + ", examName=" + examName + ", createDate=" + createDate + ", userID=" + userID + ", subjectID=" + subjectID + ", timer=" + timer + '}';
+        return "Exam{" + "examID=" + examID + ", examName=" + examName + ", createDate=" + createDate + ", userID=" + userID + ", subjectID=" + subjectID + ", timer=" + timer + ", price=" + price + '}';
     }
 }

@@ -23,6 +23,7 @@ public class Users {
     private String resetToken;
     private String otp_code;
     private boolean otp_verified;
+    private boolean Ban;
     public Users() {
     }
 
@@ -41,7 +42,7 @@ public class Users {
         this.resetToken = resetToken;
     }
      
-public Users(int userID, String username, String fullname, String password, String email, int role, String avatarURL, int balance, String phone, String address, String dob) {
+public Users(int userID, String username, String fullname, String password, String email, int role, String avatarURL, int balance, String phone, String address, String dob, boolean Ban) {
         this.userID = userID;
         this.username = username;
         this.fullname = fullname;
@@ -53,8 +54,10 @@ public Users(int userID, String username, String fullname, String password, Stri
         this.phone = phone;
         this.address = address;
         this.dob = dob;
+        this.Ban = Ban;
         
     }
+
     public int getUserID() {
         return userID;
     }
@@ -167,11 +170,17 @@ public Users(int userID, String username, String fullname, String password, Stri
         this.otp_verified = otp_verified;
     }
 
-    @Override
-    public String toString() {
-        return "Users{" + "userID=" + userID + ", username=" + username + ", fullname=" + fullname + ", password=" + password + ", email=" + email + ", role=" + role + ", avatarURL=" + avatarURL + ", balance=" + balance + ", phone=" + phone + ", address=" + address + ", dob=" + dob + ", resetToken=" + resetToken + ", otp_code=" + otp_code + ", otp_verified=" + otp_verified + '}';
+    public boolean isBan() {
+        return Ban;
     }
 
-    
+    public void setBan(boolean Ban) {
+        this.Ban = Ban;
+    }
+
+    @Override
+    public String toString() {
+        return "Users{" + "userID=" + userID + ", username=" + username + ", fullname=" + fullname + ", password=" + password + ", email=" + email + ", role=" + role + ", avatarURL=" + avatarURL + ", balance=" + balance + ", phone=" + phone + ", address=" + address + ", dob=" + dob + ", resetToken=" + resetToken + ", otp_code=" + otp_code + ", otp_verified=" + otp_verified + ", isBan=" + Ban + '}';
+    }
 
 }

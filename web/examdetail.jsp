@@ -48,6 +48,24 @@
             background-color: #45a049;
         }
 
+        #navigation ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #navigation li {
+            margin-bottom: 5px;
+        }
+
+        #navigation a {
+            text-decoration: none;
+            color: #4CAF50;
+        }
+
+        #navigation a:hover {
+            text-decoration: underline;
+        }
+
 
     </style>
 <%
@@ -66,6 +84,29 @@ for (StudentChoice studentChoice : studentChoices) {
 }
 %>
 <body>
+    <style>
+        #navigation {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Adjust as needed for alignment */
+            list-style-type: none;
+            padding: 0;
+        }
+        #navigation li {
+            margin: 5px; /* Adjust margin between items */
+        }
+        #navigation a {
+            text-decoration: none;
+            color: #4CAF50;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        #navigation a:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
     <div style="position: sticky; top: 100px; text-align: center; font-size: 30px">
         <span id="timer">00:00</span>
     </div>
@@ -89,7 +130,7 @@ for (StudentChoice studentChoice : studentChoices) {
                 Collections.shuffle(choices, new Random(seed + i));
                 number++;
             %>
-            <fieldset>
+            <fieldset id="question<%=number%>">
                 <p style="overflow-wrap:break-word; font-weight: bold">Câu <%=number + 1%>: <%=qb.getQuestionContext()%></p>
                 <input type="hidden" name="question<%=number%>" id="question<%=number%>" value="<%=qb.getQuestionId()%>"/>
                 <%
@@ -167,10 +208,10 @@ for (StudentChoice studentChoice : studentChoices) {
         window.onbeforeunload = function (event) {
             var formData = new FormData(document.getElementById('examForm'));
             var params = new URLSearchParams(formData);
-            
-            var url = 'AutoSaveServlet';  
+
+            var url = 'AutoSaveServlet';
             navigator.sendBeacon(url, params); //beacon API when closeing tab
-            
+
         };
 
         function autoSave() {
@@ -200,5 +241,5 @@ for (StudentChoice studentChoice : studentChoices) {
             }
     %>
     <jsp:include page="footer.jsp"></jsp:include>
-    
+
     <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>

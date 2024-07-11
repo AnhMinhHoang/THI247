@@ -40,7 +40,11 @@ public class ChangeSubjectUser extends HttpServlet {
         List<QuestionBank> list = new ExamDAO().getAllUserQuestionByID(subjectID, user.getUserID());
         session.setAttribute("questionList", list);
         session.setAttribute("subjectID", subjectID);
-        response.sendRedirect("viewuserquestion.jsp");
+        if(user.getRole() == 1){
+            session.setAttribute("backlink", "choosesubjectuser.jsp");
+            response.sendRedirect("PassDataQuestionAdd?subjectID="+subjectID);
+        }
+        else response.sendRedirect("viewuserquestion.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

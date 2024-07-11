@@ -11,6 +11,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import model.Users;
 
 /**
  *
@@ -32,7 +34,7 @@ public class AddQuestionToExam extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         int examID = Integer.parseInt(request.getParameter("examID"));
         String[] QuestionIDs = request.getParameterValues("selectedQuestions");
-
+        
         if (QuestionIDs != null) {
             for (String QuestionID : QuestionIDs) {
                 new ExamDAO().addQuestionToExam(Integer.parseInt(QuestionID), examID);

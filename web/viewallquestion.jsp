@@ -20,6 +20,9 @@ int examID = (Integer)session.getAttribute("examID");
 Exam currentExam = new ExamDAO().getExamByID(examID);
 List<QuestionBank> qbs = new ExamDAO().getAllQuestionByExamID(examID);
 session.setAttribute("backlink", "viewallquestion.jsp");
+Users user = (Users)session.getAttribute("currentUser");
+String backlink = "ViewAllExamTeacher.jsp";
+if(user.getRole() == 1) backlink = "view-all-exam.jsp";
 int hour = currentExam.getTimer() / 3600;
 int minute = (currentExam.getTimer() % 3600) / 60;
 %>
@@ -65,7 +68,7 @@ int minute = (currentExam.getTimer() % 3600) / 60;
                 <div style="display: flex">
                     <form action="PassDataExamAdd" method="POST">
                         <input type="hidden" name="examID" value="<%=examID%>"/>
-                        <button class="btn btn-light"><a href="ViewAllExamTeacher.jsp" style="text-decoration: none; color: Black">Trở về</a></button>
+                        <button class="btn btn-light"><a href="<%=backlink%>" style="text-decoration: none; color: Black">Trở về</a></button>
                         <input class="btn btn-light" type="submit" value="Thêm câu hỏi">
                     </form>
                     <button style="margin-left: 5px" class="btn btn-light" data-toggle="modal" data-target="#editTime">

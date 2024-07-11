@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Users;
 
 /**
  *
@@ -33,6 +34,8 @@ public class ViewQuestionDetail extends HttpServlet {
         int questionID = Integer.parseInt(request.getParameter("questionID"));
         HttpSession session = request.getSession();
         session.setAttribute("questionID", questionID);
+        Users user = (Users)session.getAttribute("currentUser");
+        if(user.getRole() == 1) session.setAttribute("backlink", "view-all-question.jsp");
         response.sendRedirect("questiondetail.jsp");
     }
 

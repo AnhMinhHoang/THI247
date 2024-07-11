@@ -215,16 +215,7 @@ public class ForumDAO extends DBConnection {
     }
 
     public static void main(String args[]) {
-        List<Forum> forums = new ForumDAO().getAllPostFromUserID(2);
-        String str;
-        for (Forum forum : forums) {
-            if (forum.getPostTitle().length() > 60) {
-                str = forum.getPostTitle().substring(1, 60) + "...";
-            } else {
-                str = forum.getPostTitle();
-            }
-            System.out.println(str);
-        }
-
+        List<Forum> forums = new ForumDAO().getAllPost();
+        System.out.println(forums.size());
     }
 }

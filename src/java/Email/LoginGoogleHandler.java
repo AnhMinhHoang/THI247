@@ -53,7 +53,8 @@ public class LoginGoogleHandler extends HttpServlet {
             if (verifiedUser != null && verifiedUser.isOtp_verified()) {
                 // Đặt các thuộc tính trong phiên và chuyển hướng đến trang chủ
                 session.setAttribute("currentUser", userFound);
-                response.sendRedirect("Home");
+                if(userFound.isBan()) response.sendRedirect("banned.jsp");
+                else response.sendRedirect("Home");
             } else {
                 // Người dùng tồn tại nhưng chưa xác minh OTP, kiểm tra xem OTP có hết hạn không
                 Timestamp expiryTime = OTP.getOtpExpiryTime(userFound.getUserID());

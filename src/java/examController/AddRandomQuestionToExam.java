@@ -37,9 +37,9 @@ public class AddRandomQuestionToExam extends HttpServlet {
         int number = Integer.parseInt(request.getParameter("numQuestions"));
         int subjectID = Integer.parseInt(request.getParameter("subjectID"));
         int examID = Integer.parseInt(request.getParameter("examID"));
-        List<QuestionBank> lists = new ExamDAO().getRandomQuestByAmountND(number, subjectID, examID);
         HttpSession session = request.getSession();
         Users user = (Users)session.getAttribute("currentUser");
+        List<QuestionBank> lists = new ExamDAO().getRandomQuestByAmountND(number, subjectID, examID, user.getUserID());
 
         for (QuestionBank list : lists) {
             new ExamDAO().addQuestionToExam(list.getQuestionId(), examID);

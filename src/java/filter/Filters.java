@@ -108,6 +108,19 @@ public class Filters implements Filter {
         }
 
         doBeforeProcessing(request, response);
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        String url = httpRequest.getServletPath();
+        HttpSession session = httpRequest.getSession(false);
+        Users user;
+        
+        if (session != null && session.getAttribute("currentUser") != null) {
+            user = (Users)session.getAttribute("currentUser");
+            if (user.isBan() && !url.endsWith("banned.jsp") && !url.endsWith("logout")) {
+                httpResponse.sendRedirect("banned.jsp");
+                return;
+            }
+        }
 
         Throwable problem = null;
         try {
@@ -121,12 +134,7 @@ public class Filters implements Filter {
         }
 
         doAfterProcessing(request, response);
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
-        String url = httpRequest.getServletPath();
-        HttpSession session = httpRequest.getSession(false);
-        Users user;
-
+        
         //auto Home
         if (url.contains("home.jsp")) {
             httpResponse.sendRedirect("Home");
@@ -190,9 +198,22 @@ public class Filters implements Filter {
         }else if (url.contains("teacher.jsp") && session.getAttribute("currentUser") == null) {
             httpResponse.sendRedirect("login.jsp");
             return;
+        }else if (url.contains("view-all-user.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        }else if (url.contains("view-all-question.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        }else if (url.contains("view-all-exam.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        }else if (url.contains("view-all-payment.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
+        }else if (url.contains("recharge.jsp") && session.getAttribute("currentUser") == null) {
+            httpResponse.sendRedirect("login.jsp");
+            return;
         }
-        
-        
         
         //prevent redirect to other role page
         if(url.contains("student.jsp") && session.getAttribute("currentUser") != null){

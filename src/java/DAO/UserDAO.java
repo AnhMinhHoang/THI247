@@ -1,9 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DAO;
 
+import static DAO.DBConnection.getConnection;
 import model.Users;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,15 +8,20 @@ import java.sql.ResultSet;
 
 /**
  *
- * @author ADMIN        
+ * @author ADMIN
  */
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import model.Exam;
+import model.Payment;
 
-public class UserDAO extends DBConnection{
+public class UserDAO extends DBConnection {
 
     private static final String LOGIN_QUERY = "SELECT userID, roles FROM Users WHERE email=? AND password=? AND otp_verified > 0";
     private static final String USER_TYPE_QUERY = "SELECT roles FROM Users WHERE email=?";
-    
+
     public String checkLogin(String email, String password) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -30,7 +32,7 @@ public class UserDAO extends DBConnection{
             stmt = conn.prepareStatement(LOGIN_QUERY);
             stmt.setString(1, email);
             stmt.setString(2, password);
-          
+
             rs = stmt.executeQuery();
 
             if (rs.next()) {
@@ -46,11 +48,10 @@ public class UserDAO extends DBConnection{
 
         return null;
     }
-  
+
     public Users findByEmail(String email) {
         String query = "SELECT * FROM Users WHERE email=?";
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, email);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -66,9 +67,9 @@ public class UserDAO extends DBConnection{
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
-                   
-            
-                    Users us = new Users(iD, username, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
+                    Boolean Ban = rs.getBoolean("is_banned");
+
+                    Users us = new Users(iD, username, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob, Ban);
                     return us;
                 }
             }
@@ -77,58 +78,115 @@ public class UserDAO extends DBConnection{
         }
         return null;
     }
-      public Users verifiedByEmail(String email) {
-        Users user = null;
+
+    public Users verifiedByEmail(String email) {
         String query = "SELECT * FROM users WHERE email = ? AND otp_verified = ?";
-        
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            
+
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+
             stmt.setString(1, email);
             stmt.setBoolean(2, true); // Only select if otp_verified is true
-            
+
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    user = new Users();
-                    user.setUserID(rs.getInt("user_id"));
-                    user.setEmail(rs.getString("email"));
-                    user.setOtp_verified(rs.getBoolean("otp_verified"));
-                    // Set other properties as needed
+                    Users users = new Users();
+                    users.setUserID(rs.getInt("userID"));
+                    users.setEmail(rs.getString("email"));
+                    users.setOtp_verified(true);
+                    return users;
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
-        return user;
+
+        return null;
     }
 
     public static int getUserIdByEmail(String email) {
-    int userId = -1; // Default value if user_id is not found
+        int userId = -1; // Default value if user_id is not found
 
-    String query = "SELECT userID FROM Users WHERE email = ?";
-    try (Connection conn = getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(query)) {
-        pstmt.setString(1, email);
-        try (ResultSet rs = pstmt.executeQuery()) {
-            if (rs.next()) {
-                userId = rs.getInt("userID");
+        String query = "SELECT userID FROM Users WHERE email = ?";
+        try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, email);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    userId = rs.getInt("userID");
+                }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+
+        return userId;
+    }
+    
+    public List<Users> getAllUsers() {
+        String query = "SELECT * FROM Users where roles > 1";
+        List<Users> users = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int iD = rs.getInt("userID");
+                    String usernames = rs.getString("username");
+                    String fullname = rs.getString("fullname");
+                    String emails = rs.getString("email");
+                    int role = rs.getInt("roles");
+                    String avatarURL = rs.getString("avatar");
+                    int balance = rs.getInt("balance");
+                    String passwords = rs.getString("password");
+
+                    String phone = rs.getString("phone");
+                    String address = rs.getString("localaddress");
+                    String dob = rs.getString("dob");
+                    Boolean Ban = rs.getBoolean("is_banned");
+
+                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob, Ban);
+                    users.add(us);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return users;
+    }
+    
+    public List<Users> getAllUsersType(int roles) {
+        String query = "SELECT * FROM Users where roles = ?";
+        List<Users> users = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, roles);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                int iD = rs.getInt("userID");
+                    String usernames = rs.getString("username");
+                    String fullname = rs.getString("fullname");
+                    String emails = rs.getString("email");
+                    int role = rs.getInt("roles");
+                    String avatarURL = rs.getString("avatar");
+                    int balance = rs.getInt("balance");
+                    String passwords = rs.getString("password");
+
+                    String phone = rs.getString("phone");
+                    String address = rs.getString("localaddress");
+                    String dob = rs.getString("dob");
+                    Boolean Ban = rs.getBoolean("is_banned");
+
+                    Users us = new Users(iD, usernames, fullname, 
+                            passwords, emails, role, avatarURL, 
+                            balance, phone, address, dob, Ban);
+                    users.add(us);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return users;
     }
 
-    return userId;
-}
-
-
-
-    
     public Users findByUserName(String username) {
         String query = "SELECT * FROM Users WHERE username=?";
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, username);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -144,8 +202,9 @@ public class UserDAO extends DBConnection{
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
-                
-                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
+                    Boolean Ban = rs.getBoolean("is_banned");
+
+                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob, Ban);
                     return us;
                 }
             }
@@ -154,11 +213,10 @@ public class UserDAO extends DBConnection{
         }
         return null;
     }
-    
+
     public Users findByUserID(int userID) {
         String query = "SELECT * FROM Users WHERE userID=?";
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, userID);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -171,13 +229,13 @@ public class UserDAO extends DBConnection{
                     String avatarURL = rs.getString("avatar");
                     int balance = rs.getInt("balance");
                     String passwords = rs.getString("password");
-            
+
                     String phone = rs.getString("phone");
                     String address = rs.getString("localaddress");
                     String dob = rs.getString("dob");
-                   
-                    
-                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob);
+                    Boolean Ban = rs.getBoolean("is_banned");
+
+                    Users us = new Users(iD, usernames, fullname, passwords, emails, role, avatarURL, balance, phone, address, dob, Ban);
                     return us;
                 }
             }
@@ -186,21 +244,19 @@ public class UserDAO extends DBConnection{
         }
         return null;
     }
-    
-    public void updateInfo(String email, String username, String fullname, String phone, String address, String dob){
+
+    public void updateInfo(String email, String username, String fullname, String phone, String address, String dob) {
         String query = "UPDATE Users SET username = ? , fullname = ?, phone = ?, localaddress = ?, dob = ? WHERE email=?";
-        try (Connection conn = getConnection();
-            PreparedStatement ps = conn.prepareStatement(query)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, username);
             ps.setString(2, fullname);
             ps.setString(3, phone);
             ps.setString(4, address);
             ps.setString(5, dob);
             ps.setString(6, email);
-            try{
+            try {
                 ps.executeUpdate();
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 System.out.println(e);
             }
         } catch (Exception e) {
@@ -208,34 +264,45 @@ public class UserDAO extends DBConnection{
         }
     }
     
-    public void changePassWordByEmail(String email, String password){
+    public void updateRole(int userID, int role){
+        String query = "UPDATE Users SET roles = ? WHERE userID=?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, role);
+            ps.setInt(2, userID);
+            try {
+                ps.executeUpdate();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (Exception e) {
+            System.out.println("SDASD");
+        }
+    }
+
+    public void changePassWordByEmail(String email, String password) {
         String query = "UPDATE Users SET password=? WHERE email=?";
-        try (Connection conn = getConnection();
-            PreparedStatement ps = conn.prepareStatement(query)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, password);
             ps.setString(2, email);
-            try{
+            try {
                 ps.executeUpdate();
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 System.out.println(e);
             }
         } catch (Exception e) {
             System.out.println("SDASD");
         }
     }
-    
-    public void updateAvatar(String url, String email){
+
+    public void updateAvatar(String url, String email) {
         String query = "UPDATE Users SET avatar=? WHERE email=?";
-        try (Connection conn = getConnection();
-            PreparedStatement ps = conn.prepareStatement(query)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, url);
             ps.setString(2, email);
             System.out.println(query);
-            try{
+            try {
                 ps.executeUpdate();
-            }
-            catch(Exception e){
+            } catch (Exception e) {
                 System.out.println(e);
             }
         } catch (Exception e) {
@@ -249,7 +316,7 @@ public class UserDAO extends DBConnection{
 
         try {
             conn = DBConnection.getConnection();
-            String sql = "DBCC CHECKIDENT (Users, RESEED, 0); DBCC CHECKIDENT (Users, RESEED); INSERT INTO Users (username, password, email, roles, avatar) VALUES (?, ?, ?, ?, ?)";
+            String sql = "DBCC CHECKIDENT (Users, RESEED, 0); DBCC CHECKIDENT (Users, RESEED); INSERT INTO Users (username, password, email, roles, avatar, balance) VALUES (?, ?, ?, ?, ?, 0)";
 
             stmt = conn.prepareStatement(sql);
             stmt.setString(1, username);
@@ -309,6 +376,100 @@ public class UserDAO extends DBConnection{
 
         return role;
     }
+    
+    public void createPayment(int userID, String paymentCode, String bank, int amount, String paymentDate){
+        String query = "DBCC CHECKIDENT (Payment, RESEED, 0); DBCC CHECKIDENT (Payment, RESEED); insert into Payment(userID, payment_code, bank, amount, payment_date)"
+                + "values(?, ?, ?, ?, ?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userID);
+            ps.setString(2, paymentCode);
+            ps.setString(3, bank);
+            ps.setInt(4, amount);
+            ps.setString(5, paymentDate);
+            try {
+                ps.executeUpdate();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (Exception err) {
+            System.out.println(err);
+        }
+    }
+    
+    public void addMoneyToBalance(int amount, int userID){
+        String query = "Update Users set balance = balance + ? where userID = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, amount);
+            ps.setInt(2, userID);
+            try {
+                ps.executeUpdate();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (Exception err) {
+            System.out.println(err);
+        }
+    }
+    
+    public void subtractMoneyToBalance(int amount, int userID){
+        String query = "Update Users set balance = balance - ? where userID = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, amount);
+            ps.setInt(2, userID);
+            try {
+                ps.executeUpdate();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        } catch (Exception err) {
+            System.out.println(err);
+        }
+    }
+    
+    public List<Payment> getAllPaymentByID(int userID) {
+        String query = "select * from Payment where userID = ?";
+        List<Payment> paymentList = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, userID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Payment payment = new Payment();
+                payment.setPaymentID(rs.getInt(1));
+                payment.setUserID(rs.getInt(2));
+                payment.setAmount(rs.getInt(3));
+                payment.setPaymentDate(rs.getString(4));
+                payment.setPaymentCode(rs.getString(5));
+                payment.setBank(rs.getString(6));
+                paymentList.add(payment);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return paymentList;
+    }
+    
+    public List<Payment> getAllPayment() {
+        String query = "select * from Payment";
+        List<Payment> paymentList = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Payment payment = new Payment();
+                payment.setPaymentID(rs.getInt(1));
+                payment.setUserID(rs.getInt(2));
+                payment.setAmount(rs.getInt(3));
+                payment.setPaymentDate(rs.getString(4));
+                payment.setPaymentCode(rs.getString(5));
+                payment.setBank(rs.getString(6));
+                paymentList.add(payment);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return paymentList;
+    }
 
     private void closeResources(Connection conn, PreparedStatement stmt, ResultSet rs) {
         try {
@@ -325,6 +486,53 @@ public class UserDAO extends DBConnection{
             System.err.println("Error closing resources: " + e.getMessage());
         }
     }
+public String getEmailByUserId(int userId) {
+        String email = null;
+        String query = "SELECT email FROM Users WHERE userID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                email = rs.getString("email");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return email;
+    }
+
+    
+    public List<Integer> getAllUserIds() {
+        List<Integer> userIds = new ArrayList<>();
+        String query = "SELECT userID FROM Users";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                userIds.add(rs.getInt("userID"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userIds;
+    }
+    public String getUserNameByUserId(int userId) {
+    String username = null;
+    String query = "SELECT username FROM Users WHERE userID = ?";
+    try (Connection conn = getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        pstmt.setInt(1, userId);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            username = rs.getString("username");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return username;
+}
+
 
     /* public static void main(String[] args) {
         UserDAO userDAO = new UserDAO();
@@ -350,8 +558,10 @@ public class UserDAO extends DBConnection{
             System.out.println("Only admin can register new admins");
         }
     }*/
-       public static void main(String[] args) {
+    public static void main(String[] args) {
         // Địa chỉ email cần tìm userId
-        new UserDAO().checkLogin("student1@gmail.com", "student123");
+        int a = 10;
+        double b = a * 0.7;
+        System.out.println(b);
     }
 }

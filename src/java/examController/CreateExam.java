@@ -33,21 +33,36 @@ public class CreateExam extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
-        Users user = (Users)session.getAttribute("currentUser");
+        Users user = (Users) session.getAttribute("currentUser");
         int subjectID = Integer.parseInt(request.getParameter("subjectID"));
         int examHours = Integer.parseInt(request.getParameter("examHours"));
         int examMinutes = Integer.parseInt(request.getParameter("examMinutes"));
+        int price = Integer.parseInt(request.getParameter("price"));
         String examName = request.getParameter("examName");
         String[] QuestionIDs = request.getParameterValues("selectedQuestions");
-        
-        int examTime = (examHours * 3600) + (examMinutes * 60);
-        
-        new ExamDAO().addExam(examName, user.getUserID(), subjectID, examTime);
-        int examID = new ExamDAO().getLastestExam().getExamID();
-        for (String QuestionID : QuestionIDs) {
-            new ExamDAO().addQuestionToExam(Integer.parseInt(QuestionID), examID);
+        if(QuestionIDs == null){
+            request.setAttribute("error", "Vui lòng chọn ít nhất một câu hỏi trong bài kiểm tra");
+            request.getRequestDispatcher("create-exam.jsp").forward(request, response);
         }
-        response.sendRedirect("teacher.jsp");
+        else{
+            int examTime = (examHours * 3600) + (examMinutes * 60);
+
+            if (user.getRole() == 1) {
+                new ExamDAO().addExam(examName, 1, subjectID, examTime, price);
+                int examID = new ExamDAO().getLastestExam().getExamID();
+                for (String QuestionID : QuestionIDs) {
+                    new ExamDAO().addQuestionToExam(Integer.parseInt(QuestionID), examID);
+                }
+                response.sendRedirect("view-all-exam.jsp");
+            } else {
+                new ExamDAO().addExam(examName, user.getUserID(), subjectID, examTime, price);
+                int examID = new ExamDAO().getLastestExam().getExamID();
+                for (String QuestionID : QuestionIDs) {
+                    new ExamDAO().addQuestionToExam(Integer.parseInt(QuestionID), examID);
+                }
+                response.sendRedirect("teacher.jsp");
+            }
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

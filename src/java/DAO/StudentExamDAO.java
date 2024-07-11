@@ -38,12 +38,70 @@ public class StudentExamDAO {
                 exam.setCreateDate(rs.getString(3));
                 exam.setUserID(rs.getInt(4));
                 exam.setSubjectID(rs.getInt(5));
+                exam.setTimer(rs.getInt(6));
+                exam.setPrice(rs.getInt(7));
                 list.add(exam);
             }
         } catch (Exception e) {
             System.out.println(e);
         }
         return list;
+    }
+    
+    public List<Exam> getAllExamByUserSubjectID(int subjectID, int userID) {
+        String query = "SELECT * FROM Exam Where subject_id = ? and userID = ?";
+        List<Exam> list = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, subjectID);
+            ps.setInt(2, userID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Exam exam = new Exam();
+                exam.setExamID(rs.getInt(1));
+                exam.setExamName(rs.getString(2));
+                exam.setCreateDate(rs.getString(3));
+                exam.setUserID(rs.getInt(4));
+                exam.setSubjectID(rs.getInt(5));
+                exam.setTimer(rs.getInt(6));
+                exam.setPrice(rs.getInt(7));
+                list.add(exam);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+    
+    public void addExamPayment(int userID, int examID){
+        String query = "DBCC CHECKIDENT (ExamPayment, RESEED, 0); DBCC CHECKIDENT (ExamPayment, RESEED); insert into ExamPayment(userID, exam_id) values(?, ?)";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userID);
+            ps.setInt(2, examID);
+            try {
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        } catch (Exception err) {
+            System.out.println(err);
+        }
+    }
+    
+    //check if user is bought the exam
+    public boolean checkExamPay(int userID, int examID){
+        String query = "Select * from ExamPayment where userID = ? and exam_id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, userID);
+            ps.setInt(2, examID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                return true;
+            }
+        } catch (Exception err) {
+            System.out.println(err);
+        }
+        return false;
     }
     
     //get all finished test by userID
@@ -276,7 +334,7 @@ public class StudentExamDAO {
     }
 
     //get lastest result
-    public Result getLastestExam() {
+    public Result getLastestResult() {
         Result result = new Result();
         String query = "Select top 1 * from Result order by result_id desc";
         try (Connection con = getConnection()) {

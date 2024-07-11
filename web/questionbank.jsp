@@ -1,6 +1,11 @@
 <!DOCTYPE html>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" import="DAO.*, java.util.*, model.*"%>
 <jsp:include page="header.jsp"></jsp:include>
+
+<%
+Users user = (Users)session.getAttribute("currentUser");
+TeacherRequest requests = new AdminDAO().getRequestByUserID(user.getUserID());
+%>
     <br><!-- comment -->
     
     <div class="container-xxl py-5">
@@ -14,7 +19,7 @@
                     <div class="course-item bg-light">
                         <div class="position-relative overflow-hidden"></div>
                         <div class="text-center p-4 pb-0">
-                            <a href="choosesubjectsystem.jsp" style="text-decoration: none">
+                            <a href="ChangeSubjectSystem?subjectID=<%=requests.getSubjectID()%>" style="text-decoration: none">
                                 <h3 class="mb-0">Câu hỏi của hệ thống</h3>
                             </a>  
                         </div>
@@ -27,7 +32,7 @@
                     <div class="course-item bg-light">
                         <div class="position-relative overflow-hidden"></div>
                         <div class="text-center p-4 pb-0">
-                            <a href="choosesubjectuser.jsp" style="text-decoration: none">
+                            <a href="ChangeSubjectUser?subjectID=<%=requests.getSubjectID()%>" style="text-decoration: none">
                                 <h3 class="mb-0">Câu hỏi của tôi</h3>
                             </a>  
                         </div>
