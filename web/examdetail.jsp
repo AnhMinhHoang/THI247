@@ -107,15 +107,6 @@ for (StudentChoice studentChoice : studentChoices) {
             background-color: #f0f0f0;
         }
     </style>
-
-    <div id="navigation">
-        <% for (int i = 0; i < qbs.size(); i++) { %>
-        <a href="#question<%=i%>">Question <%=i + 1%></a>
-        <% if ((i + 1) % 10 == 0) { %>
-        <br> <!-- Break line after every 10 questions -->
-        <% } %>
-        <% } %>
-    </div>
     <div style="position: sticky; top: 100px; text-align: center; font-size: 30px">
         <span id="timer">00:00</span>
     </div>

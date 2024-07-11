@@ -1,10 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Yêu Cầu Đặt Lại Mật Khẩu Đã Được Gửi</title>
 <style>
     body {
         font-family: Arial, sans-serif;
@@ -68,16 +64,13 @@
         transform: scale(1.1);
     }
 </style>
-</head>
 <body>
-    <jsp:include page="header.jsp"></jsp:include>
     <div class="container">
         <h2>Yêu Cầu Đặt Lại Mật Khẩu Đã Được Gửi</h2>
         <p>Một email với hướng dẫn để đặt lại mật khẩu của bạn đã được gửi tới địa chỉ email của bạn.</p>
         <p>Vui lòng kiểm tra email và làm theo các hướng dẫn.</p>
         <a href="login.jsp" class="btn">Quay lại Đăng nhập</a>
     </div>
-    <jsp:include page="footer.jsp"></jsp:include>
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
 </body>

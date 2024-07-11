@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import model.Users;
 
 /**
  *
@@ -31,8 +32,10 @@ public class LogOutControl extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         HttpSession session = request.getSession();
+        Users user = (Users)session.getAttribute("currentUser");
         session.setAttribute("currentUser", null);
-        request.getRequestDispatcher("login.jsp").forward(request, response);
+        if(user.isBan()) response.sendRedirect("Home");
+        else response.sendRedirect("login.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

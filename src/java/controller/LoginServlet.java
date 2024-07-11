@@ -69,7 +69,8 @@ public class LoginServlet extends HttpServlet {
                 // Chuyển hướng đến trang tương ứng với vai trò người dùng
                 if (role == 3 || role == 2) {
                     // Người dùng thường (user)
-                    response.sendRedirect("Home");
+                    if(user.isBan()) response.sendRedirect("banned.jsp");
+                    else response.sendRedirect("Home");
                 } else if (role == 1) {
                     // Quản trị viên (admin)
                     response.sendRedirect("admin.jsp");

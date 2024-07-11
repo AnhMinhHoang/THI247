@@ -182,4 +182,5 @@ public Users(int userID, String username, String fullname, String password, Stri
     public String toString() {
         return "Users{" + "userID=" + userID + ", username=" + username + ", fullname=" + fullname + ", password=" + password + ", email=" + email + ", role=" + role + ", avatarURL=" + avatarURL + ", balance=" + balance + ", phone=" + phone + ", address=" + address + ", dob=" + dob + ", resetToken=" + resetToken + ", otp_code=" + otp_code + ", otp_verified=" + otp_verified + ", isBan=" + Ban + '}';
     }
+
 }
