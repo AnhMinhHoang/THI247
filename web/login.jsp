@@ -13,8 +13,6 @@
             height: 50px;
         }
 </style>
-<div class="container">
-       
     <div id="intro" class="bg-image shadow-2-strong">
         <div class="mask d-flex align-items-center h-100">
             <div class="container">

@@ -4,10 +4,12 @@
  */
 package Email;
 
+//import Schedule.TimetableDAO;
+//import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
-import javax.mail.Authenticator;
+//import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -15,6 +17,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
 
 /**
  *
@@ -109,4 +112,39 @@ public class EmailSender {
     public static String generateToken() {
         return UUID.randomUUID().toString();
     }
+  public static boolean sendPlannerEmail(String toEmail, String emailContent) {
+    final String username = "tuantpde170492@fpt.edu.vn"; // Replace with your email
+    final String password = "xelm aagm oppl exkg"; // Replace with your password or app-specific password
+
+    Properties props = new Properties();
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.host", "smtp.gmail.com");
+    props.put("mail.smtp.port", "587");
+
+    Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(username, password);
+        }
+    });
+
+    try {
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(username));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+        message.setSubject("Planner Email");
+
+        // Set email content
+        message.setText(emailContent);
+
+        Transport.send(message);
+
+        System.out.println("Email sent successfully");
+        return true;
+    } catch (MessagingException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
+
 }

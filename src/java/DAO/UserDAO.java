@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package DAO;
 
 import static DAO.DBConnection.getConnection;
@@ -490,6 +486,52 @@ public class UserDAO extends DBConnection {
             System.err.println("Error closing resources: " + e.getMessage());
         }
     }
+public String getEmailByUserId(int userId) {
+        String email = null;
+        String query = "SELECT email FROM Users WHERE userID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                email = rs.getString("email");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return email;
+    }
+
+    
+    public List<Integer> getAllUserIds() {
+        List<Integer> userIds = new ArrayList<>();
+        String query = "SELECT userID FROM Users";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                userIds.add(rs.getInt("userID"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return userIds;
+    }
+    public String getUserNameByUserId(int userId) {
+    String username = null;
+    String query = "SELECT username FROM Users WHERE userID = ?";
+    try (Connection conn = getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        pstmt.setInt(1, userId);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            username = rs.getString("username");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return username;
+}
 
 
     /* public static void main(String[] args) {
