@@ -38,6 +38,7 @@ import org.apache.poi.xwpf.usermodel.XWPFRun;
  */
 @MultipartConfig
 public class DocFileQuestionAdd extends HttpServlet {
+    public int nameCount = 0;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -80,6 +81,8 @@ public class DocFileQuestionAdd extends HttpServlet {
             String explainImage = null;
             boolean isExplain = false;
             paragraphIndex = 0;
+            int count = 1;
+            int size = 1;
 
             for (XWPFParagraph paragraph : document.getParagraphs()) {
                 String text = paragraph.getText().trim();
@@ -119,9 +122,11 @@ public class DocFileQuestionAdd extends HttpServlet {
                         qb.setExplainImg(explainImage);
 //                        qbs.add(qb);
                         new ExamDAO().addQuestionToQuestionBank(qb);
+                        count++;
+                        size = String.valueOf(count).length();
                     }
                     currentQuestion.setLength(0);
-                    currentQuestion.append(text.substring(6).trim());
+                    currentQuestion.append(text.substring(5+size).trim());
                     choice1 = new StringBuilder();
                     choice2 = new StringBuilder();
                     choice3 = new StringBuilder();
@@ -136,7 +141,6 @@ public class DocFileQuestionAdd extends HttpServlet {
                     if (imageMap.containsKey(paragraphIndex)) {
                         XWPFPictureData picture = imageMap.get(paragraphIndex);
                         String imagePath = savePicture(picture);
-                        Thread.sleep(50);
                         System.out.println("A. "+paragraphIndex);
                         choice1.append(imagePath);
                     } else {
@@ -146,7 +150,6 @@ public class DocFileQuestionAdd extends HttpServlet {
                     if (imageMap.containsKey(paragraphIndex)) {
                         XWPFPictureData picture = imageMap.get(paragraphIndex);
                         String imagePath = savePicture(picture);
-                        Thread.sleep(50);
                         System.out.println("B. "+paragraphIndex);
                         choice2.append(imagePath);
                     } else {
@@ -156,7 +159,6 @@ public class DocFileQuestionAdd extends HttpServlet {
                     if (imageMap.containsKey(paragraphIndex)) {
                         XWPFPictureData picture = imageMap.get(paragraphIndex);
                         String imagePath = savePicture(picture);
-                        Thread.sleep(50);
                         System.out.println("C. "+paragraphIndex);
                         choice3.append(imagePath);
                     } else {
@@ -166,7 +168,6 @@ public class DocFileQuestionAdd extends HttpServlet {
                     if (imageMap.containsKey(paragraphIndex)) {
                         XWPFPictureData picture = imageMap.get(paragraphIndex);
                         String imagePath = savePicture(picture);
-                        Thread.sleep(50);
                         System.out.println("D. "+paragraphIndex);
                         choice4.append(imagePath);
                     } else {
@@ -181,7 +182,6 @@ public class DocFileQuestionAdd extends HttpServlet {
                     if (imageMap.containsKey(paragraphIndex)) {
                         XWPFPictureData picture = imageMap.get(paragraphIndex);
                         String imagePath = savePicture(picture);
-                        Thread.sleep(50);
                         if (!isExplain && questionImage == null) {
                             questionImage = imagePath;
                         } else if (isExplain && explainImage == null) {
@@ -246,8 +246,9 @@ public class DocFileQuestionAdd extends HttpServlet {
         }
     }
 
-    private String savePicture(XWPFPictureData picture) throws IOException {
-        String imageFileName = System.currentTimeMillis() + "." + picture.suggestFileExtension();
+    private synchronized String savePicture(XWPFPictureData picture) throws IOException {
+        String imageFileName = System.currentTimeMillis()+ nameCount + "." + picture.suggestFileExtension();
+        nameCount++;
         String directoryPath = getServletContext().getRealPath("") + File.separator + "uploads/docreader";
         File directory = new File(directoryPath);
 

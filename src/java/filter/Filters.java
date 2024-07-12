@@ -135,6 +135,8 @@ public class Filters implements Filter {
 
         doAfterProcessing(request, response);
         
+        session = httpRequest.getSession(false);
+        
         //auto Home
         if (url.contains("home.jsp")) {
             httpResponse.sendRedirect("Home");
@@ -226,6 +228,12 @@ public class Filters implements Filter {
             user = (Users) session.getAttribute("currentUser");
             if (user.getRole() == 3) {
                 httpResponse.sendRedirect("student.jsp");
+            }
+        }
+        if(url.contains("teacher.jsp") && session.getAttribute("currentUser") != null){
+            user = (Users) session.getAttribute("currentUser");
+            if (user.getRole() == 1) {
+                httpResponse.sendRedirect("view-all-exam.jsp");
             }
         }
 
