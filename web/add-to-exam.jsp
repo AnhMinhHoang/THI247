@@ -5,109 +5,192 @@
 <!DOCTYPE html>
 <jsp:include page="header.jsp"></jsp:include>
 
-    <style>
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"], input[type="number"] {
-            margin-bottom: 10px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        input[type="checkbox"] {
-            display: inline-block;
-            margin-right: 5px;
-            vertical-align: middle;
-        }
-
-        .question-label {
-            display: inline-block;
-            vertical-align: middle;
-        }
-
-        .question-list {
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        button[type="submit"], button[type="button"] {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            border: none;
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 10px;
-        }
-
-        button[type="submit"]:hover, button[type="button"]:hover {
-            background-color: #0056b3;
-        }
-
-        .error-message {
-            color: #dc3545;
-            margin-top: 10px;
-        }
-
-        a{
-            overflow-wrap: break-word;
-            word-break: break-word;
-        }
-
-        p{
-            overflow-wrap: break-word;
-            word-break: break-word;
-        }
-
-        span{
-            overflow-wrap: break-word;
-            word-break: break-word;
-        }
-    </style>
+   <style>
+        .scrollable-tbody {
+    max-height: 400px; /* Adjust the height as needed */
+    overflow-y: auto;
+}
+        
+    </style> 
 <%
-if(session.getAttribute("questionlist") != null){
+if(session.getAttribute("questionList") != null){
 int examID = (Integer)session.getAttribute("examID");
 int subjectID = (Integer)session.getAttribute("subjectID");
 %>
 <body>
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css"
-        integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o="
-        crossorigin="anonymous"
-        />
     <div class="container">
         <br><br>
         <h1>Thêm câu hỏi</h1>
-        <form action="AddQuestionToExam" method="post">
             <h2>Chọn câu hỏi:</h2>
-            <div class="question-list">
-                <%
-                List<QuestionBank> qblist = (List<QuestionBank>)session.getAttribute("questionlist");
-                if(qblist.size() > 0){
-                
-                for(int i = qblist.size() - 1; i >= 0; i--){
-                    QuestionBank qb = qblist.get(i);
-                %>
-                <label>
-                    <input type="checkbox" name="selectedQuestions" value="<%=qb.getQuestionId()%>">
-                    <span class="question-label"><%=qb.getQuestionContext()%></span>
-                </label><br>
-                <%
-                    }
-                }
-                else{
-                %>
-                <p>No questions available.</p>
-                <%
-                    }
-                %>
+            <form action="AddQuestionToExam" method="post">
+            <div class="inner-main-body scrollable-tbody">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-primary" scope="col"></th>
+                                <th class="text-primary" scope="col">Câu hỏi</th>
+                                <th class="text-primary" scope="col">Đáp án</th>
+                                <th class="text-primary" scope="col">Tác vụ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%
+                            List<QuestionBank> qbs = (List<QuestionBank>)session.getAttribute("questionList");
+                            String context;
+                            String answer;
+                            for(int i = qbs.size() - 1; i >= 0; i--){
+                                QuestionBank qb = qbs.get(i);
+                                if(qb.getQuestionContext().length() > 40){ 
+                                    context = qb.getQuestionContext().substring(0, 40) + "...";
+                                }
+                                else if(qb.getQuestionContext().length() == 0){
+                                    context = qb.getQuestionImg();
+                                }
+                                else context = qb.getQuestionContext();
+                                if(qb.getChoiceCorrect().startsWith("uploads/docreader")){
+                                    answer = qb.getChoiceCorrect();
+                                }
+                                else{
+                                    if(qb.getChoiceCorrect().length() > 40) 
+                                        answer = qb.getChoiceCorrect().substring(0, 40) + "...";
+                                    else answer = qb.getChoiceCorrect();
+                                }
+                                String modalDetailId = "threadModalDetail" + i;
+                            %>
+                            <tr>
+                                <td><input type="checkbox" name="selectedQuestions" value="<%=qb.getQuestionId()%>"></td>
+                                    <%
+                                    if(context.startsWith("uploads/docreader")){
+                                    %>
+                                <td style="max-width: 500px"><img src="<%=context%>" width="60%"alt="alt"/></td>
+                                    <%
+                                        }
+                                    else{
+                                    %>
+                                <td><p><%=context%></p></td>
+                                <%
+                                    }
+                                %>
+                                <%
+                                if(answer.startsWith("uploads/docreader")){
+                                %>
+                                <td><img src="<%=answer%>" width="50%" height="50%" alt="alt"/></td>
+                                    <%
+                                        }
+                                    else{
+                                    %>
+                                <td><%=answer%></td>
+                                <%
+                                    }
+                                %>
+                                <td style="display: flex; flex-direction: row; text-align: center">
+                                    <button
+                                        class="btn btn-primary has-icon btn-block"
+                                        type="button"
+                                        data-toggle="modal"
+                                        data-target="#<%=modalDetailId%>"
+                                        >
+                                        Xem chi tiết
+                                    </button>
+                                    <div class="modal fade" id="<%=modalDetailId%>" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content" style="width: 100%; margin: auto">
+                                                <div class="modal-header d-flex align-items-center bg-primary text-white">
+                                                    <h6 class="modal-title mb-0" id="threadModalLabel">Chi tiết câu hỏi</h6>
+                                                </div>
+                                                <div class="modal-body" style="text-align: left;"> 
+                                                    <p style="font-weight: bold; overflow-wrap:break-word;">Câu hỏi: <span style="font-weight: 100"><%=qb.getQuestionContext()%></span></p>
+                                                        <%
+                                                        if(qb.getQuestionImg() != null){
+                                                        %>
+                                                    <img src="<%=qb.getQuestionImg()%>" width="50%" height="50%"/>
+                                                    <%
+                                                        }
+                                                    %>
+                                                    <p style="font-weight: bold">Câu trả lời</p>
+                                                    <%
+                                                    if(qb.getChoice1().startsWith("uploads/docreader")){
+                                                    %>
+                                                    <br><span style="font-weight: bold">A. </span><img src="<%=qb.getChoice1()%>" height="30" alt="alt"/>
+                                                    <%
+                                                        }
+                                                    else{
+                                                    %>
+                                                    <p style="overflow-wrap:break-word;"><label style="font-weight: bold">A:</label> <%=qb.getChoice1()%></p>
+                                                    <%
+                                                        }
+                                                    %>
+                                                    <%
+                                                    if(qb.getChoice2().startsWith("uploads/docreader")){
+                                                    %>
+                                                    <br><span style="font-weight: bold">B. </span><img src="<%=qb.getChoice2()%>" height="30" alt="alt"/>
+                                                    <%
+                                                        }
+                                                    else{
+                                                    %>
+                                                    <p style="overflow-wrap:break-word;"><label style="font-weight: bold">B:</label> <%=qb.getChoice2()%></p>
+                                                    <%
+                                                        }
+                                                    %>
+                                                    <%
+                                                    if(qb.getChoice3().startsWith("uploads/docreader")){
+                                                    %>
+                                                    <br><span style="font-weight: bold">D. </span><img src="<%=qb.getChoice3()%>" height="30" alt="alt"/>
+                                                    <%
+                                                        }
+                                                    else{
+                                                    %>
+                                                    <p style="overflow-wrap:break-word;"><label style="font-weight: bold">C:</label> <%=qb.getChoice3()%></p>
+                                                    <%
+                                                        }
+                                                    %>
+                                                    <%
+                                                    if(qb.getChoiceCorrect().startsWith("uploads/docreader")){
+                                                    %>
+                                                    <br><span style="font-weight: bold">D. </span><img src="<%=qb.getChoiceCorrect()%>" height="30" alt="alt"/>
+                                                    <%
+                                                        }
+                                                    else{
+                                                    %>
+                                                    <p style="overflow-wrap:break-word;"><label style="font-weight: bold">D:</label> <%=qb.getChoiceCorrect()%></p>
+                                                    <%
+                                                        }
+                                                    %>
+                                                    <%
+                                                    if(qb.getChoiceCorrect().startsWith("uploads/docreader")){
+                                                    %>
+                                                    <br><span style="font-weight: bold">Đáp án: </span><img src="<%=qb.getChoiceCorrect()%>" height="30" alt="alt"/>
+                                                    <%
+                                                        }
+                                                    else{
+                                                    %>
+                                                    <p style="overflow-wrap:break-word;"><label style="font-weight: bold">Đáp án:</label> <%=qb.getChoiceCorrect()%></p>
+                                                    <%
+                                                        }
+                                                    %>
+                                                    <p style="overflow-wrap:break-word;"><label style="font-weight: bold">Giải thích:</label> <%=qb.getExplain()%></p>
+                                                    <%
+                                                    if(qb.getExplainImg() != null){
+                                                    %>
+                                                    <img src="<%=qb.getExplainImg()%>" width="50%" height="50%"/>
+                                                    <%
+                                                        }
+                                                    %>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <input type="button" class="btn btn-primary" data-dismiss="modal"value="Xác nhận">
+                                                </div>
+                                            </div> 
+                                        </div>                        
+                                    </div> 
+                                </td>
+                            </tr>
+                            <%
+                                }
+                            %>
+                        </tbody>
+
+                    </table>
             </div>
 
             <button
@@ -115,14 +198,14 @@ int subjectID = (Integer)session.getAttribute("subjectID");
                 type="button"
                 data-toggle="modal"
                 data-target="#threadModal"
+                style="margin-top: 20px; margin-bottom: 10px"
                 >
                 Thêm ngẫu nhiên
             </button>
             <input type="hidden" name="examID" value="<%=examID%>">
-            <button type="submit">Thêm câu hỏi</button>
-        </form>
-        <form action="viewallquestion.jsp">
-            <button type="submit">Trở về</button>
+            <button
+                class="btn btn-primary has-icon btn-block"
+                type="submit">Thêm câu hỏi</button>
         </form>
 
         <div class="modal fade" id="threadModal" tabindex="-1" role="dialog" aria-labelledby="threadModalLabel" aria-hidden="true">
@@ -134,8 +217,8 @@ int subjectID = (Integer)session.getAttribute("subjectID");
                         </div>
                         <div class="modal-body">
                             <%
-                            if(qblist.size() > 0){
-                                int max = qblist.size();
+                            if(qbs.size() > 0){
+                                int max = qbs.size();
                             %>
                             <input type="hidden" name="examID" value="<%=examID%>"/>
                             <input type="hidden" name="subjectID" value="<%=subjectID%>"/>
@@ -153,7 +236,7 @@ int subjectID = (Integer)session.getAttribute("subjectID");
                         <div class="modal-footer">
                             <input type="button" class="btn btn-light" data-dismiss="modal" style="background-color: red" value="Huỷ">
                             <%
-                            if(qblist.size() > 0){
+                            if(qbs.size() > 0){
                             %>
                             <input type="submit" class="btn btn-primary" style="background-color: #007bff" value="Thêm câu hỏi"/>
                             <%

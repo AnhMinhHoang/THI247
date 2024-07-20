@@ -7,6 +7,14 @@ Users user = (Users)session.getAttribute("currentUser");
 if(user.getRole() == 2){
 TeacherRequest requests = new AdminDAO().getRequestByUserID(user.getUserID());
 %>
+
+<script>
+        var container = document.getElementById("tagID");
+        var tag = container.getElementsByClassName("tag");
+        var current = container.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+        tag[2].className += " active";
+    </script>
 <br><!-- comment -->
 
 <div class="container-xxl py-5">
@@ -22,7 +30,7 @@ TeacherRequest requests = new AdminDAO().getRequestByUserID(user.getUserID());
                     <div class="text-center p-4 pb-0">
                         <a href="ChangeSubject?subjectID=<%=requests.getSubjectID()%>" style="text-decoration: none">
                             <h3 class="mb-0">Tạo bài kiểm tra</h3>
-                        </a>                           
+                        </a>                            
                     </div>
                 </div>
             </div>

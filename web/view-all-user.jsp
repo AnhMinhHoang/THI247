@@ -253,7 +253,7 @@
                             <td><%=user.getUserID()%></td>
                             <td><img src="<%=user.getAvatarURL()%>" width="50" height="50" alt="alt" class="rounded-circle"/></td>
                             <td><%=user.getUsername()%></td>
-                            <td><%=user.getFullname()%></td>
+                            <td><%if (user.getFullname() != null){%><%=user.getFullname()%><% }else%> </td>
                             <td><%=role%></td>
                             <td><span class="badge" style="font-size: 14px"><a href="UserProfile?userID=<%=user.getUserID()%>">Xem chi tiết</a></span></td>
                             <%

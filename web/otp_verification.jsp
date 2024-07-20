@@ -4,7 +4,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>OTP Verification</title>
+        <title>Xác thực OTP</title>
         <style>
             body {
                 font-family: Arial, sans-serif;

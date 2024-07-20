@@ -91,8 +91,8 @@
                         }
                     %>
                     <div class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                        <h4>Recent post</h4>
-                        <h4><a style="text-decoration: none" href="ViewAllPostUser?userID=<%=user.getUserID()%>">View all post</a></h4>
+                        <h4>Bài đăng gần đây</h4>
+                        <h4><a style="text-decoration: none" href="ViewAllPostUser?userID=<%=user.getUserID()%>">Tất cả bài đăng</a></h4>
                     </div>
                     <%
                     List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());

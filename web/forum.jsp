@@ -160,6 +160,11 @@
             max-width: 400px; /* Adjust max width as needed */
             max-height: 400px; /* Adjust max height as needed */
         }
+        
+        #image-preview2 {
+            max-width: 400px; /* Adjust max width as needed */
+            max-height: 400px; /* Adjust max height as needed */
+        }
 
         #image-preview-wrapper {
             position: relative;
@@ -167,6 +172,18 @@
         }
 
         #delete-image {
+            position: absolute;
+            top: 5px; /* Adjust as needed */
+            right: 5px; /* Adjust as needed */
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: none; /* Initially hidden */
+        }
+        
+        #delete-image2 {
             position: absolute;
             top: 5px; /* Adjust as needed */
             right: 5px; /* Adjust as needed */
@@ -318,16 +335,6 @@
                         data-toggle="inner-sidebar"
                         ><i class="material-icons">arrow_forward_ios</i></a
                     >
-
-                    <span class="input-icon input-icon-sm ml-auto w-auto">
-                        <input
-                            type="text"
-                            class="form-control form-control-sm bg-gray-200 border-gray-200 shadow-none mb-4 mt-4"
-                            placeholder="Tìm kiếm"
-                            id="userInput" 
-                            onkeyup="searchFuntion()"
-                            />
-                    </span>
                 </div>
 
                 <div class="inner-main-body p-2 p-sm-3 collapse forum-content show">
@@ -639,11 +646,11 @@
                                                         <input type="file" name="file" id="imgupload" accept="image/png, image/jpeg" style="display:none" onchange="submitForm()"/>-->
                                     <div id="image-preview-container">
                                         <label for="myfile">Chọn ảnh:</label>
-                                        <input id="image-upload" type="file" name="image" accept="image/*">
+                                        <input id="image-upload2" type="file" name="image" accept="image/*">
                                         <br>
                                         <div id="image-preview-wrapper" style="position: relative;">
-                                            <img id="image-preview" src="#" alt="Preview Image" style="display:none;">
-                                            <button id="delete-image"><i class="fa fa-times"></i></button>
+                                            <img id="image-preview2" src="#" alt="Preview Image" style="display:none;">
+                                            <button id="delete-image2"><i class="fa fa-times"></i></button>
                                         </div>
                                     </div>
                                     <br>
@@ -747,25 +754,63 @@
         });
 
         // Function to handle delete image button click
-        document.getElementById('delete-image').addEventListener('click', function (event) {
+        document.getElementById('delete-image2').addEventListener('click', function (event) {
             event.preventDefault(); // Prevent default behavior (page reload)
 
-            var imgElement = document.getElementById('image-preview');
+            var imgElement = document.getElementById('image-preview2');
             imgElement.src = '#'; // Clear the preview
             imgElement.style.display = 'none';
 
             // Hide delete button
-            document.getElementById('delete-image').style.display = 'none';
+            document.getElementById('delete-image2').style.display = 'none';
 
             // Reset file input
-            document.getElementById('image-upload').value = '';
+            document.getElementById('image-upload2').value = '';
         });
 
         function removeURL() {
-            var imgElement = document.getElementById('image-preview');
+            var imgElement = document.getElementById('image-preview2');
             imgElement.src = '#'; // Clear the preview
             imgElement.style.display = 'none';
-            document.getElementById('image-upload').value = '';
+            document.getElementById('image-upload2').value = '';
+        }
+        
+        document.getElementById('image-upload2').addEventListener('change', function (event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                var imgElement = document.getElementById('image-preview2');
+                imgElement.src = e.target.result;
+                imgElement.style.display = 'block';
+
+                // Show delete button
+                document.getElementById('delete-image2').style.display = 'inline-block';
+            }
+
+            reader.readAsDataURL(file);
+        });
+
+        // Function to handle delete image button click
+        document.getElementById('delete-image2').addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default behavior (page reload)
+
+            var imgElement = document.getElementById('image-preview2');
+            imgElement.src = '#'; // Clear the preview
+            imgElement.style.display = 'none';
+
+            // Hide delete button
+            document.getElementById('delete-image2').style.display = 'none';
+
+            // Reset file input
+            document.getElementById('image-upload2').value = '';
+        });
+
+        function removeURL() {
+            var imgElement = document.getElementById('image-preview2');
+            imgElement.src = '#'; // Clear the preview
+            imgElement.style.display = 'none';
+            document.getElementById('image-upload2').value = '';
         }
 
     </script>

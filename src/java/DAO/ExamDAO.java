@@ -15,20 +15,22 @@ import java.util.List;
 import model.Exam;
 import model.QuestionBank;
 import model.Subjects;
+import model.Tests;
 
 /**
  *
  * @author GoldCandy
  */
 public class ExamDAO extends DBConnection {
-    //Add question
-
-    //Update question
     //Delete question
     public void deleteQuestion(int questionID){
-        String query = "delete from QuestionBank where question_id = ? DBCC CHECKIDENT (QuestionBank, RESEED, 0); DBCC CHECKIDENT (QuestionBank, RESEED);";
+        String query = "delete from ExamQuestion where question_id = ?"
+                + "delete from StudentChoice where question_id = ?"
+                + "delete from QuestionBank where question_id = ? DBCC CHECKIDENT (QuestionBank, RESEED, 0); DBCC CHECKIDENT (QuestionBank, RESEED);";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, questionID);
+            ps.setInt(2, questionID);
+            ps.setInt(3, questionID);
             try {
                 ps.executeUpdate();
             } catch (SQLException e) {
@@ -37,6 +39,7 @@ public class ExamDAO extends DBConnection {
         } catch (Exception err) {
             System.out.println(err);
         }
+        
     }
     
     //Add exam
@@ -141,12 +144,19 @@ public class ExamDAO extends DBConnection {
     //Update exam
     //Delete exam
     public void deleteExamByExamID(int examID) {
-        String query = "ALTER TABLE ExamQuestion DROP CONSTRAINT fk_question_id_examquestion; "
-                + "DELETE FROM ExamQuestion WHERE exam_id = ?; DELETE FROM Exam WHERE exam_id = ?; DBCC CHECKIDENT (Exam, RESEED, 0); DBCC CHECKIDENT (Exam, RESEED);"
-                + "ALTER TABLE ExamQuestion ADD CONSTRAINT fk_question_id_examquestion FOREIGN KEY (question_id) REFERENCES QuestionBank(question_id);";
+        List<Tests> list = new StudentExamDAO().getTestByExamID(examID);
+        for(Tests test: list){
+            new StudentExamDAO().deleteStudentChoiceByTestID(test.getTestID());
+        }
+        String query = "delete from ExamPayment where exam_id = ?"
+                + "delete from Result where exam_id = ? delete from Tests where exam_id = ?"
+                + "DELETE FROM ExamQuestion WHERE exam_id = ?; DELETE FROM Exam WHERE exam_id = ?; DBCC CHECKIDENT (Exam, RESEED, 0); DBCC CHECKIDENT (Exam, RESEED);";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, examID);
             ps.setInt(2, examID);
+            ps.setInt(3, examID);
+            ps.setInt(4, examID);
+            ps.setInt(5, examID);
             try {
                 ps.executeUpdate();
             } catch (SQLException e) {
@@ -160,11 +170,14 @@ public class ExamDAO extends DBConnection {
     //Delete question in exam
     public void deleteQuestionInExam(int questionID, int examID) {
         String query = "ALTER TABLE ExamQuestion DROP CONSTRAINT fk_question_id_examquestion; "
-                + "DELETE FROM ExamQuestion WHERE exam_id = ? and question_id = ?; DBCC CHECKIDENT (ExamQuestion, RESEED, 0); DBCC CHECKIDENT (ExamQuestion, RESEED);"
+                + "DELETE FROM ExamQuestion WHERE exam_id = ? and question_id = ?;"
+                + "delete from StudentChoice where question_id = ?"
+                + " DBCC CHECKIDENT (ExamQuestion, RESEED, 0); DBCC CHECKIDENT (ExamQuestion, RESEED);"
                 + "ALTER TABLE ExamQuestion ADD CONSTRAINT fk_question_id_examquestion FOREIGN KEY (question_id) REFERENCES QuestionBank(question_id);";
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setInt(1, examID);
             ps.setInt(2, questionID);
+            ps.setInt(3, questionID);
             try {
                 ps.executeUpdate();
             } catch (SQLException e) {
@@ -635,9 +648,7 @@ public class ExamDAO extends DBConnection {
             }
         }
 
-        query = " select * from QuestionBank "
-                + "left join ExamQuestion on QuestionBank.question_id = ExamQuestion.question_id and exam_id = ? "
-                + "WHERE ExamQuestion.question_id IS NULL and subject_id = ? and userID = ?";
+        query = "select * from QuestionBank left join ExamQuestion on QuestionBank.question_id = ExamQuestion.question_id and exam_id = ? WHERE ExamQuestion.question_id IS NULL and subject_id = ? and userID = ?";
         try (Connection con = getConnection()) {
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, examID);

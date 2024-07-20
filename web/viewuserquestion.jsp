@@ -18,7 +18,8 @@
 if(session.getAttribute("subjectID") != null){
 int subjectID = (Integer)session.getAttribute("subjectID");
 Subjects subject = new ExamDAO().getSubjectByID(subjectID);
-List<QuestionBank> qbs = (List<QuestionBank>)session.getAttribute("questionList");
+Users user = (Users)session.getAttribute("currentUser");
+List<QuestionBank> qbs = new ExamDAO().getAllUserQuestionByID(subjectID, user.getUserID());
 session.setAttribute("backlink", "teacher.jsp");
 %>
 <div class="container-fluid bg-primary py-5 mb-5 page-header">

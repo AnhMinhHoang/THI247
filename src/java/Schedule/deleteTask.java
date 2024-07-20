@@ -32,10 +32,7 @@ public class deleteTask extends HttpServlet {
         boolean success = taskDAO.deleteTask(taskId);
 
         if (success) {
-            response.sendRedirect("TaskListServlet");
-        } else {
-            request.setAttribute("errorMessage", "Xóa nhiệm vụ thất bại");
-            request.getRequestDispatcher("TaskListServlet").forward(request, response);
+            response.sendRedirect("schedule.jsp");
         }
     }
 

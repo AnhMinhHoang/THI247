@@ -203,6 +203,42 @@ public class StudentExamDAO {
             System.out.println(err);
         }
     }
+    
+    public List<Tests> getTestByExamID(int examID){
+         String query = "SELECT * FROM Tests Where exam_id = ?";
+        List<Tests> list = new ArrayList<>();
+        try (Connection con = getConnection()) {
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setInt(1, examID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Tests test = new Tests();
+                test.setTestID(rs.getInt(1));
+                test.setUserID(rs.getInt(2));
+                test.setExamID(rs.getInt(3));
+                test.setTimeLeft(rs.getInt(4));
+                test.setSeed(rs.getLong(5));
+                list.add(test);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+    
+    public void deleteStudentChoiceByTestID(int testID){
+        String query = "DELETE FROM StudentChoice WHERE test_id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setInt(1, testID);
+            try {
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
+        } catch (Exception err) {
+            System.out.println(err);
+        }
+    }
 
     //delete test by test ID
     public void deleteTest(int testID) {

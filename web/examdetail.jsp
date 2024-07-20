@@ -5,6 +5,13 @@
 <%@ page import="java.util.Collections" %>
 <!DOCTYPE html>
 <jsp:include page="header.jsp"></jsp:include>
+    <script>
+        var container = document.getElementById("tagID");
+        var tag = container.getElementsByClassName("tag");
+        var current = container.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+        tag[2].className += " active";
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -107,7 +114,8 @@ for (StudentChoice studentChoice : studentChoices) {
             background-color: #f0f0f0;
         }
     </style>
-    <div style="position: sticky; top: 100px; text-align: center; font-size: 30px">
+    <br><br>
+    <div class="text-primary" style="top: 100px; text-align: center; font-size: 30px">
         <span id="timer">00:00</span>
     </div>
     <div class="container">

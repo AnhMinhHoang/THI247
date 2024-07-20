@@ -40,7 +40,7 @@ public class PassDataExamAdd extends HttpServlet {
         Users user = (Users)session.getAttribute("currentUser");
         
         List<QuestionBank> qbs = new ExamDAO().getAllQuestionNotInExam(subjectID, user.getUserID(), examID);
-        session.setAttribute("questionlist", qbs);
+        session.setAttribute("questionList", qbs);
         session.setAttribute("subjectID", subjectID);
         session.setAttribute("examID", examID);
         response.sendRedirect("add-to-exam.jsp");

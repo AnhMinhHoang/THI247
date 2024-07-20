@@ -21,14 +21,14 @@
    
                         <form class="bg-white rounded shadow-5-strong p-5" action="login" method="POST">
                             <!-- Email input -->
-                            <h5 class="card-title text-center mb-5 fw-light fs-5">Login</h5>
+                            <h5 class="card-title text-center mb-5 fw-light fs-5">Đăng nhập</h5>
                             <div class="form-outline mb-4" data-mdb-input-init>
                                 <input type="email" id="form1Example1" class="form-control" placeholder="Email" name="email" required/>
                             </div>
 
                             <!-- Password input -->
                             <div class="form-outline mb-4" data-mdb-input-init>
-                                <input type="password" id="form1Example2" minlength="10" class="form-control" placeholder="Password" name="password" required/>
+                                <input type="password" id="form1Example2" minlength="10" class="form-control" placeholder="Mật khẩu" name="password" required/>
                             </div>
                             <c:if test="${not empty errorMessage}">
                                 <p style="color:red">${errorMessage}</p>
@@ -37,31 +37,25 @@
                             <div class="row mb-4">
                                 <div class="col d-flex" style="justify-content: space-between">
                                     <!-- Checkbox -->
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="form1Example3" />
-                                        <label class="form-check-label" for="form1Example3">
-                                            Remember password
-                                        </label>
-                                    </div>
-                                    <a href="RequestPasswordServlet" style="text-decoration: none">Forgot password ?</a>
+                                    <a href="RequestPasswordServlet" style="text-decoration: none">Quên mật khẩu?</a>
                                 </div>
                             </div>
                             <div class="col">
                                 <!-- Simple link -->
-                                <span>You don't have any account yet,register 
-                                    <a href="register.jsp">here</a></span>
+                                <span>Chưa có tài khoản? 
+                                    <a href="register.jsp"> Đăng ký ở đây</a></span>
                             </div>
                             <br>
                             <!-- Submit button -->
                             <button type="submit" class="btn btn-primary btn-block" style="width: 100%"
                                 data-mdb-ripple-init>
-                                Sign in
+                                Đăng nhập
                             </button>
                         </form>
                     </div>
                     <div class="button-group text-center mt-4">
                         <a href="https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/userinfo.email&redirect_uri=http://localhost:8080/THI247/LoginGoogleHandler&response_type=code&client_id=1029812003567-92uoqu8gm9iuqafta301erqdqjine7pc.apps.googleusercontent.com&approval_prompt=force">
-                            <i class="fa-brands fa-google"></i> SIGN IN WITH GOOGLE
+                            <i class="fa-brands fa-google"></i> Đăng nhập bằng Google
                         </a>
                     </div>
                 </div>

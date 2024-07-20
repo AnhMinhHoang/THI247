@@ -14,6 +14,9 @@ public class Task {
     private String taskContext;
     private Timestamp taskDeadline;
 
+    public Task() {
+    }
+
     public Task(int userID, int taskId, String taskContext, Timestamp taskDeadline) {
         this.userID = userID;
         this.taskId = taskId;

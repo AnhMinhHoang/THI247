@@ -4,6 +4,7 @@
  */
 package Schedule;
 
+import DAO.UserDAO;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.Users;
 import java.sql.Timestamp;
+import java.util.List;
 import model.Task;
 
 /**
@@ -45,7 +47,7 @@ public class createTask extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-     @Override
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Chuyển tiếp đến trang createTask.jsp
@@ -60,7 +62,7 @@ public class createTask extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-      @Override
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -76,33 +78,21 @@ public class createTask extends HttpServlet {
         String taskContext = request.getParameter("taskContext");
         String taskDateStr = request.getParameter("taskDate");
         String taskTimeStr = request.getParameter("taskTime");
+        
+        System.out.println(taskDateStr + " " + taskTimeStr);
+        
+        Timestamp taskDeadline = Timestamp.valueOf(taskDateStr + " " + taskTimeStr + ":00");
+        
+        System.out.println(taskDeadline.toString());
+        Task newTask = new Task(user.getUserID(), taskContext, taskDeadline);
 
-        if (taskContext == null || taskContext.isEmpty() || taskDateStr == null || taskDateStr.isEmpty() || taskTimeStr == null || taskTimeStr.isEmpty()) {
-            request.setAttribute("errorMessage", "Vui lòng điền đầy đủ thông tin nhiệm vụ.");
-            request.getRequestDispatcher("createTask.jsp").forward(request, response);
-            return;
-        }
+        TaskDAO taskDAO = new TaskDAO();
+        boolean success = taskDAO.createTask(newTask);
 
-        try {
-            Timestamp taskDeadline = Timestamp.valueOf(taskDateStr + " " + taskTimeStr + ":00");
-            Task newTask = new Task(user.getUserID(), taskContext, taskDeadline);
-
-            TaskDAO taskDAO = new TaskDAO();
-            boolean success = taskDAO.createTask(newTask);
-
-            if (success) {
-                request.setAttribute("successMessage", "Tạo nhiệm vụ thành công.");
-            } else {
-                request.setAttribute("errorMessage", "Tạo nhiệm vụ thất bại.");
-            }
-            request.getRequestDispatcher("createTask.jsp").forward(request, response);
-        } catch (IllegalArgumentException e) {
-            request.setAttribute("errorMessage", "Định dạng ngày giờ không hợp lệ.");
-            request.getRequestDispatcher("createTask.jsp").forward(request, response);
+        if (success) {
+            response.sendRedirect("schedule.jsp");
         }
     }
-
-
 
     /**
      * Returns a short description of the servlet.

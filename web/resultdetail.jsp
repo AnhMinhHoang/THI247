@@ -5,6 +5,13 @@
 <%@ page import="java.util.Collections" %>
 <!DOCTYPE html>
 <jsp:include page="header.jsp"></jsp:include>
+<script>
+        var container = document.getElementById("tagID");
+        var tag = container.getElementsByClassName("tag");
+        var current = container.getElementsByClassName("active");
+        current[0].className = current[0].className.replace(" active", "");
+        tag[2].className += " active";
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;

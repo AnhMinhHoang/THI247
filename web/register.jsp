@@ -15,9 +15,9 @@
                     <div class="col-xl-5 col-md-8" style="border-bottom: 1px solid;">
                         <form class="bg-white rounded shadow-5-strong p-5" action="RegisterServlet" method="POST">
                             <!-- Email input -->
-                            <h5 class="card-title text-center mb-5 fw-light fs-5">Register</h5>
+                            <h5 class="card-title text-center mb-5 fw-light fs-5">Đăng ký</h5>
                             <div class="form-outline mb-4" data-mdb-input-init>
-                                <input type="text" id="form1Example1" minlength="8" class="form-control" name="username" placeholder="Username" required/>
+                                <input type="text" id="form1Example1" minlength="8" class="form-control" name="username" placeholder="Tên đăng nhập" required/>
 
                             </div>
                             <div class="form-outline mb-4" data-mdb-input-init>
@@ -27,7 +27,7 @@
 
                             <!-- Password input -->
                             <div class="form-outline mb-4" data-mdb-input-init>
-                                <input type="password" id="form1Example2" minlength="10" class="form-control" name="password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Mật khẩu phải có ít nhất 1 chữ cái hoa, 1 chữ cái thường, 1 số và ít nhất là 8 ký tự!" required/>
+                                <input type="password" id="form1Example2" minlength="10" class="form-control" name="password" placeholder="Mật khẩu" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Mật khẩu phải có ít nhất 1 chữ cái hoa, 1 chữ cái thường, 1 số và ít nhất là 8 ký tự!" required/>
                             </div>
 
                             <!-- 2 column grid layout for inline styling -->
@@ -39,17 +39,17 @@
                         </c:if>
                         <div class="col">
                             <!-- Simple link -->
-                            <span>Already have account,login <a href="login.jsp">here</a></span>
+                            <span>Đã có tài khoản? <a href="login.jsp"> Đăng nhập</a></span>
                         </div>
                         <br>
                         <!-- Submit button -->
                         <button type="submit" class="btn btn-primary btn-block mt-2" style="width: 100%;" data-mdb-ripple-init>
-                            Register</button>
+                            Đăng ký</button>
                     </form>
                 </div>
                 <div class="button-group text-center mt-4">
                     <a href="https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/userinfo.profile%20https://www.googleapis.com/auth/userinfo.email&redirect_uri=http://localhost:8080/THI247/LoginGoogleHandler&response_type=code&client_id=1029812003567-92uoqu8gm9iuqafta301erqdqjine7pc.apps.googleusercontent.com&approval_prompt=force">
-                        <i class="fa-brands fa-google"></i> SIGN UP WITH GOOGLE
+                        <i class="fa-brands fa-google"></i> Đăng nhập bằng Google
                     </a>
                 </div>
             </div>

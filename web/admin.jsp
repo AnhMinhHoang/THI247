@@ -267,7 +267,7 @@
                                                 %>
                                                 <tr>
                                                     <th scope="row"><%=user.getUsername()%></th>
-                                                    <td><%=user.getFullname()%></td>
+                                                    <td><%if (user.getFullname() != null){%><%=user.getFullname()%><% }else%> </td>
                                                     <td><%=user.getEmail()%></td>
                                                     <td><span class="badge" style="font-size: 14px"><a href="UserProfile?userID=<%=user.getUserID()%>">Bấm ở đây</a></span></td>
                                                     <td style="text-align: center">

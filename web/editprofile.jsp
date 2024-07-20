@@ -201,7 +201,7 @@ else role = "Student";
                             <div class="row">
                                 <div class="col-sm-3"></div>
                                 <div class="col-sm-9 text-secondary" style="display: flex; justify-content: space-between">
-                                    <input type="submit" class="btn btn-primary px-4" value="Save Changes">
+                                    <input type="submit" class="btn btn-primary px-4" value="Lưu">
                                 </div>
                             </div>
                         </form>

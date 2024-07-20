@@ -75,8 +75,8 @@ else role = "Học sinh";
             </div>
             <div class="card mt-3">
                 <div class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
-                    <h4>Recent post</h4>
-                    <h4><a href="ViewAllPost?userID=<%=user.getUserID()%>">View all post</a></h4>
+                    <h4>Bài đăng gần đây</h4>
+                    <h4><a href="ViewAllPost?userID=<%=user.getUserID()%>">Tất cả bài đăng</a></h4>
                 </div>
                 <%
                 List<Forum> forums = new ForumDAO().getAllPostFromUserID(user.getUserID());
@@ -204,6 +204,9 @@ else role = "Học sinh";
                     </div><!-- End Bordered Tabs -->
                 </div>
                 <!-- start of modal -->
+                <%
+                if(currentUser.getRole() != 1){
+                %>
                 <button
                     class="btn btn-primary has-icon btn-block"
                     type="button"
@@ -322,6 +325,9 @@ else role = "Học sinh";
                     </div>
                 </div>
                 <!-- End of modal -->
+                <%
+                    }
+                %>
             </div>
         </div>
     </div>
